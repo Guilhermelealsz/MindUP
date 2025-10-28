@@ -35,7 +35,7 @@ class ApiService {
     return data;
   }
 
-  // Usuários
+  // API para registro de usuário
   async register(userData) {
     const response = await this.request('/usuarios/register', {
       method: 'POST',
@@ -44,6 +44,7 @@ class ApiService {
     return response;
   }
 
+  // API para login de usuário
   async login(credentials) {
     const response = await this.request('/usuarios/login', {
       method: 'POST',
@@ -55,10 +56,12 @@ class ApiService {
     return response;
   }
 
+  // API para obter perfil de usuário
   async getProfile(userId) {
     return this.request(`/usuarios/${userId}`);
   }
 
+  // API para atualizar perfil de usuário
   async updateProfile(userId, userData) {
     return this.request(`/usuarios/${userId}`, {
       method: 'PUT',
@@ -66,15 +69,17 @@ class ApiService {
     });
   }
 
-  // Posts
+  // API para obter todos os posts
   async getPosts() {
     return this.request('/posts');
   }
 
+  // API para obter post por ID
   async getPostById(id) {
     return this.request(`/posts/${id}`);
   }
 
+  // API para criar post
   async createPost(postData) {
     return this.request('/posts', {
       method: 'POST',
@@ -82,6 +87,7 @@ class ApiService {
     });
   }
 
+  // API para atualizar post
   async updatePost(id, postData) {
     return this.request(`/posts/${id}`, {
       method: 'PUT',
@@ -89,21 +95,24 @@ class ApiService {
     });
   }
 
+  // API para deletar post
   async deletePost(id) {
     return this.request(`/posts/${id}`, {
       method: 'DELETE',
     });
   }
 
+  // API para obter posts por categoria
   async getPostsByCategory(categoryId) {
     return this.request(`/posts/categoria/${categoryId}`);
   }
 
-  // Categorias
+  // API para obter todas as categorias
   async getCategories() {
     return this.request('/categorias');
   }
 
+  // API para criar categoria
   async createCategory(categoryData) {
     return this.request('/categorias', {
       method: 'POST',
@@ -111,7 +120,7 @@ class ApiService {
     });
   }
 
-  // Comentários
+  // API para criar comentário
   async createComment(commentData) {
     return this.request('/comentarios', {
       method: 'POST',
@@ -119,17 +128,19 @@ class ApiService {
     });
   }
 
+  // API para obter comentários por post
   async getCommentsByPost(postId) {
     return this.request(`/comentarios/post/${postId}`);
   }
 
+  // API para deletar comentário
   async deleteComment(id) {
     return this.request(`/comentarios/${id}`, {
       method: 'DELETE',
     });
   }
 
-  // Curtidas
+  // API para curtir post
   async likePost(postId) {
     return this.request('/curtidas', {
       method: 'POST',
@@ -137,28 +148,31 @@ class ApiService {
     });
   }
 
+  // API para descurtir post
   async unlikePost(postId) {
     return this.request(`/curtidas/${postId}`, {
       method: 'DELETE',
     });
   }
 
+  // API para obter curtidas de um post
   async getLikes(postId) {
     return this.request(`/curtidas/${postId}`);
   }
 
-  // Notificações
+  // API para obter notificações do usuário
   async getNotifications(userId) {
     return this.request(`/notificacoes/usuario/${userId}`);
   }
 
+  // API para marcar notificação como lida
   async markNotificationAsRead(id) {
     return this.request(`/notificacoes/${id}/read`, {
       method: 'PUT',
     });
   }
 
-  // Upload de imagem
+  // API para upload de imagem
   async uploadImage(file) {
     const formData = new FormData();
     formData.append('imagem', file);
@@ -175,7 +189,7 @@ class ApiService {
     return data;
   }
 
-  // Follow/Unfollow
+  // API para seguir usuário
   async follow(userId) {
     return this.request('/follows', {
       method: 'POST',
@@ -183,21 +197,24 @@ class ApiService {
     });
   }
 
+  // API para deixar de seguir usuário
   async unfollow(userId) {
     return this.request(`/follows/${userId}`, {
       method: 'DELETE',
     });
   }
 
-  // Additional user methods
+  // API para obter posts do usuário
   async getUserPosts(userId) {
     return this.request(`/posts/usuario/${userId}`);
   }
 
+  // API para obter usuários que o usuário está seguindo
   async getFollowing(userId) {
     return this.request(`/usuarios/${userId}/following`);
   }
 
+  // API para obter seguidores do usuário
   async getFollowers(userId) {
     return this.request(`/usuarios/${userId}/followers`);
   }

@@ -1,78 +1,77 @@
-import React, { useState } from "react";
-import { useAuth } from "../../context/AuthContext";
+import './login.scss';
+import { Link, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import api from '../../api';
 
-const Login = ({ onSwitchToRegister }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
+export default function Login() {
+  const [cpf, setCpf] = useState('');
+  const [senha, setSenha] = useState('');
+  const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-i
-    try {
-      await login(email, password);
-      // Redirecionar ou atualizar estado após login bem-sucedido
-      console.log('Login bem-sucedido');
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    const usuario = localStorage.getItem("USUARIO");
+    const token = localStorage.getItem("TOKEN");
+
+    if (usuario && token) {
+      navigate('/');
     }
-  };
+  }, [navigate]);
+
+  async function entrar(e) {
+    e.preventDefault();
+
+    try {
+      const body = { cpf, senha };
+      const resp = await api.post('/login', body);
+
+      const token = resp.data.token;
+      const usuario = resp.data.usuario.email;
+      const usuarioi = resp.data.usuario;
+      
+
+      localStorage.setItem('TOKEN', resp.data.token);
+      localStorage.setItem('USUARIO', usuario.email);
+      localStorage.setItem('ID_USUARIO', usuarioi.id); 
+      navigate('/');
+    } catch (err) {
+      alert('Cpf ou senha incorretos');
+    }
+  }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900">
-      <div className="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h1 className="text-2xl font-bold text-white text-center mb-6">
-          Acesse o Xestudos
-        </h1>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <input
-              type="email"
-              placeholder="E-mail"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
-          <div className="mb-6">
-            <input
-              type="password"
-              placeholder="Senha"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
-          {error && (
-            <div className="mb-4 text-red-500 text-center">{error}</div>
-          )}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
-          >
-            {loading ? "Entrando..." : "Login"}
-          </button>
+    <div className="login-container">
+      <div className="login-lado-esquerdo">
+        <img src="./Logo1.png" className="login-logo" />
+      </div>
+
+      <div className="login-lado-direito">
+        <h1>Login - Usuário</h1>
+
+        <form className="login-formulario" onSubmit={entrar}>
+          <label>CPF:</label>
+          <input
+            type="text"
+            placeholder="Digite seu CPF"
+            value={cpf}
+            onChange={e => setCpf(e.target.value)}
+          />
+
+          <label>Senha:</label>
+          <input
+            type="password"
+            placeholder="Digite sua Senha"
+            value={senha}
+            onChange={e => setSenha(e.target.value)}
+          />
+
+          <button type="submit">Entrar</button>
+
+          <p className="login-registro">
+            Não possui uma conta?
+            <Link to={'/cadastro'}> Cadastrar</Link>
+          </p>
         </form>
-        <div className="mt-4 text-center">
-          <button
-            onClick={onSwitchToRegister}
-            className="text-blue-400 hover:text-blue-300"
-          >
-            Não tem conta? Registre-se
-          </button>
-        </div>
       </div>
     </div>
   );
-};
-
-export default Login;
+}

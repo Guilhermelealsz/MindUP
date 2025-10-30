@@ -1,77 +1,81 @@
-import './login.scss';
-import { Link, useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import api from '../../api';
+import { useState } from 'react';
+import { Eye, EyeOff, Brain } from 'lucide-react';
+import './Login.scss';
 
-export default function Login() {
-  const [cpf, setCpf] = useState('');
-  const [senha, setSenha] = useState('');
-  const navigate = useNavigate();
+function Login() {
+  const [showPassword, setShowPassword] = useState(false);
+  const [acceptTerms, setAcceptTerms] = useState(false);
 
-  useEffect(() => {
-    const usuario = localStorage.getItem("USUARIO");
-    const token = localStorage.getItem("TOKEN");
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
-    if (usuario && token) {
-      navigate('/');
-    }
-  }, [navigate]);
-
-  async function entrar(e) {
+  const handleSubmit = (e) => {
     e.preventDefault();
-
-    try {
-      const body = { cpf, senha };
-      const resp = await api.post('/login', body);
-
-      const token = resp.data.token;
-      const usuario = resp.data.usuario.email;
-      const usuarioi = resp.data.usuario;
-      
-
-      localStorage.setItem('TOKEN', resp.data.token);
-      localStorage.setItem('USUARIO', usuario.email);
-      localStorage.setItem('ID_USUARIO', usuarioi.id); 
-      navigate('/');
-    } catch (err) {
-      alert('Cpf ou senha incorretos');
-    }
-  }
+    console.log('Login attempt');
+  };
 
   return (
-    <div className="login-container">
-      <div className="login-lado-esquerdo">
-        <img src="./Logo1.png" className="login-logo" />
-      </div>
+    <section className="login-container">
+      <div className="login-box">
+        <div className="logo-section">
+          <Brain className="logo-icon" size={48} strokeWidth={1.5} />
+          <h1 className="logo-text">MINDUP</h1>
+        </div>
 
-      <div className="login-lado-direito">
-        <h1>Login - Usuário</h1>
+        <form onSubmit={handleSubmit}>
+          <div className="input-group">
+            <input
+              type="text"
+              placeholder="Usuário, email ou telefone"
+              className="login-input"
+            />
+          </div>
 
-        <form className="login-formulario" onSubmit={entrar}>
-          <label>CPF:</label>
-          <input
-            type="text"
-            placeholder="Digite seu CPF"
-            value={cpf}
-            onChange={e => setCpf(e.target.value)}
-          />
+          <div className="input-group password-group">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Senha"
+              className="login-input"
+            />
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={togglePasswordVisibility}
+              aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+            >
+              {showPassword ? (
+                <EyeOff size={20} />
+              ) : (
+                <Eye size={20} />
+              )}
+            </button>
+          </div>
 
-          <label>Senha:</label>
-          <input
-            type="password"
-            placeholder="Digite sua Senha"
-            value={senha}
-            onChange={e => setSenha(e.target.value)}
-          />
+          <a href="#" className="forgot-link">
+            esqueceu a senha ou usuário?
+          </a>
 
-          <button type="submit">Entrar</button>
+          <label className="checkbox-group">
+            <input
+              type="checkbox"
+              checked={acceptTerms}
+              onChange={(e) => setAcceptTerms(e.target.checked)}
+            />
+            <span className="checkbox-label">Aceito os Termos e Condições</span>
+          </label>
 
-          <p className="login-registro">
-            Não possui uma conta?
-            <Link to={'/cadastro'}> Cadastrar</Link>
-          </p>
+          <button type="submit" className="login-button">
+            ENTRAR
+          </button>
         </form>
+
+        <p className="footer-text">
+          NÃO POSSUI UMA CONTA? <a href="#" className="signup-link">CADASTRE-SE</a>
+        </p>
       </div>
-    </div>
+    </section>
   );
 }
+
+export default Login;

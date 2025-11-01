@@ -1,25 +1,41 @@
-import {BrowserRouter, Route, Routes} from "react-router";
-import Inicio from "./pages/inicio/inicio";
-import Cadastro from "./pages/cadastro/Index";
-import Login from "./pages/login/login";
-import Agenda from "./pages/agenda/agenda";
-import Sobre from "./pages/sobre/sobre";
-import Consulta from "./pages/verificarConsultas/consulta";
-import Blogs from "./pages/blogs/blog";
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import Login from './pages/login/Login';
+import Register from './pages/register/Register';
+import Feed from './pages/feed/Feed';
+import Perfil from './pages/perfil/Perfil'; // NOVO
 
+function RotaPrivada({ children }) {
+  const token = localStorage.getItem('token');
+  return token ? children : <Navigate to="/" />;
+}
 
-export default function Navegacao(){
-    return(
-        <BrowserRouter>
-            <Routes>
-                <Route path="/" element={<Inicio/>}/>
-                <Route path="/Cadastro" element={<Cadastro/>}/>
-                <Route path="/login" element={<Login/>}/>
-                 <Route path="/" element={<Agenda/>}/>
-                 <Route path="/sobre" element={<Sobre/>}/>
-                 <Route path="/" element={<Consulta/>}/>
-                 <Route path="/" element={<Blogs/>}/>
-            </Routes>
-        </BrowserRouter>
-    )
+export default function AppRoutes() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        
+        <Route 
+          path="/feed" 
+          element={
+            <RotaPrivada>
+              <Feed />
+            </RotaPrivada>
+          } 
+        />
+
+        <Route 
+          path="/perfil/:id" 
+          element={
+            <RotaPrivada>
+              <Perfil />
+            </RotaPrivada>
+          } 
+        />
+        
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }

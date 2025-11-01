@@ -1,55 +1,109 @@
-import './index.scss'
-import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import api from '../../api';
+import { useNavigate } from 'react-router-dom';
+import { cadastrarUsuario } from '../../api';
+import './register.scss';
 
-export default function Cadastro() {
-  const [email, setEmail] = useState('');
-  const [cpf, setCpf] = useState('');
-  const [senha, setSenha] = useState('');
+export default function Register() {
+  const [formData, setFormData] = useState({
+    nome: '',
+    email: '',
+    celular: '',
+    data_nascimento: '',
+    senha: '',
+    confirmarSenha: ''
+  });
+  const [aceitouTermos, setAceitouTermos] = useState(false);
+  const [erro, setErro] = useState('');
+  const [carregando, setCarregando] = useState(false);
   const navigate = useNavigate();
 
-  async function cadastrar(e) {
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const validarFormulario = () => {
+    if (!formData.nome || !formData.email || !formData.senha) {
+      setErro('Preencha todos os campos obrigatórios');
+      return false;
+    }
+    if (formData.senha !== formData.confirmarSenha) {
+      setErro('As senhas não coincidem');
+      return false;
+    }
+    if (formData.senha.length < 6) {
+      setErro('A senha deve ter pelo menos 6 caracteres');
+      return false;
+    }
+    if (!aceitouTermos) {
+      setErro('Você precisa aceitar os termos e condições');
+      return false;
+    }
+    return true;
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setErro('');
+
+    if (!validarFormulario()) return;
 
     try {
-      const body = { email, cpf, senha };
-      await api.post('/usuario', body);
-
-      alert("Usuário cadastrado com sucesso!");
-      navigate('/login');
-    } catch (err) {
-      alert("Erro ao cadastrar: " + err.response?.data?.erro);
+      setCarregando(true);
+      await cadastrarUsuario({
+        nome: formData.nome,
+        email: formData.email,
+        senha: formData.senha,
+        celular: formData.celular,
+        data_nascimento: formData.data_nascimento
+      });
+      alert('Cadastro realizado com sucesso! Faça login para continuar.');
+      navigate('/');
+    } catch (error) {
+      setErro(error.response?.data?.erro || 'Erro ao cadastrar usuário');
+    } finally {
+      setCarregando(false);
     }
-  }
+  };
 
   return (
-    <div className="cadastro-container">
-      <div className="cadastro-lado-esquerdo">
-        <img src="./Logo1.png" className="cadastro-logo" />
+    <div className="register-container">
+      <div className="register-left">
+        <div className="logo">
+          <h1>MINDUP</h1>
+        </div>
+        <button className="btn-cadastrar" onClick={() => navigate('/')} disabled={carregando}>
+          Cadastrar-se
+        </button>
+        <div className="checkbox-group">
+          <input
+            type="checkbox"
+            id="termos"
+            checked={aceitouTermos}
+            onChange={(e) => setAceitouTermos(e.target.checked)}
+            disabled={carregando}
+          />
+          <label htmlFor="termos">Aceito os Termos e Condições</label>
+        </div>
       </div>
 
-      <div className="cadastro-lado-direito">
-        <h1>Cadastro - Usuário</h1>
-
-        <form className="cadastro-formulario" onSubmit={cadastrar}>
-          <label>Email:</label>
-          <input type="email" placeholder="Digite seu E-mail" value={email} onChange={e => setEmail(e.target.value)} />
-
-          <label>CPF:</label>
-          <input type="text" placeholder="Digite seu CPF" value={cpf} onChange={e => setCpf(e.target.value)} />
-
-          <label>Senha:</label>
-          <input type="password" placeholder="Digite sua Senha" value={senha} onChange={e => setSenha(e.target.value)} />
-
-          <button type="submit">Cadastrar</button>
+      <div className="register-right">
+        <h2>Cadastre-se</h2>
+        <form onSubmit={handleSubmit}>
+          <input type="text" name="nome" placeholder="Nome Completo" value={formData.nome} onChange={handleChange} disabled={carregando} required />
+          <input type="email" name="email" placeholder="E-mail" value={formData.email} onChange={handleChange} disabled={carregando} required />
+          <input type="tel" name="celular" placeholder="Celular" value={formData.celular} onChange={handleChange} disabled={carregando} />
+          <input type="date" name="data_nascimento" placeholder="Data de Nascimento" value={formData.data_nascimento} onChange={handleChange} disabled={carregando} />
+          <input type="password" name="senha" placeholder="Senha" value={formData.senha} onChange={handleChange} disabled={carregando} required />
+          <input type="password" name="confirmarSenha" placeholder="Confirmar Senha" value={formData.confirmarSenha} onChange={handleChange} disabled={carregando} required />
+          {erro && <div className="erro-mensagem">{erro}</div>}
+          <button type="submit" className="btn-submit" disabled={carregando}>
+            {carregando ? 'CADASTRANDO...' : 'CRIAR CONTA'}
+          </button>
         </form>
-
-        <p className="cadastro-login">
-          Já possui uma conta?
-          <Link to={'/login'}> Login</Link>
-        </p>
+        <div className="login-link">
+          Já possui uma conta? <button onClick={() => navigate('/')}>Faça login</button>
+        </div>
       </div>
     </div>
-  )
+  );
 }

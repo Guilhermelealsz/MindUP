@@ -1,12 +1,27 @@
+/* Reseta margens e garante fundo cobrindo toda a tela */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, #0f1419 0%, #1a2634 100%);
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+/* Centraliza o conteúdo perfeitamente */
 .login-container {
   min-height: 100vh;
+  width: 100vw;
   display: flex;
   align-items: center;
   justify-content: center;
   background: linear-gradient(135deg, #0f1419 0%, #1a2634 100%);
-  padding: 20px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
+/* Cartão de login */
 .login-card {
   background: linear-gradient(135deg, #1a3a52 0%, #0f2537 100%);
   border-radius: 20px;
@@ -159,6 +174,7 @@
   }
 }
 
+/* Responsividade */
 @media (max-width: 600px) {
   .login-card {
     padding: 40px 30px;

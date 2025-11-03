@@ -164,6 +164,7 @@ endpoints.get('/posts/:id/curtidas', async (req, res) => {
     console.error(error);
     res.status(500).json({ erro: 'Erro ao buscar curtidas' });
   }
+});
 
 // Buscar posts de um usuário
 endpoints.get('/usuarios/:id/posts', async (req, res) => {
@@ -175,8 +176,6 @@ endpoints.get('/usuarios/:id/posts', async (req, res) => {
     console.error(error);
     res.status(500).json({ erro: 'Erro ao buscar posts do usuário' });
   }
-});
-
 });
 
 export default endpoints;

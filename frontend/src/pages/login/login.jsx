@@ -50,7 +50,7 @@ export default function Login() {
           <div className="input-group">
             <input
               type="text"
-              placeholder="Usuário, email ou telefone"
+              placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={carregando}

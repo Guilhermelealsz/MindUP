@@ -1,11 +1,11 @@
 import express from 'express';
 import cors from 'cors';
 import 'dotenv/config';
-import usuarioEndpoints from '../controllers/usuarioController.js';
-import postEndpoints from '../controllers/postController.js';
-import comentarioEndpoints from '../controllers/comentarioController.js';
-import categoriaEndpoints from '../controllers/categoriaController.js';
-import seguidorEndpoints from '../controllers/seguidorController.js'; // NOVO
+import usuarioEndpoints from './controllers/usuarioController.js';
+import postEndpoints from './controllers/postController.js';
+import comentarioEndpoints from './controllers/comentarioController.js';
+import categoriaEndpoints from './controllers/categoriaController.js';
+import seguidorEndpoints from './controllers/seguidoresController.js'; 
 
 const app = express();
 

@@ -1,67 +1,161 @@
-html, body, #root {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  background: linear-gradient(135deg, #0f1419 0%, #1a2634 100%);
-  font-family: 'Poppins', sans-serif;
-}
-
 .register-container {
-  height: 100vh;
-  width: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, #0f1419 0%, #1a2634 100%);
-  padding: 20px;
-  box-sizing: border-box;
+  height: 100vh;
+  background: #0d1117; // mantém o fundo escuro
+  gap: 2rem;
+  padding: 1rem;
 
-  .register-left,
-  .register-right {
-    background: linear-gradient(135deg, #1a3a52 0%, #0f2537 100%);
-    border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-    padding: 40px;
-    color: white;
-    display: flex;
+  @media (max-width: 850px) {
     flex-direction: column;
-    justify-content: center;
+    height: auto;
+    padding: 2rem 0;
+  }
+}
+
+/* --- LADO ESQUERDO --- */
+.register-left {
+  background: #111827;
+  color: #fff;
+  border-radius: 20px;
+  padding: 2.5rem 2rem;
+  width: 300px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .logo {
+    margin-bottom: 1.5rem;
+
+    h1 {
+      color: #3a80ff; // azul MindUP
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
   }
 
-  .register-left {
-    flex: 1;
-    max-width: 320px;
+  .btn-cadastrar {
+    background: #3a80ff;
+    border: none;
+    border-radius: 10px;
+    padding: 0.8rem 1.5rem;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s ease;
+
+    &:hover {
+      background: #5b9aff;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  .checkbox-group {
+    margin-top: 1.5rem;
+    display: flex;
     align-items: center;
-    text-align: center;
-    margin-right: 30px;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
 
-    .logo {
-      margin-bottom: 40px;
+    input[type='checkbox'] {
+      width: 16px;
+      height: 16px;
+      accent-color: #3a80ff;
+      cursor: pointer;
+    }
 
-      h1 {
-        font-size: 34px;
-        color: #4a9eff;
-        letter-spacing: 2px;
-        font-weight: bold;
+    label {
+      color: #ccc;
+
+      a {
+        color: #3a80ff;
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
+
+/* --- LADO DIREITO --- */
+.register-right {
+  background: #111827;
+  border-radius: 20px;
+  padding: 3rem 2.5rem;
+  width: 420px;
+  color: #fff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  h2 {
+    color: #3a80ff;
+    margin-bottom: 1.8rem;
+    font-weight: 600;
+    font-size: 1.6rem;
+  }
+
+  form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+
+    input {
+      background: #1f2937;
+      border: none;
+      border-radius: 10px;
+      padding: 0.9rem 1rem;
+      margin-bottom: 1rem;
+      color: #fff;
+      font-size: 1rem;
+      transition: 0.2s ease;
+
+      &::placeholder {
+        color: #aaa;
+      }
+
+      &:focus {
+        outline: 2px solid #3a80ff;
+      }
+
+      &[type='date'] {
+        color-scheme: dark;
       }
     }
 
-    .btn-cadastrar {
-      background: linear-gradient(135deg, #4a9eff 0%, #3b7ed8 100%);
-      color: white;
+    .erro-mensagem {
+      color: #ff4d4d;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .btn-submit {
+      background: #3a80ff;
       border: none;
-      padding: 16px;
-      border-radius: 12px;
-      font-size: 16px;
-      font-weight: bold;
+      border-radius: 10px;
+      padding: 0.9rem;
+      color: #fff;
+      font-weight: 600;
       cursor: pointer;
-      letter-spacing: 1px;
-      transition: all 0.3s;
-      width: 100%;
+      transition: 0.3s;
 
       &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 25px rgba(74, 158, 255, 0.4);
+        background: #5b9aff;
       }
 
       &:disabled {
@@ -69,141 +163,34 @@ html, body, #root {
         cursor: not-allowed;
       }
     }
-
-    .checkbox-group {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 20px;
-      font-size: 14px;
-
-      input[type='checkbox'] {
-        width: 18px;
-        height: 18px;
-        cursor: pointer;
-      }
-
-      label {
-        cursor: pointer;
-      }
-    }
   }
 
-  .register-right {
-    flex: 1.5;
-    max-width: 500px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: linear-gradient(135deg, #1a3a52 0%, #0f2537 100%);
-    border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-    padding: 50px;
+  .login-link {
+    margin-top: 1rem;
+    text-align: center;
+    color: #bbb;
+    font-size: 0.9rem;
 
-    h2 {
-      color: #4a9eff;
-      font-size: 26px;
-      font-weight: bold;
-      margin-bottom: 30px;
-      text-align: center;
-    }
+    button {
+      background: none;
+      border: none;
+      color: #3a80ff;
+      cursor: pointer;
+      font-weight: 500;
+      text-decoration: none;
+      transition: 0.2s;
 
-    form {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-
-      input {
-        width: 100%;
-        padding: 14px 18px;
-        border: none;
-        border-radius: 12px;
-        background: white;
-        font-size: 15px;
-        outline: none;
-        transition: all 0.3s;
-
-        &::placeholder {
-          color: #aaa;
-        }
-
-        &:focus {
-          box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.3);
-        }
-
-        &:disabled {
-          background: #eee;
-        }
-      }
-
-      .erro-mensagem {
-        color: #ff7070;
-        text-align: center;
-        font-size: 14px;
-        margin-top: 5px;
-      }
-
-      .btn-submit {
-        background: linear-gradient(135deg, #4a9eff 0%, #3b7ed8 100%);
-        color: white;
-        border: none;
-        padding: 16px;
-        border-radius: 12px;
-        font-size: 16px;
-        font-weight: bold;
-        cursor: pointer;
-        letter-spacing: 1px;
-        transition: all 0.3s;
-        margin-top: 10px;
-
-        &:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 10px 25px rgba(74, 158, 255, 0.4);
-        }
-
-        &:disabled {
-          opacity: 0.6;
-          cursor: not-allowed;
-        }
-      }
-    }
-
-    .login-link {
-      text-align: center;
-      color: white;
-      margin-top: 25px;
-      font-size: 14px;
-
-      button {
-        background: none;
-        border: none;
-        color: #4a9eff;
-        font-weight: bold;
-        cursor: pointer;
-        font-size: 14px;
+      &:hover {
         text-decoration: underline;
-
-        &:hover {
-          color: #6bb3ff;
-        }
       }
     }
   }
 }
 
-@media (max-width: 900px) {
-  .register-container {
-    flex-direction: column;
-
-    .register-left {
-      margin-right: 0;
-      margin-bottom: 25px;
-    }
-
-    .register-right {
-      max-width: 100%;
-    }
+/* --- RESPONSIVIDADE --- */
+@media (max-width: 850px) {
+  .register-left,
+  .register-right {
+    width: 90%;
   }
 }

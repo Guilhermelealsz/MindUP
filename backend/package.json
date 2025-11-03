@@ -2,12 +2,12 @@
   "name": "xestudos-backend",
   "version": "1.0.0",
   "description": "Backend for Xestudos TCC project",
-  "main": "src/index.js",
+  "main": "src/app.js",
   "type": "module",
-  "scripts": {
-    "start": "node src/index.js",
-    "dev": "nodemon src/index.js"
-  },
+"scripts": {
+  "start": "node src/app.js",
+  "dev": "nodemon src/app.js"
+},
   "dependencies": {
     "express": "^4.18.2",
     "mysql2": "^3.6.5",

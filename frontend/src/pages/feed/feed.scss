@@ -1,24 +1,23 @@
-// feed.scss
-
-// Cores base (inspiradas no login)
-$bg-primary: #0f172a;     // fundo escuro
-$card-bg: #1e293b;        // cards e sidebar
-$input-bg: #f8fafc;       // fundo dos inputs
+$bg-primary: #0f172a;    
+$card-bg: #1e293b;    
+$input-bg: #f8fafc;      
 $border-radius: 16px;
-$primary-blue: #3b82f6;   // azul do botão
+$primary-blue: #3b82f6;  
 $text-primary: #e2e8f0;
 $text-secondary: #94a3b8;
-$accent: #8b5cf6;         // roxo para destaques (olho da senha)
+$accent: #8b5cf6;        
 $hover-blue: #2563eb;
 
-// Fontes
 $font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
-// Reset básico
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+html {
+  background-color: $bg-primary;
 }
 
 body {
@@ -34,7 +33,6 @@ body {
   padding: 1rem;
 }
 
-// Header
 .feed-header {
   display: flex;
   justify-content: space-between;
@@ -89,7 +87,6 @@ body {
   }
 }
 
-// Layout principal
 .feed-content {
   display: grid;
   grid-template-columns: 280px 1fr;
@@ -97,7 +94,6 @@ body {
   margin-top: 2rem;
 }
 
-// Sidebar
 .sidebar {
   background: $card-bg;
   border-radius: $border-radius;
@@ -155,8 +151,8 @@ body {
   }
 }
 
-// Posts Section
 .posts-section {
+  background-color: $bg-primary;
   h2 {
     margin-bottom: 1.5rem;
     font-size: 1.6rem;
@@ -282,7 +278,6 @@ body {
   }
 }
 
-// Modal
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -324,7 +319,7 @@ body {
       padding: 0.9rem 1rem;
       border-radius: 12px;
       font-size: 1rem;
-      color: #1e293b;
+      color: #074ab6;
 
       &::placeholder {
         color: #94a3b8;
@@ -379,7 +374,6 @@ body {
   }
 }
 
-// Responsividade
 @media (max-width: 768px) {
   .feed-content {
     grid-template-columns: 1fr;

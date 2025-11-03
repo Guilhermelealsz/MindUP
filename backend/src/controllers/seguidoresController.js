@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { verificarToken } from './usuarioController.js';
-import * as seguidorRepository from '../Repository/seguidorRepository.js';
+import * as seguidorRepository from '../Repository/seguidoresRepository.js';
 
 const endpoints = Router();
 

@@ -2,11 +2,11 @@ import pool from './db.js';
 
 export async function listarTodos() {
   const sql = `
-    SELECT 
+    SELECT
       p.*,
       u.nome as autor_nome,
       c.nome as categoria_nome,
-      COUNT(DISTINCT cu.id) as total_curtidas,
+      COUNT(DISTINCT cu.usuario_id) as total_curtidas,
       COUNT(DISTINCT co.id) as total_comentarios
     FROM posts p
     LEFT JOIN usuarios u ON p.autor_id = u.id
@@ -23,11 +23,11 @@ export async function listarTodos() {
 
 export async function buscarPorId(id) {
   const sql = `
-    SELECT 
+    SELECT
       p.*,
       u.nome as autor_nome,
       c.nome as categoria_nome,
-      COUNT(DISTINCT cu.id) as total_curtidas,
+      COUNT(DISTINCT cu.usuario_id) as total_curtidas,
       COUNT(DISTINCT co.id) as total_comentarios
     FROM posts p
     LEFT JOIN usuarios u ON p.autor_id = u.id
@@ -44,11 +44,11 @@ export async function buscarPorId(id) {
 
 export async function buscarPorCategoria(categoriaId) {
   const sql = `
-    SELECT 
+    SELECT
       p.*,
       u.nome as autor_nome,
       c.nome as categoria_nome,
-      COUNT(DISTINCT cu.id) as total_curtidas,
+      COUNT(DISTINCT cu.usuario_id) as total_curtidas,
       COUNT(DISTINCT co.id) as total_comentarios
     FROM posts p
     LEFT JOIN usuarios u ON p.autor_id = u.id
@@ -125,11 +125,11 @@ export async function contarCurtidas(postId) {
 // Buscar posts de um usuário específico
 export async function buscarPorAutor(autorId) {
   const sql = `
-    SELECT 
+    SELECT
       p.*,
       u.nome as autor_nome,
       c.nome as categoria_nome,
-      COUNT(DISTINCT cu.id) as total_curtidas,
+      COUNT(DISTINCT cu.usuario_id) as total_curtidas,
       COUNT(DISTINCT co.id) as total_comentarios
     FROM posts p
     LEFT JOIN usuarios u ON p.autor_id = u.id

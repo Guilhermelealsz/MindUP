@@ -1,11 +1,6 @@
-<<<<<<< HEAD
-  CREATE DATABASE IF NOT EXISTS xestudos;
-=======
 CREATE DATABASE IF NOT EXISTS MindUP;
-USE MindUP;
->>>>>>> 9a81c13c86ab980c52df529cb46d767c896a2931
 
-  USE xestudos;
+USE MindUP;
 
   CREATE TABLE IF NOT EXISTS usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -19,8 +14,6 @@ USE MindUP;
     data_nascimento DATE,
     data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   );
-
-  ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS username VARCHAR(255) UNIQUE;
 
   CREATE TABLE IF NOT EXISTS categorias (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -79,6 +72,21 @@ USE MindUP;
     FOREIGN KEY (comentario_id) REFERENCES comentarios(id) ON DELETE CASCADE,
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
     UNIQUE KEY unique_curtida_comentario (comentario_id, usuario_id)
+  );
+
+  CREATE TABLE IF NOT EXISTS notificacoes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT NOT NULL,
+    tipo ENUM('curtida_post', 'curtida_comentario', 'comentario', 'seguidor') NOT NULL,
+    ator_id INT NOT NULL,
+    post_id INT NULL,
+    comentario_id INT NULL,
+    lida BOOLEAN DEFAULT FALSE,
+    data_notificacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+    FOREIGN KEY (ator_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+    FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
+    FOREIGN KEY (comentario_id) REFERENCES comentarios(id) ON DELETE CASCADE
   );
 
   INSERT INTO categorias (nome, descricao) VALUES

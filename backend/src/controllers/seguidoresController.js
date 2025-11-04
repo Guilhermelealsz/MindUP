@@ -1,19 +1,27 @@
 import { Router } from 'express';
 import { verificarToken } from './usuarioController.js';
 import * as seguidorRepository from '../Repository/seguidoresRepository.js';
+import * as notificacaoRepository from '../Repository/notificacaoRepository.js';
 
 const endpoints = Router();
 
-// Seguir um usuário
 endpoints.post('/usuarios/:id/seguir', verificarToken, async (req, res) => {
   try {
     const { id } = req.params;
-    
+
     if (parseInt(id) === req.usuarioId) {
       return res.status(400).json({ erro: 'Você não pode seguir a si mesmo' });
     }
 
     await seguidorRepository.seguir(req.usuarioId, id);
+
+    // Criar notificação para o usuário seguido
+    await notificacaoRepository.criarNotificacao({
+      usuario_id: id,
+      tipo: 'seguidor',
+      ator_id: req.usuarioId
+    });
+
     res.json({ mensagem: 'Usuário seguido com sucesso' });
   } catch (error) {
     if (error.code === 'ER_DUP_ENTRY') {
@@ -24,7 +32,6 @@ endpoints.post('/usuarios/:id/seguir', verificarToken, async (req, res) => {
   }
 });
 
-// Deixar de seguir
 endpoints.delete('/usuarios/:id/seguir', verificarToken, async (req, res) => {
   try {
     const { id } = req.params;
@@ -36,7 +43,6 @@ endpoints.delete('/usuarios/:id/seguir', verificarToken, async (req, res) => {
   }
 });
 
-// Verificar se está seguindo
 endpoints.get('/usuarios/:id/seguindo', verificarToken, async (req, res) => {
   try {
     const { id } = req.params;
@@ -48,7 +54,6 @@ endpoints.get('/usuarios/:id/seguindo', verificarToken, async (req, res) => {
   }
 });
 
-// Listar seguidores
 endpoints.get('/usuarios/:id/seguidores', async (req, res) => {
   try {
     const { id } = req.params;
@@ -60,7 +65,6 @@ endpoints.get('/usuarios/:id/seguidores', async (req, res) => {
   }
 });
 
-// Listar seguindo
 endpoints.get('/usuarios/:id/seguindo-lista', async (req, res) => {
   try {
     const { id } = req.params;
@@ -72,7 +76,6 @@ endpoints.get('/usuarios/:id/seguindo-lista', async (req, res) => {
   }
 });
 
-// Estatísticas de seguidores
 endpoints.get('/usuarios/:id/stats', async (req, res) => {
   try {
     const { id } = req.params;

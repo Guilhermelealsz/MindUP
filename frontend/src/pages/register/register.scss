@@ -1,4 +1,4 @@
-.register-container {
+  .register-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -32,11 +32,10 @@
   .logo {
     margin-bottom: 1.5rem;
 
-    h1 {
-      color: #3a80ff; // azul MindUP
-      font-size: 2rem;
-      font-weight: 700;
-      letter-spacing: 1px;
+    .logo-image {
+      max-width: 120px;
+      height: auto;
+      margin: 0 auto;
     }
   }
 

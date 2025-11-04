@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import { verificarToken } from './usuarioController.js';
 import * as comentarioRepository from '../Repository/comentarioRepository.js';
+import * as notificacaoRepository from '../Repository/notificacaoRepository.js';
+import * as postRepository from '../Repository/postRepository.js';
 
 const endpoints = Router();
 
@@ -18,7 +20,7 @@ endpoints.get('/comentarios/:postId', async (req, res) => {
 endpoints.post('/comentarios', verificarToken, async (req, res) => {
   try {
     const { texto, post_id } = req.body;
-    
+
     if (!texto || !post_id) {
       return res.status(400).json({ erro: 'Texto e ID do post são obrigatórios' });
     }
@@ -30,6 +32,19 @@ endpoints.post('/comentarios', verificarToken, async (req, res) => {
     };
 
     const resultado = await comentarioRepository.inserir(novoComentario);
+
+    // Criar notificação para o autor do post
+    const post = await postRepository.buscarPorId(post_id);
+    if (post && post.autor_id !== req.usuarioId) {
+      await notificacaoRepository.criarNotificacao({
+        usuario_id: post.autor_id,
+        tipo: 'comentario',
+        ator_id: req.usuarioId,
+        post_id: post_id,
+        comentario_id: resultado.insertId
+      });
+    }
+
     res.status(201).json({ id: resultado.insertId, mensagem: 'Comentário adicionado' });
   } catch (error) {
     console.error(error);
@@ -74,6 +89,16 @@ endpoints.post('/comentarios/:id/curtir', verificarToken, async (req, res) => {
 
     await comentarioRepository.curtirComentario(id, req.usuarioId);
     const totalCurtidas = await comentarioRepository.contarCurtidasComentario(id);
+
+    // Criar notificação para o autor do comentário
+    if (comentario.autor_id !== req.usuarioId) {
+      await notificacaoRepository.criarNotificacao({
+        usuario_id: comentario.autor_id,
+        tipo: 'curtida_comentario',
+        ator_id: req.usuarioId,
+        comentario_id: id
+      });
+    }
 
     res.json({ mensagem: 'Comentário curtido com sucesso', curtidas: totalCurtidas });
   } catch (error) {

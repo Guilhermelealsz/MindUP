@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { cadastrarUsuario } from '../../api';
+import logo from '../../assets/image 27.png';
 import './register.scss';
 
 export default function Register() {
@@ -69,7 +70,7 @@ export default function Register() {
     <div className="register-container">
       <div className="register-left">
         <div className="logo">
-          <h1>MINDUP</h1>
+          <img src={logo} alt="MindUp" className="logo-image" />
         </div>
         <button className="btn-cadastrar" onClick={() => navigate('/')} disabled={carregando}>
           Cadastrar-se

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fazerLogin } from '../../api';
+import logo from '../../assets/image 27.png';
 import './login.scss';
 
 export default function Login() {
@@ -43,7 +44,7 @@ export default function Login() {
     <div className="login-container">
       <div className="login-card">
         <div className="logo">
-          <h1>MINDUP</h1>
+          <img src={logo} alt="MindUp" className="logo-image" />
         </div>
 
         <form onSubmit={handleLogin}>

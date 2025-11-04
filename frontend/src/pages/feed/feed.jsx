@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { listarPosts, listarCategorias, criarPost, curtirPost, removerCurtida, listarComentarios, adicionarComentario, deletarComentario, curtirComentario, descurtirComentario } from '../../api';
+import Sidebar from '../../components/Sidebar';
 import './feed.scss';
 
 export default function Feed() {
@@ -151,48 +152,40 @@ export default function Feed() {
 
   return (
     <div className="feed-container">
-      <header className="feed-header">
-        <div className="logo">
-          <h1>MINDUP</h1>
-        </div>
-        <div className="user-section">
-          <span onClick={() => navigate(`/perfil/${usuario?.id}`)} style={{cursor: 'pointer'}}>
-            👤 {usuario?.nome}
-          </span>
-          <button onClick={handleLogout} className="btn-logout">Sair</button>
-        </div>
-      </header>
+      <Sidebar />
 
       <div className="feed-content">
-        <aside className="sidebar">
-          <button 
-            className="btn-novo-post"
-            onClick={() => setMostrarModal(true)}
-          >
-            + Novo Post
-          </button>
-
-          <div className="categorias-section">
-            <h3>Categorias</h3>
-            <button 
-              className={`categoria-item ${!categoriaFiltro ? 'active' : ''}`}
-              onClick={() => handleFiltroCategoria(null)}
-            >
-              Todas
-            </button>
-            {categorias.map(cat => (
-              <button
-                key={cat.id}
-                className={`categoria-item ${categoriaFiltro === cat.id ? 'active' : ''}`}
-                onClick={() => handleFiltroCategoria(cat.id)}
-              >
-                {cat.nome}
-              </button>
-            ))}
-          </div>
-        </aside>
-
         <main className="posts-section">
+          <div className="feed-header-actions">
+            <button
+              className="btn-novo-post"
+              onClick={() => setMostrarModal(true)}
+            >
+              + Novo Post
+            </button>
+
+            <div className="categorias-section">
+              <h3>Categorias</h3>
+              <div className="categorias-buttons">
+                <button
+                  className={`categoria-item ${!categoriaFiltro ? 'active' : ''}`}
+                  onClick={() => handleFiltroCategoria(null)}
+                >
+                  Todas
+                </button>
+                {categorias.map(cat => (
+                  <button
+                    key={cat.id}
+                    className={`categoria-item ${categoriaFiltro === cat.id ? 'active' : ''}`}
+                    onClick={() => handleFiltroCategoria(cat.id)}
+                  >
+                    {cat.nome}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
           <h2>Feed de Conhecimento</h2>
           
           {carregando ? (

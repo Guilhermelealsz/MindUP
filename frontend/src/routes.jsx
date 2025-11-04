@@ -2,8 +2,9 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/login/Login';
 import Register from './pages/register/Register';
 import Feed from './pages/feed/Feed';
-import Perfil from './pages/perfil/Perfil'; // NOVO
-import ProfileEdit from './pages/ProfileEdit/ProfileEdit'; // NOVO
+import Perfil from './pages/perfil/Perfil';
+import ProfileEdit from './pages/ProfileEdit/ProfileEdit';
+import Notifications from './pages/notifications/Notifications';
 
 function RotaPrivada({ children }) {
   const token = localStorage.getItem('token');
@@ -40,6 +41,15 @@ export default function AppRoutes() {
           element={
             <RotaPrivada>
               <ProfileEdit />
+            </RotaPrivada>
+          }
+        />
+
+        <Route
+          path="/notifications"
+          element={
+            <RotaPrivada>
+              <Notifications />
             </RotaPrivada>
           }
         />

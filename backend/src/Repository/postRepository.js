@@ -122,7 +122,6 @@ export async function contarCurtidas(postId) {
   return linhas[0].total;
 }
 
-// Buscar posts de um usuário específico
 export async function buscarPorAutor(autorId) {
   const sql = `
     SELECT
@@ -145,7 +144,6 @@ export async function buscarPorAutor(autorId) {
   return linhas;
 }
 
-// Contar posts de um usuário
 export async function contarPostsUsuario(autorId) {
   const sql = 'SELECT COUNT(*) as total FROM posts WHERE autor_id = ?';
   const [linhas] = await pool.query(sql, [autorId]);

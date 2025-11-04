@@ -165,6 +165,27 @@
     return response.data;
   };
 
+  // Funções de Notificações
+  export const listarNotificacoes = async () => {
+    const response = await api.get('/notificacoes');
+    return response.data;
+  };
+
+  export const listarNotificacoesNaoLidas = async () => {
+    const response = await api.get('/notificacoes/nao-lidas');
+    return response.data;
+  };
+
+  export const marcarNotificacaoComoLida = async (id) => {
+    const response = await api.put(`/notificacoes/${id}/lida`);
+    return response.data;
+  };
+
+  export const marcarTodasComoLidas = async () => {
+    const response = await api.put('/notificacoes/marcar-todas-lidas');
+    return response.data;
+  };
+
   export default api;
 
 

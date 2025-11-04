@@ -5,7 +5,6 @@ import * as usuarioRepository from '../Repository/usuarioRepository.js';
 
 const endpoints = Router();
 
-// Middleware de autenticação
 export const verificarToken = (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
   
@@ -22,7 +21,6 @@ export const verificarToken = (req, res, next) => {
   }
 };
 
-// Cadastrar usuário
 endpoints.post('/usuarios', async (req, res) => {
   try {
     const { nome, username, email, senha, celular, data_nascimento } = req.body;
@@ -66,7 +64,6 @@ endpoints.post('/usuarios', async (req, res) => {
   }
 });
 
-// Login
 endpoints.post('/login', async (req, res) => {
   try {
     const { email, senha } = req.body;
@@ -108,7 +105,6 @@ endpoints.post('/login', async (req, res) => {
   }
 });
 
-// Buscar perfil
 endpoints.get('/usuarios/:id', verificarToken, async (req, res) => {
   try {
     const { id } = req.params;
@@ -126,7 +122,6 @@ endpoints.get('/usuarios/:id', verificarToken, async (req, res) => {
   }
 });
 
-// Atualizar perfil
 endpoints.put('/usuarios/:id', verificarToken, async (req, res) => {
   try {
     const { id } = req.params;
@@ -137,7 +132,6 @@ endpoints.put('/usuarios/:id', verificarToken, async (req, res) => {
 
     const { nome, username, bio, avatar, celular, data_nascimento } = req.body;
 
-    // Verificar se username já existe (se fornecido)
     if (username) {
       const usuarioComUsername = await usuarioRepository.buscarPorUsername(username);
       if (usuarioComUsername && usuarioComUsername.id !== parseInt(id)) {
@@ -167,7 +161,6 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 
-// Configuração do multer para upload de avatar
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const uploadDir = 'uploads/avatars/';
@@ -194,7 +187,6 @@ const upload = multer({
   }
 });
 
-// Upload de avatar
 endpoints.post('/usuarios/:id/avatar', verificarToken, upload.single('avatar'), async (req, res) => {
   try {
     const { id } = req.params;
@@ -209,7 +201,6 @@ endpoints.post('/usuarios/:id/avatar', verificarToken, upload.single('avatar'), 
 
     const avatarUrl = `/uploads/avatars/${req.file.filename}`;
 
-    // Atualizar avatar no banco
     await usuarioRepository.atualizar(id, { avatar: avatarUrl });
 
     res.json({

@@ -37,22 +37,42 @@ export async function buscarPorId(id) {
 }
 
 export async function atualizar(id, dados) {
-  const sql = `
-    UPDATE usuarios
-    SET nome = ?, username = ?, bio = ?, avatar = ?, celular = ?, data_nascimento = ?
-    WHERE id = ?
-  `;
+  const campos = [];
+  const valores = [];
 
-  const [resultado] = await pool.query(sql, [
-    dados.nome,
-    dados.username,
-    dados.bio,
-    dados.avatar,
-    dados.celular,
-    dados.data_nascimento,
-    id
-  ]);
+  if (dados.nome !== undefined) {
+    campos.push('nome = ?');
+    valores.push(dados.nome);
+  }
+  if (dados.username !== undefined) {
+    campos.push('username = ?');
+    valores.push(dados.username);
+  }
+  if (dados.bio !== undefined) {
+    campos.push('bio = ?');
+    valores.push(dados.bio);
+  }
+  if (dados.avatar !== undefined) {
+    campos.push('avatar = ?');
+    valores.push(dados.avatar);
+  }
+  if (dados.celular !== undefined) {
+    campos.push('celular = ?');
+    valores.push(dados.celular);
+  }
+  if (dados.data_nascimento !== undefined) {
+    campos.push('data_nascimento = ?');
+    valores.push(dados.data_nascimento);
+  }
 
+  if (campos.length === 0) {
+    throw new Error('Nenhum campo para atualizar');
+  }
+
+  const sql = `UPDATE usuarios SET ${campos.join(', ')} WHERE id = ?`;
+  valores.push(id);
+
+  const [resultado] = await pool.query(sql, valores);
   return resultado;
 }
 

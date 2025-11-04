@@ -3,6 +3,7 @@ import multer from 'multer';
 import path from 'path';
 import { verificarToken } from './usuarioController.js';
 import * as postRepository from '../Repository/postRepository.js';
+import * as notificacaoRepository from '../Repository/notificacaoRepository.js';
 
 const endpoints = Router();
 
@@ -134,6 +135,18 @@ endpoints.post('/posts/:id/curtir', verificarToken, async (req, res) => {
   try {
     const { id } = req.params;
     await postRepository.curtir(id, req.usuarioId);
+
+    // Criar notificação para o autor do post
+    const post = await postRepository.buscarPorId(id);
+    if (post && post.autor_id !== req.usuarioId) {
+      await notificacaoRepository.criarNotificacao({
+        usuario_id: post.autor_id,
+        tipo: 'curtida_post',
+        ator_id: req.usuarioId,
+        post_id: id
+      });
+    }
+
     res.json({ mensagem: 'Post curtido com sucesso' });
   } catch (error) {
     if (error.code === 'ER_DUP_ENTRY') {

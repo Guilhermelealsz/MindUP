@@ -1,4 +1,9 @@
+<<<<<<< HEAD
   CREATE DATABASE IF NOT EXISTS xestudos;
+=======
+CREATE DATABASE IF NOT EXISTS MindUP;
+USE MindUP;
+>>>>>>> 9a81c13c86ab980c52df529cb46d767c896a2931
 
   USE xestudos;
 

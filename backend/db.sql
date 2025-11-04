@@ -1,12 +1,15 @@
 CREATE DATABASE IF NOT EXISTS xestudos;
+
 USE xestudos;
 
 CREATE TABLE IF NOT EXISTS usuarios (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(255) NOT NULL,
+  username VARCHAR(255) UNIQUE,
   email VARCHAR(255) UNIQUE NOT NULL,
   senha VARCHAR(255) NOT NULL,
   bio TEXT,
+  avatar VARCHAR(255),
   celular VARCHAR(20),
   data_nascimento DATE,
   data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP

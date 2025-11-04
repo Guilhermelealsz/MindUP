@@ -25,7 +25,7 @@ export const verificarToken = (req, res, next) => {
 // Cadastrar usuário
 endpoints.post('/usuarios', async (req, res) => {
   try {
-    const { nome, email, senha, celular, data_nascimento } = req.body;
+    const { nome, username, email, senha, celular, data_nascimento } = req.body;
 
     if (!nome || !email || !senha) {
       return res.status(400).json({ erro: 'Nome, email e senha são obrigatórios' });
@@ -36,10 +36,18 @@ endpoints.post('/usuarios', async (req, res) => {
       return res.status(400).json({ erro: 'Email já cadastrado' });
     }
 
+    if (username) {
+      const usernameExiste = await usuarioRepository.buscarPorUsername(username);
+      if (usernameExiste) {
+        return res.status(400).json({ erro: 'Username já cadastrado' });
+      }
+    }
+
     const senhaHash = await bcrypt.hash(senha, 10);
 
     const novoUsuario = {
       nome,
+      username,
       email,
       senha: senhaHash,
       celular,
@@ -47,10 +55,10 @@ endpoints.post('/usuarios', async (req, res) => {
     };
 
     const resultado = await usuarioRepository.inserir(novoUsuario);
-    
-    res.status(201).json({ 
+
+    res.status(201).json({
       id: resultado.insertId,
-      mensagem: 'Usuário cadastrado com sucesso' 
+      mensagem: 'Usuário cadastrado com sucesso'
     });
   } catch (error) {
     console.error(error);
@@ -122,26 +130,95 @@ endpoints.get('/usuarios/:id', verificarToken, async (req, res) => {
 endpoints.put('/usuarios/:id', verificarToken, async (req, res) => {
   try {
     const { id } = req.params;
-    
+
     if (parseInt(id) !== req.usuarioId) {
       return res.status(403).json({ erro: 'Você não pode editar este perfil' });
     }
 
-    const { nome, bio, celular, data_nascimento } = req.body;
+    const { nome, username, bio, avatar, celular, data_nascimento } = req.body;
+
+    // Verificar se username já existe (se fornecido)
+    if (username) {
+      const usuarioComUsername = await usuarioRepository.buscarPorUsername(username);
+      if (usuarioComUsername && usuarioComUsername.id !== parseInt(id)) {
+        return res.status(400).json({ erro: 'Username já está em uso' });
+      }
+    }
 
     const dadosAtualizados = {
       nome,
+      username,
       bio,
+      avatar,
       celular,
       data_nascimento
     };
 
     await usuarioRepository.atualizar(id, dadosAtualizados);
-    
+
     res.json({ mensagem: 'Perfil atualizado com sucesso' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ erro: 'Erro ao atualizar perfil' });
+  }
+});
+
+import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
+
+// Configuração do multer para upload de avatar
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const uploadDir = 'uploads/avatars/';
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    cb(null, uploadDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, 'avatar-' + req.usuarioId + '-' + uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Apenas arquivos de imagem são permitidos'));
+    }
+  }
+});
+
+// Upload de avatar
+endpoints.post('/usuarios/:id/avatar', verificarToken, upload.single('avatar'), async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (parseInt(id) !== req.usuarioId) {
+      return res.status(403).json({ erro: 'Você não pode fazer upload para este perfil' });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({ erro: 'Nenhum arquivo enviado' });
+    }
+
+    const avatarUrl = `/uploads/avatars/${req.file.filename}`;
+
+    // Atualizar avatar no banco
+    await usuarioRepository.atualizar(id, { avatar: avatarUrl });
+
+    res.json({
+      mensagem: 'Avatar atualizado com sucesso',
+      avatarUrl: avatarUrl
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ erro: 'Erro ao fazer upload do avatar' });
   }
 });
 

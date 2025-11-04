@@ -32,6 +32,16 @@
     return response.data;
   };
 
+  export const uploadAvatar = async (id, file) => {
+    const formData = new FormData();
+    formData.append('avatar', file);
+
+    const response = await api.post(`/usuarios/${id}/avatar`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
+    return response.data;
+  };
+
   export const listarPosts = async (categoriaId = null) => {
     const url = categoriaId ? `/posts?categoria_id=${categoriaId}` : '/posts';
     const response = await api.get(url);
@@ -146,3 +156,5 @@
   };
 
   export default api;
+
+

@@ -41,7 +41,7 @@ endpoints.delete('/comentarios/:id', verificarToken, async (req, res) => {
   try {
     const { id } = req.params;
     const comentario = await comentarioRepository.buscarPorId(id);
-    
+
     if (!comentario) {
       return res.status(404).json({ erro: 'Comentário não encontrado' });
     }
@@ -54,6 +54,56 @@ endpoints.delete('/comentarios/:id', verificarToken, async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ erro: 'Erro ao deletar comentário' });
+  }
+});
+
+endpoints.post('/comentarios/:id/curtir', verificarToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const comentario = await comentarioRepository.buscarPorId(id);
+
+    if (!comentario) {
+      return res.status(404).json({ erro: 'Comentário não encontrado' });
+    }
+
+    const jaCurtiu = await comentarioRepository.verificarCurtidaComentario(id, req.usuarioId);
+
+    if (jaCurtiu) {
+      return res.status(400).json({ erro: 'Você já curtiu este comentário' });
+    }
+
+    await comentarioRepository.curtirComentario(id, req.usuarioId);
+    const totalCurtidas = await comentarioRepository.contarCurtidasComentario(id);
+
+    res.json({ mensagem: 'Comentário curtido com sucesso', curtidas: totalCurtidas });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ erro: 'Erro ao curtir comentário' });
+  }
+});
+
+endpoints.delete('/comentarios/:id/curtir', verificarToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const comentario = await comentarioRepository.buscarPorId(id);
+
+    if (!comentario) {
+      return res.status(404).json({ erro: 'Comentário não encontrado' });
+    }
+
+    const jaCurtiu = await comentarioRepository.verificarCurtidaComentario(id, req.usuarioId);
+
+    if (!jaCurtiu) {
+      return res.status(400).json({ erro: 'Você não curtiu este comentário' });
+    }
+
+    await comentarioRepository.descurtirComentario(id, req.usuarioId);
+    const totalCurtidas = await comentarioRepository.contarCurtidasComentario(id);
+
+    res.json({ mensagem: 'Curtida removida com sucesso', curtidas: totalCurtidas });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ erro: 'Erro ao remover curtida' });
   }
 });
 

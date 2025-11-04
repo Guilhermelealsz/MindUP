@@ -3,6 +3,7 @@ import Login from './pages/login/Login';
 import Register from './pages/register/Register';
 import Feed from './pages/feed/Feed';
 import Perfil from './pages/perfil/Perfil'; // NOVO
+import ProfileEdit from './pages/ProfileEdit/ProfileEdit'; // NOVO
 
 function RotaPrivada({ children }) {
   const token = localStorage.getItem('token');
@@ -25,15 +26,24 @@ export default function AppRoutes() {
           } 
         />
 
-        <Route 
-          path="/perfil/:id" 
+        <Route
+          path="/perfil/:id"
           element={
             <RotaPrivada>
               <Perfil />
             </RotaPrivada>
-          } 
+          }
         />
-        
+
+        <Route
+          path="/profile-edit/:id"
+          element={
+            <RotaPrivada>
+              <ProfileEdit />
+            </RotaPrivada>
+          }
+        />
+
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>

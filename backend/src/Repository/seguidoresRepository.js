@@ -24,7 +24,7 @@ export async function verificarSeguindo(seguidorId, seguindoId) {
 // Listar seguidores de um usuário
 export async function listarSeguidores(usuarioId) {
   const sql = `
-    SELECT 
+    SELECT
       u.id,
       u.nome,
       u.email,
@@ -42,7 +42,7 @@ export async function listarSeguidores(usuarioId) {
 // Listar quem o usuário está seguindo
 export async function listarSeguindo(usuarioId) {
   const sql = `
-    SELECT 
+    SELECT
       u.id,
       u.nome,
       u.email,

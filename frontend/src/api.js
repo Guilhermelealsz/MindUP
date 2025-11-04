@@ -110,6 +110,16 @@
     return response.data;
   };
 
+  export const curtirComentario = async (id) => {
+    const response = await api.post(`/comentarios/${id}/curtir`);
+    return response.data;
+  };
+
+  export const descurtirComentario = async (id) => {
+    const response = await api.delete(`/comentarios/${id}/curtir`);
+    return response.data;
+  };
+
   export const listarCategorias = async () => {
     const response = await api.get('/categorias');
     return response.data;

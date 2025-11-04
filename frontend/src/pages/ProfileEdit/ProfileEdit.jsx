@@ -102,6 +102,10 @@ const ProfileEdit = () => {
 
       await atualizarPerfil(id, dadosParaAtualizar);
       setSuccess('Perfil atualizado com sucesso!');
+      // Redirecionar após 2 segundos
+      setTimeout(() => {
+        navigate(`/perfil/${id}`);
+      }, 2000);
     } catch (err) {
       setError(err.message || 'Erro ao atualizar perfil');
     } finally {
@@ -112,8 +116,8 @@ const ProfileEdit = () => {
   return (
     <div className="profile-edit">
       <div className="profile-header">
-        <button className="back-button">← Voltar</button>
-        <h2>Perfil</h2>
+        <button className="back-button" onClick={() => navigate(`/perfil/${id}`)}>← Voltar</button>
+        <h2>Editar Perfil</h2>
       </div>
 
       <form onSubmit={handleSubmit} className="profile-form">

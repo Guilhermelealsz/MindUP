@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { listarPosts, listarCategorias, criarPost, curtirPost, removerCurtida } from '../../api';
+import { listarPosts, listarCategorias, criarPost, curtirPost, removerCurtida, listarComentarios, adicionarComentario, deletarComentario, curtirComentario, descurtirComentario } from '../../api';
 import './feed.scss';
 
 export default function Feed() {
@@ -11,6 +11,9 @@ export default function Feed() {
   const [novoPost, setNovoPost] = useState({ titulo: '', conteudo: '', categoria_id: '' });
   const [carregando, setCarregando] = useState(true);
   const [usuario, setUsuario] = useState(null);
+  const [comentariosVisiveis, setComentariosVisiveis] = useState({});
+  const [comentarios, setComentarios] = useState({});
+  const [novoComentario, setNovoComentario] = useState({});
   
   const navigate = useNavigate();
 
@@ -86,6 +89,64 @@ export default function Feed() {
     localStorage.removeItem('token');
     localStorage.removeItem('usuario');
     navigate('/');
+  };
+
+  const toggleComentarios = async (postId) => {
+    const visivel = !comentariosVisiveis[postId];
+    setComentariosVisiveis({ ...comentariosVisiveis, [postId]: visivel });
+
+    if (visivel && !comentarios[postId]) {
+      try {
+        const comentariosData = await listarComentarios(postId);
+        setComentarios({ ...comentarios, [postId]: comentariosData });
+      } catch (error) {
+        console.error('Erro ao carregar comentários:', error);
+      }
+    }
+  };
+
+  const handleAdicionarComentario = async (postId, e) => {
+    e.preventDefault();
+    const texto = novoComentario[postId]?.trim();
+    if (!texto) return;
+
+    try {
+      await adicionarComentario({ texto, post_id: postId });
+      setNovoComentario({ ...novoComentario, [postId]: '' });
+      // Recarregar comentários
+      const comentariosData = await listarComentarios(postId);
+      setComentarios({ ...comentarios, [postId]: comentariosData });
+      carregarDados(); // Atualizar contadores
+    } catch (error) {
+      alert('Erro ao adicionar comentário');
+    }
+  };
+
+  const handleDeletarComentario = async (comentarioId, postId) => {
+    if (!confirm('Tem certeza que deseja deletar este comentário?')) return;
+
+    try {
+      await deletarComentario(comentarioId);
+      const comentariosData = await listarComentarios(postId);
+      setComentarios({ ...comentarios, [postId]: comentariosData });
+      carregarDados();
+    } catch (error) {
+      alert('Erro ao deletar comentário');
+    }
+  };
+
+  const handleCurtirComentario = async (comentarioId, postId) => {
+    try {
+      await curtirComentario(comentarioId);
+      const comentariosData = await listarComentarios(postId);
+      setComentarios({ ...comentarios, [postId]: comentariosData });
+    } catch (error) {
+      if (error.response?.status === 400) {
+        await descurtirComentario(comentarioId);
+        const comentariosData = await listarComentarios(postId);
+        setComentarios({ ...comentarios, [postId]: comentariosData });
+      }
+    }
   };
 
   return (
@@ -177,16 +238,77 @@ export default function Feed() {
                   )}
                   
                   <div className="post-footer">
-                    <button 
+                    <button
                       className="btn-interacao"
                       onClick={() => handleCurtir(post.id)}
                     >
                       ❤️ {post.total_curtidas || 0}
                     </button>
-                    <button className="btn-interacao">
+                    <button
+                      className="btn-interacao"
+                      onClick={() => toggleComentarios(post.id)}
+                    >
                       💬 {post.total_comentarios || 0}
                     </button>
                   </div>
+
+                  {comentariosVisiveis[post.id] && (
+                    <div className="comentarios-section">
+                      <div className="comentarios-lista">
+                        {comentarios[post.id]?.length > 0 ? (
+                          comentarios[post.id].map(comentario => (
+                            <div key={comentario.id} className="comentario-item">
+                              <div className="comentario-header">
+                                <div className="comentario-autor">
+                                  <strong>{comentario.autor_nome}</strong>
+                                  <span className="comentario-data">
+                                    {new Date(comentario.data).toLocaleDateString('pt-BR')}
+                                  </span>
+                                </div>
+                                {usuario?.id === comentario.autor_id && (
+                                  <button
+                                    className="btn-deletar-comentario"
+                                    onClick={() => handleDeletarComentario(comentario.id, post.id)}
+                                  >
+                                    🗑️
+                                  </button>
+                                )}
+                              </div>
+                              <p className="comentario-texto">{comentario.texto}</p>
+                              <div className="comentario-footer">
+                                <button
+                                  className="btn-curtir-comentario"
+                                  onClick={() => handleCurtirComentario(comentario.id, post.id)}
+                                >
+                                  👍 {comentario.curtidas || 0}
+                                </button>
+                              </div>
+                            </div>
+                          ))
+                        ) : (
+                          <p className="sem-comentarios">Nenhum comentário ainda.</p>
+                        )}
+                      </div>
+
+                      <form
+                        className="form-comentario"
+                        onSubmit={(e) => handleAdicionarComentario(post.id, e)}
+                      >
+                        <input
+                          type="text"
+                          placeholder="Escreva um comentário..."
+                          value={novoComentario[post.id] || ''}
+                          onChange={(e) => setNovoComentario({
+                            ...novoComentario,
+                            [post.id]: e.target.value
+                          })}
+                        />
+                        <button type="submit" className="btn-comentar">
+                          Comentar
+                        </button>
+                      </form>
+                    </div>
+                  )}
                 </article>
               ))}
             </div>

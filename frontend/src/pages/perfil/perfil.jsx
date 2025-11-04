@@ -24,6 +24,7 @@ export default function Perfil() {
   const [abaAtiva, setAbaAtiva] = useState('posts'); // posts, seguidores, seguindo
   const [carregando, setCarregando] = useState(true);
   const [meuPerfil, setMeuPerfil] = useState(false);
+  const [avatarError, setAvatarError] = useState(false);
 
   useEffect(() => {
     carregarPerfil();
@@ -121,9 +122,18 @@ export default function Perfil() {
         {/* Informações do usuário */}
         <div className="perfil-info">
           <div className="perfil-avatar">
-            <div className="avatar-circle">
-              {usuario?.nome?.charAt(0).toUpperCase()}
-            </div>
+            {usuario?.avatar && !avatarError ? (
+              <img
+                src={`http://localhost:3000${usuario.avatar}`}
+                alt="Avatar"
+                className="avatar-image"
+                onError={() => setAvatarError(true)}
+              />
+            ) : (
+              <div className="avatar-circle">
+                {usuario?.nome?.charAt(0).toUpperCase()}
+              </div>
+            )}
           </div>
 
           <div className="perfil-detalhes">
@@ -146,8 +156,15 @@ export default function Perfil() {
               </div>
             </div>
 
-            {!meuPerfil && (
-              <button 
+            {meuPerfil ? (
+              <button
+                className="btn-editar"
+                onClick={() => navigate(`/profile-edit/${id}`)}
+              >
+                 Editar Perfil
+              </button>
+            ) : (
+              <button
                 className={`btn-seguir ${estaSeguin ? 'seguindo' : ''}`}
                 onClick={handleSeguir}
               >

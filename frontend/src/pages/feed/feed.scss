@@ -168,6 +168,13 @@ body {
           justify-content: center;
           font-weight: bold;
           font-size: 1.1rem;
+
+          .avatar-image {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+          }
         }
 
         strong {
@@ -259,15 +266,41 @@ body {
             margin-bottom: 0.5rem;
 
             .comentario-autor {
-              strong {
-                color: $text-primary;
-                font-size: 0.95rem;
+              display: flex;
+              align-items: center;
+              gap: 0.5rem;
+
+              .comentario-avatar {
+                width: 24px;
+                height: 24px;
+                background: linear-gradient(135deg, $primary-blue, $accent);
+                color: white;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+                font-size: 0.8rem;
+
+                .avatar-image-mini {
+                  width: 100%;
+                  height: 100%;
+                  border-radius: 50%;
+                  object-fit: cover;
+                }
               }
 
-              .comentario-data {
-                color: $text-secondary;
-                font-size: 0.8rem;
-                margin-left: 0.5rem;
+              div {
+                strong {
+                  color: $text-primary;
+                  font-size: 0.95rem;
+                }
+
+                .comentario-data {
+                  color: $text-secondary;
+                  font-size: 0.8rem;
+                  margin-left: 0.5rem;
+                }
               }
             }
 

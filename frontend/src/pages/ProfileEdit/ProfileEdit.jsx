@@ -21,6 +21,7 @@ const ProfileEdit = () => {
   });
 
   const [previewUrl, setPreviewUrl] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
 
   useEffect(() => {
     carregarPerfil();
@@ -70,14 +71,30 @@ const ProfileEdit = () => {
       return;
     }
 
+    // Criar preview local imediatamente
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setPreviewUrl(e.target.result);
+      setSelectedFile(file);
+    };
+    reader.readAsDataURL(file);
+
+    setError('');
+    setSuccess('');
+  };
+
+  const handleUploadAvatar = async () => {
+    if (!selectedFile) return;
+
     setLoading(true);
     setError('');
     setSuccess('');
 
     try {
-      const { avatarUrl } = await uploadAvatar(id, file);
+      const { avatarUrl } = await uploadAvatar(id, selectedFile);
       setPreviewUrl(avatarUrl);
       setFormData(prev => ({ ...prev, avatar: avatarUrl }));
+      setSelectedFile(null);
       setSuccess('Foto enviada com sucesso!');
     } catch (err) {
       setError(err.message || 'Erro ao fazer upload da imagem');
@@ -145,6 +162,31 @@ const ProfileEdit = () => {
             style={{ display: 'none' }}
           />
           <p className="avatar-hint">Clique para alterar a foto</p>
+          {selectedFile && (
+            <div className="avatar-actions">
+              <button
+                type="button"
+                className="btn-upload-avatar"
+                onClick={handleUploadAvatar}
+                disabled={loading}
+              >
+                {loading ? 'Enviando...' : 'Confirmar foto'}
+              </button>
+              <button
+                type="button"
+                className="btn-cancel-avatar"
+                onClick={() => {
+                  setPreviewUrl(formData.avatar);
+                  setSelectedFile(null);
+                  if (fileInputRef.current) {
+                    fileInputRef.current.value = '';
+                  }
+                }}
+              >
+                Cancelar
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Campos */}

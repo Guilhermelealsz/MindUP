@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { listarNotificacoes, marcarNotificacaoComoLida, marcarTodasComoLidas } from '../../api';
+import { listarNotificacoes, marcarNotificacaoComoLida, marcarTodasComoLidas, limparTodasNotificacoes } from '../../api';
 import Sidebar from '../../components/Sidebar';
 import './Notifications.scss';
 
@@ -46,6 +46,15 @@ export default function Notifications() {
       );
     } catch (error) {
       console.error('Erro ao marcar todas como lidas:', error);
+    }
+  };
+
+  const handleLimparTodas = async () => {
+    try {
+      await limparTodasNotificacoes();
+      setNotificacoes([]);
+    } catch (error) {
+      console.error('Erro ao limpar notificações:', error);
     }
   };
 
@@ -109,14 +118,24 @@ export default function Notifications() {
       <main className="notifications-content">
         <header className="notifications-header">
           <h1>Notificações</h1>
-          {notificacoesNaoLidas.length > 0 && (
-            <button
-              className="btn-marcar-todas"
-              onClick={handleMarcarTodasComoLidas}
-            >
-              Marcar todas como lidas
-            </button>
-          )}
+          <div className="header-buttons">
+            {notificacoesNaoLidas.length > 0 && (
+              <button
+                className="btn-marcar-todas"
+                onClick={handleMarcarTodasComoLidas}
+              >
+                Marcar todas como lidas
+              </button>
+            )}
+            {notificacoes.length > 0 && (
+              <button
+                className="btn-limpar-todas"
+                onClick={handleLimparTodas}
+              >
+                Limpar todas
+              </button>
+            )}
+          </div>
         </header>
 
         <div className="notifications-list">

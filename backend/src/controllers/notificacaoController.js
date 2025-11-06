@@ -62,4 +62,14 @@ endpoints.delete('/notificacoes/:id', verificarToken, async (req, res) => {
   }
 });
 
+endpoints.delete('/notificacoes', verificarToken, async (req, res) => {
+  try {
+    await notificacaoRepository.deletarTodasNotificacoes(req.usuarioId);
+    res.json({ mensagem: 'Todas as notificações foram deletadas com sucesso' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ erro: 'Erro ao deletar notificações' });
+  }
+});
+
 export default endpoints;

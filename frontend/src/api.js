@@ -60,8 +60,8 @@
     if (dados.categoria_id) {
       formData.append('categoria_id', dados.categoria_id);
     }
-    if (dados.imagem) {
-      formData.append('imagem', dados.imagem);
+    if (dados.media) {
+      formData.append('media', dados.media);
     }
 
     const response = await api.post('/posts', formData, {
@@ -183,6 +183,11 @@
 
   export const marcarTodasComoLidas = async () => {
     const response = await api.put('/notificacoes/marcar-todas-lidas');
+    return response.data;
+  };
+
+  export const limparTodasNotificacoes = async () => {
+    const response = await api.delete('/notificacoes');
     return response.data;
   };
 

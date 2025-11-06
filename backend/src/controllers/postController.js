@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import multer from 'multer';
 import path from 'path';
+import fs from 'fs';
 import { verificarToken } from './usuarioController.js';
 import * as postRepository from '../Repository/postRepository.js';
 import * as notificacaoRepository from '../Repository/notificacaoRepository.js';
@@ -9,7 +10,11 @@ const endpoints = Router();
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/');
+    const uploadDir = path.join(__dirname, '../../uploads');
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -17,18 +22,22 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({ 
+const upload = multer({
   storage,
-  limits: { fileSize: 5 * 1024 * 1024 },
+  limits: { fileSize: 50 * 1024 * 1024 }, // Aumentado para 50MB para vídeos
   fileFilter: (req, file, cb) => {
-    const allowedTypes = /jpeg|jpg|png|gif/;
-    const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
-    const mimetype = allowedTypes.test(file.mimetype);
-    
-    if (extname && mimetype) {
+    const allowedImageTypes = /jpeg|jpg|png|gif/;
+    const allowedVideoTypes = /mp4|avi|mov|wmv|flv|webm|mkv/;
+    const extname = path.extname(file.originalname).toLowerCase();
+    const mimetype = file.mimetype;
+
+    const isImage = allowedImageTypes.test(extname) && allowedImageTypes.test(mimetype.split('/')[1]);
+    const isVideo = allowedVideoTypes.test(extname) && mimetype.startsWith('video/');
+
+    if (isImage || isVideo) {
       return cb(null, true);
     }
-    cb(new Error('Apenas imagens são permitidas'));
+    cb(new Error('Apenas imagens e vídeos são permitidos'));
   }
 });
 
@@ -62,12 +71,24 @@ endpoints.get('/posts/:id', async (req, res) => {
   }
 });
 
-endpoints.post('/posts', verificarToken, upload.single('imagem'), async (req, res) => {
+endpoints.post('/posts', verificarToken, upload.single('media'), async (req, res) => {
   try {
     const { titulo, conteudo, categoria_id } = req.body;
-    
+
     if (!titulo || !conteudo) {
       return res.status(400).json({ erro: 'Título e conteúdo são obrigatórios' });
+    }
+
+    let imagem = null;
+    let video = null;
+
+    if (req.file) {
+      const isVideo = req.file.mimetype.startsWith('video/');
+      if (isVideo) {
+        video = req.file.filename;
+      } else {
+        imagem = req.file.filename;
+      }
     }
 
     const novoPost = {
@@ -75,7 +96,8 @@ endpoints.post('/posts', verificarToken, upload.single('imagem'), async (req, re
       conteudo,
       categoria_id: categoria_id || null,
       autor_id: req.usuarioId,
-      imagem: req.file ? req.file.filename : null
+      imagem,
+      video
     };
 
     const resultado = await postRepository.inserir(novoPost);

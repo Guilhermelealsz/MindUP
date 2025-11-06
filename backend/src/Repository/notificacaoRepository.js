@@ -68,3 +68,12 @@ export async function deletarNotificacao(id, usuarioId) {
   const [resultado] = await pool.query(comando, [id, usuarioId]);
   return resultado.affectedRows > 0;
 }
+
+export async function deletarTodasNotificacoes(usuarioId) {
+  const comando = `
+    DELETE FROM notificacoes
+    WHERE usuario_id = ?
+  `;
+  const [resultado] = await pool.query(comando, [usuarioId]);
+  return resultado.affectedRows;
+}

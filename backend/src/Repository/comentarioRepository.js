@@ -5,6 +5,7 @@ export async function buscarPorPost(postId) {
     SELECT
       c.*,
       u.nome as autor_nome,
+      u.avatar as autor_avatar,
       COUNT(cc.id) as curtidas
     FROM comentarios c
     LEFT JOIN usuarios u ON c.autor_id = u.id

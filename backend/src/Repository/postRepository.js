@@ -5,6 +5,7 @@ export async function listarTodos() {
     SELECT
       p.*,
       u.nome as autor_nome,
+      u.avatar as autor_avatar,
       c.nome as categoria_nome,
       COUNT(DISTINCT cu.usuario_id) as total_curtidas,
       COUNT(DISTINCT co.id) as total_comentarios
@@ -16,7 +17,7 @@ export async function listarTodos() {
     GROUP BY p.id
     ORDER BY p.data_postagem DESC
   `;
-  
+
   const [linhas] = await pool.query(sql);
   return linhas;
 }
@@ -26,6 +27,7 @@ export async function buscarPorId(id) {
     SELECT
       p.*,
       u.nome as autor_nome,
+      u.avatar as autor_avatar,
       c.nome as categoria_nome,
       COUNT(DISTINCT cu.usuario_id) as total_curtidas,
       COUNT(DISTINCT co.id) as total_comentarios
@@ -37,7 +39,7 @@ export async function buscarPorId(id) {
     WHERE p.id = ?
     GROUP BY p.id
   `;
-  
+
   const [linhas] = await pool.query(sql, [id]);
   return linhas[0];
 }
@@ -47,6 +49,7 @@ export async function buscarPorCategoria(categoriaId) {
     SELECT
       p.*,
       u.nome as autor_nome,
+      u.avatar as autor_avatar,
       c.nome as categoria_nome,
       COUNT(DISTINCT cu.usuario_id) as total_curtidas,
       COUNT(DISTINCT co.id) as total_comentarios
@@ -59,25 +62,26 @@ export async function buscarPorCategoria(categoriaId) {
     GROUP BY p.id
     ORDER BY p.data_postagem DESC
   `;
-  
+
   const [linhas] = await pool.query(sql, [categoriaId]);
   return linhas;
 }
 
 export async function inserir(post) {
   const sql = `
-    INSERT INTO posts (titulo, conteudo, imagem, categoria_id, autor_id)
-    VALUES (?, ?, ?, ?, ?)
+    INSERT INTO posts (titulo, conteudo, imagem, video, categoria_id, autor_id)
+    VALUES (?, ?, ?, ?, ?, ?)
   `;
-  
+
   const [resultado] = await pool.query(sql, [
     post.titulo,
     post.conteudo,
     post.imagem,
+    post.video,
     post.categoria_id,
     post.autor_id
   ]);
-  
+
   return resultado;
 }
 
@@ -127,6 +131,7 @@ export async function buscarPorAutor(autorId) {
     SELECT
       p.*,
       u.nome as autor_nome,
+      u.avatar as autor_avatar,
       c.nome as categoria_nome,
       COUNT(DISTINCT cu.usuario_id) as total_curtidas,
       COUNT(DISTINCT co.id) as total_comentarios
@@ -139,7 +144,7 @@ export async function buscarPorAutor(autorId) {
     GROUP BY p.id
     ORDER BY p.data_postagem DESC
   `;
-  
+
   const [linhas] = await pool.query(sql, [autorId]);
   return linhas;
 }

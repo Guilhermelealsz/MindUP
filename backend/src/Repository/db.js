@@ -9,7 +9,7 @@ const env = process.env;
 const dbConfig = {
   host: env.DB_HOST || 'localhost',
   user: env.DB_USER || 'root',
-  password: env.DB_PASSWORD || '1234',
+  password: env.DB_PASSWORD || 'enzogaeta17',
   database: env.DB_NAME || 'MindUP',
   waitForConnections: true,
   connectionLimit: 10,

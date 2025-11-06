@@ -9,7 +9,7 @@ export default function Feed() {
   const [categorias, setCategorias] = useState([]);
   const [categoriaFiltro, setCategoriaFiltro] = useState(null);
   const [mostrarModal, setMostrarModal] = useState(false);
-  const [novoPost, setNovoPost] = useState({ titulo: '', conteudo: '', categoria_id: '' });
+  const [novoPost, setNovoPost] = useState({ titulo: '', conteudo: '', categoria_id: '', media: null });
   const [carregando, setCarregando] = useState(true);
   const [usuario, setUsuario] = useState(null);
   const [comentariosVisiveis, setComentariosVisiveis] = useState({});
@@ -63,7 +63,7 @@ export default function Feed() {
     try {
       await criarPost(novoPost);
       setMostrarModal(false);
-      setNovoPost({ titulo: '', conteudo: '', categoria_id: '' });
+      setNovoPost({ titulo: '', conteudo: '', categoria_id: '', media: null });
       carregarDados();
     } catch (error) {
       alert('Erro ao criar post: ' + (error.response?.data?.erro || 'Erro desconhecido'));
@@ -205,7 +205,15 @@ export default function Feed() {
                       style={{ cursor: 'pointer' }}
                     >
                       <div className="author-avatar">
-                        {post.autor_nome?.charAt(0).toUpperCase()}
+                        {post.autor_avatar ? (
+                          <img
+                            src={`http://localhost:3000${post.autor_avatar}`}
+                            alt={post.autor_nome}
+                            className="avatar-image"
+                          />
+                        ) : (
+                          post.autor_nome?.charAt(0).toUpperCase()
+                        )}
                       </div>
                       <div>
                         <strong>{post.autor_nome}</strong>
@@ -223,10 +231,18 @@ export default function Feed() {
                   <p className="post-conteudo">{post.conteudo}</p>
                   
                   {post.imagem && (
-                    <img 
-                      src={`http://localhost:3000/uploads/${post.imagem}`} 
+                    <img
+                      src={`http://localhost:3000/uploads/${post.imagem}`}
                       alt={post.titulo}
                       className="post-imagem"
+                    />
+                  )}
+
+                  {post.video && (
+                    <video
+                      src={`http://localhost:3000/uploads/${post.video}`}
+                      controls
+                      className="post-video"
                     />
                   )}
                   
@@ -253,10 +269,23 @@ export default function Feed() {
                             <div key={comentario.id} className="comentario-item">
                               <div className="comentario-header">
                                 <div className="comentario-autor">
-                                  <strong>{comentario.autor_nome}</strong>
-                                  <span className="comentario-data">
-                                    {new Date(comentario.data).toLocaleDateString('pt-BR')}
-                                  </span>
+                                  <div className="comentario-avatar">
+                                    {comentario.autor_avatar ? (
+                                      <img
+                                        src={`http://localhost:3000${comentario.autor_avatar}`}
+                                        alt={comentario.autor_nome}
+                                        className="avatar-image-mini"
+                                      />
+                                    ) : (
+                                      comentario.autor_nome?.charAt(0).toUpperCase()
+                                    )}
+                                  </div>
+                                  <div>
+                                    <strong>{comentario.autor_nome}</strong>
+                                    <span className="comentario-data">
+                                      {new Date(comentario.data).toLocaleDateString('pt-BR')}
+                                    </span>
+                                  </div>
                                 </div>
                                 {usuario?.id === comentario.autor_id && (
                                   <button
@@ -337,7 +366,13 @@ export default function Feed() {
                   <option key={cat.id} value={cat.id}>{cat.nome}</option>
                 ))}
               </select>
-              
+
+              <input
+                type="file"
+                accept="image/*,video/*"
+                onChange={(e) => setNovoPost({ ...novoPost, media: e.target.files[0] })}
+              />
+
               <div className="modal-buttons">
                 <button type="button" onClick={() => setMostrarModal(false)}>
                   Cancelar

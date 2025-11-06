@@ -9,7 +9,7 @@ USE MindUP;
     email VARCHAR(255) UNIQUE NOT NULL,
     senha VARCHAR(255) NOT NULL,
     bio TEXT,
-    avatar VARCHAR(255),
+    avatar TEXT,
     celular VARCHAR(20),
     data_nascimento DATE,
     data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -26,7 +26,8 @@ USE MindUP;
     id INT AUTO_INCREMENT PRIMARY KEY,
     titulo VARCHAR(255) NOT NULL,
     conteudo TEXT NOT NULL,
-    imagem VARCHAR(255),
+    imagem TEXT,
+    video TEXT,
     categoria_id INT,
     autor_id INT NOT NULL,
     data_postagem TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

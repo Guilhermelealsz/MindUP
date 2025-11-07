@@ -17,7 +17,7 @@ USE MindUP;
 
   CREATE TABLE IF NOT EXISTS categorias (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(255) NOT NULL,
+    nome VARCHAR(255) NOT NULL UNIQUE,
     descricao TEXT,
     data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   );
@@ -78,7 +78,7 @@ USE MindUP;
   CREATE TABLE IF NOT EXISTS notificacoes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     usuario_id INT NOT NULL,
-    tipo ENUM('curtida_post', 'curtida_comentario', 'comentario', 'seguidor') NOT NULL,
+    tipo ENUM('curtida_post', 'curtida_comentario', 'comentario', 'seguidor', 'mensagem') NOT NULL,
     ator_id INT NOT NULL,
     post_id INT NULL,
     comentario_id INT NULL,
@@ -90,10 +90,36 @@ USE MindUP;
     FOREIGN KEY (comentario_id) REFERENCES comentarios(id) ON DELETE CASCADE
   );
 
-  INSERT INTO categorias (nome, descricao) VALUES
+  CREATE TABLE IF NOT EXISTS chats (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario1_id INT NOT NULL,
+    usuario2_id INT NOT NULL,
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (usuario1_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+    FOREIGN KEY (usuario2_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_chat (usuario1_id, usuario2_id)
+  );
+
+  CREATE TABLE IF NOT EXISTS mensagens (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    chat_id INT NOT NULL,
+    remetente_id INT NOT NULL,
+    destinatario_id INT NOT NULL,
+    texto TEXT,
+    post_id INT NULL,
+    lida BOOLEAN DEFAULT FALSE,
+    data_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (chat_id) REFERENCES chats(id) ON DELETE CASCADE,
+    FOREIGN KEY (remetente_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+    FOREIGN KEY (destinatario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+    FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE
+  );
+
+
+
+INSERT IGNORE INTO categorias (nome, descricao) VALUES
   ('Tecnologia', 'Posts sobre tecnologia e inovação'),
   ('Educação', 'Conteúdo educacional e aprendizado'),
   ('Saúde', 'Dicas de saúde e bem-estar'),
   ('Entretenimento', 'Diversão e lazer'),
-  ('Esportes', 'Notícias e discussões sobre esportes')
-  ON DUPLICATE KEY UPDATE nome = nome;
+  ('Esportes', 'Notícias e discussões sobre esportes');

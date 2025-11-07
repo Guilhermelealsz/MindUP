@@ -16,8 +16,17 @@ endpoints.get('/notificacoes', verificarToken, async (req, res) => {
 
 endpoints.get('/notificacoes/nao-lidas', verificarToken, async (req, res) => {
   try {
-    const total = await notificacaoRepository.contarNotificacoesNaoLidas(req.usuarioId);
-    res.json({ total });
+    const notificacoesNaoLidas = await notificacaoRepository.contarNotificacoesNaoLidas(req.usuarioId);
+
+    // Importar chatRepository aqui para evitar dependência circular
+    const { contarMensagensNaoLidasUsuario } = await import('../Repository/chatRepository.js');
+    const mensagensNaoLidas = await contarMensagensNaoLidasUsuario(req.usuarioId);
+
+    res.json({
+      notificacoes: notificacoesNaoLidas,
+      mensagens: mensagensNaoLidas,
+      total: notificacoesNaoLidas + mensagensNaoLidas
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ erro: 'Erro ao contar notificações não lidas' });

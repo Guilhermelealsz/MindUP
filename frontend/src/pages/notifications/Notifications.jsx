@@ -143,7 +143,7 @@ export default function Notifications() {
             <div className="loading">Carregando notificações...</div>
           ) : notificacoes.length === 0 ? (
             <div className="empty-state">
-              <div className="empty-icon">🔔</div>
+              <div className="empty-icon"></div>
               <h3>Nenhuma notificação</h3>
               <p>Você não tem notificações no momento.</p>
             </div>
@@ -157,7 +157,7 @@ export default function Notifications() {
                 <div className="notification-avatar">
                   {notificacao.ator_avatar ? (
                     <img
-                      src={`http://localhost:3000/uploads/${notificacao.ator_avatar}`}
+                      src={`http://localhost:3000${notificacao.ator_avatar}`}
                       alt={notificacao.ator_nome}
                     />
                   ) : (

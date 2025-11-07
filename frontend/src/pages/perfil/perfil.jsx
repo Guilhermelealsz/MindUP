@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { 
-  buscarPerfil, 
-  buscarEstatisticas, 
+import {
+  buscarPerfil,
+  buscarEstatisticas,
   buscarPostsUsuario,
   listarSeguidores,
   listarSeguindo,
   seguirUsuario,
   deixarDeSeguir,
-  verificarSeguindo
+  verificarSeguindo,
+  buscarChat,
+  criarChat
 } from '../../api';
 import './perfil.scss';
 
@@ -91,6 +93,23 @@ export default function Perfil() {
     }
   };
 
+  const handleIniciarChat = async () => {
+    try {
+      // Primeiro tenta buscar chat existente
+      const chatExistente = await buscarChat(id);
+      if (chatExistente.chatId) {
+        navigate(`/chat/${chatExistente.chatId}`);
+      } else {
+        // Se não existe, cria um novo
+        const novoChat = await criarChat(id);
+        navigate(`/chat/${novoChat.chatId}`);
+      }
+    } catch (error) {
+      console.error('Erro ao iniciar chat:', error);
+      alert('Erro ao iniciar conversa');
+    }
+  };
+
   const mudarAba = (aba) => {
     setAbaAtiva(aba);
     if (aba === 'seguidores' && seguidores.length === 0) {
@@ -164,12 +183,22 @@ export default function Perfil() {
                  Editar Perfil
               </button>
             ) : (
-              <button
-                className={`btn-seguir ${estaSeguin ? 'seguindo' : ''}`}
-                onClick={handleSeguir}
-              >
-                {estaSeguin ? 'Seguindo' : 'Seguir'}
-              </button>
+              <div className="perfil-acoes">
+                <button
+                  className={`btn-seguir ${estaSeguin ? 'seguindo' : ''}`}
+                  onClick={handleSeguir}
+                >
+                  {estaSeguin ? 'Seguindo' : 'Seguir'}
+                </button>
+                {estaSeguin && (
+                  <button
+                    className="btn-chat"
+                    onClick={handleIniciarChat}
+                  >
+                    💬 Chat
+                  </button>
+                )}
+              </div>
             )}
           </div>
         </div>
@@ -180,19 +209,19 @@ export default function Perfil() {
             className={abaAtiva === 'posts' ? 'active' : ''}
             onClick={() => mudarAba('posts')}
           >
-            📝 Posts
+             Posts
           </button>
           <button 
             className={abaAtiva === 'seguidores' ? 'active' : ''}
             onClick={() => mudarAba('seguidores')}
           >
-            👥 Seguidores
+             Seguidores
           </button>
           <button 
             className={abaAtiva === 'seguindo' ? 'active' : ''}
             onClick={() => mudarAba('seguindo')}
           >
-            ➕ Seguindo
+             Seguindo
           </button>
         </div>
 

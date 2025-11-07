@@ -135,12 +135,35 @@ endpoints.put('/usuarios/:id', verificarToken, async (req, res) => {
       return res.status(403).json({ erro: 'Você não pode editar este perfil' });
     }
 
-    const { nome, username, bio, avatar, celular, data_nascimento } = req.body;
+    const { nome, username, bio, avatar, celular, data_nascimento, email, senhaAtual } = req.body;
+
+    // Verificar senha atual para confirmar alterações
+    if (!senhaAtual) {
+      return res.status(400).json({ erro: 'Senha atual é obrigatória para confirmar alterações' });
+    }
+
+    // Buscar usuário para verificar senha atual
+    const usuario = await usuarioRepository.buscarPorId(id);
+    if (!usuario) {
+      return res.status(404).json({ erro: 'Usuário não encontrado' });
+    }
+
+    const senhaValida = await bcrypt.compare(senhaAtual, usuario.senha);
+    if (!senhaValida) {
+      return res.status(400).json({ erro: 'Senha atual incorreta' });
+    }
 
     if (username) {
       const usuarioComUsername = await usuarioRepository.buscarPorUsername(username);
       if (usuarioComUsername && usuarioComUsername.id !== parseInt(id)) {
         return res.status(400).json({ erro: 'Username já está em uso' });
+      }
+    }
+
+    if (email) {
+      const usuarioComEmail = await usuarioRepository.buscarPorEmail(email);
+      if (usuarioComEmail && usuarioComEmail.id !== parseInt(id)) {
+        return res.status(400).json({ erro: 'Email já está em uso' });
       }
     }
 
@@ -150,12 +173,20 @@ endpoints.put('/usuarios/:id', verificarToken, async (req, res) => {
       bio,
       avatar,
       celular,
-      data_nascimento
+      data_nascimento,
+      email
     };
 
     await usuarioRepository.atualizar(id, dadosAtualizados);
 
-    res.json({ mensagem: 'Perfil atualizado com sucesso' });
+    // Buscar o usuário atualizado para retornar os dados completos
+    const usuarioAtualizado = await usuarioRepository.buscarPorId(id);
+    delete usuarioAtualizado.senha;
+
+    res.json({
+      mensagem: 'Perfil atualizado com sucesso',
+      usuario: usuarioAtualizado
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ erro: 'Erro ao atualizar perfil' });
@@ -215,6 +246,49 @@ endpoints.post('/usuarios/:id/avatar', verificarToken, upload.single('avatar'), 
   } catch (error) {
     console.error(error);
     res.status(500).json({ erro: 'Erro ao fazer upload do avatar' });
+  }
+});
+
+endpoints.put('/usuarios/:id/senha', verificarToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (parseInt(id) !== req.usuarioId) {
+      return res.status(403).json({ erro: 'Você não pode alterar a senha deste perfil' });
+    }
+
+    const { senhaAtual, novaSenha } = req.body;
+
+    if (!senhaAtual || !novaSenha) {
+      return res.status(400).json({ erro: 'Senha atual e nova senha são obrigatórias' });
+    }
+
+    if (novaSenha.length < 6) {
+      return res.status(400).json({ erro: 'A nova senha deve ter pelo menos 6 caracteres' });
+    }
+
+    // Buscar usuário para verificar senha atual
+    const usuario = await usuarioRepository.buscarPorId(id);
+    if (!usuario) {
+      return res.status(404).json({ erro: 'Usuário não encontrado' });
+    }
+
+    const senhaValida = await bcrypt.compare(senhaAtual, usuario.senha);
+    if (!senhaValida) {
+      return res.status(400).json({ erro: 'Senha atual incorreta' });
+    }
+
+    // Hash da nova senha
+    const novaSenhaHash = await bcrypt.hash(novaSenha, 10);
+
+    await usuarioRepository.atualizar(id, { senha: novaSenhaHash });
+
+    res.json({
+      mensagem: 'Senha alterada com sucesso'
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ erro: 'Erro ao alterar senha' });
   }
 });
 

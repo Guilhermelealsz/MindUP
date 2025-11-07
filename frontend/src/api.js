@@ -29,7 +29,7 @@
 
   export const atualizarPerfil = async (id, dados) => {
     const response = await api.put(`/usuarios/${id}`, dados);
-    return response.data;
+    return response.data.usuario; 
   };
 
   export const uploadAvatar = async (id, file) => {
@@ -188,6 +188,53 @@
 
   export const limparTodasNotificacoes = async () => {
     const response = await api.delete('/notificacoes');
+    return response.data;
+  };
+
+  // Funções de Chat
+  export const criarChat = async (outroUsuarioId) => {
+    const response = await api.post('/chats', { outroUsuarioId });
+    return response.data;
+  };
+
+  export const buscarChat = async (outroUsuarioId) => {
+    const response = await api.get(`/chats?outroUsuarioId=${outroUsuarioId}`);
+    return response.data;
+  };
+
+  export const listarChats = async () => {
+    const response = await api.get('/chats');
+    return response.data;
+  };
+
+  export const enviarMensagem = async (chatId, dados) => {
+    const response = await api.post(`/chats/${chatId}/mensagens`, dados);
+    return response.data;
+  };
+
+  export const listarMensagensChat = async (chatId) => {
+    const response = await api.get(`/chats/${chatId}/mensagens`);
+    return response.data;
+  };
+
+  export const contarMensagensNaoLidas = async () => {
+    const response = await api.get('/chats/mensagens-nao-lidas');
+    return response.data;
+  };
+
+  export const marcarMensagensComoLidas = async (chatId) => {
+    const response = await api.put(`/chats/${chatId}/mensagens/lidas`);
+    return response.data;
+  };
+
+  // Funções de Configurações
+  export const deletarUsuario = async (id) => {
+    const response = await api.delete(`/usuarios/${id}`);
+    return response.data;
+  };
+
+  export const alterarSenha = async (id, senhaAtual, novaSenha) => {
+    const response = await api.put(`/usuarios/${id}/senha`, { senhaAtual, novaSenha });
     return response.data;
   };
 

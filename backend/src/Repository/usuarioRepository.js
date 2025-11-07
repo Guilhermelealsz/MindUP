@@ -64,6 +64,14 @@ export async function atualizar(id, dados) {
     campos.push('data_nascimento = ?');
     valores.push(dados.data_nascimento);
   }
+  if (dados.email !== undefined) {
+    campos.push('email = ?');
+    valores.push(dados.email);
+  }
+  if (dados.senha !== undefined) {
+    campos.push('senha = ?');
+    valores.push(dados.senha);
+  }
 
   if (campos.length === 0) {
     throw new Error('Nenhum campo para atualizar');

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { listarPosts, listarCategorias, criarPost, curtirPost, removerCurtida, listarComentarios, adicionarComentario, deletarComentario, curtirComentario, descurtirComentario } from '../../api';
 import Sidebar from '../../components/Sidebar';
+import ExpoCieeAnuncio from '../../components/ExpoCieeAnuncio'; // ✅ import do anúncio
 import './feed.scss';
 
 export default function Feed() {
@@ -114,10 +115,9 @@ export default function Feed() {
     try {
       await adicionarComentario({ texto, post_id: postId });
       setNovoComentario({ ...novoComentario, [postId]: '' });
-      // Recarregar comentários
       const comentariosData = await listarComentarios(postId);
       setComentarios({ ...comentarios, [postId]: comentariosData });
-      carregarDados(); // Atualizar contadores
+      carregarDados();
     } catch (error) {
       alert('Erro ao adicionar comentário');
     }
@@ -385,6 +385,9 @@ export default function Feed() {
           </div>
         </div>
       )}
+
+     
+      <ExpoCieeAnuncio />
     </div>
   );
 }

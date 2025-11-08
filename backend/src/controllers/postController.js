@@ -2,9 +2,13 @@ import { Router } from 'express';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+import { fileURLToPath } from 'url';
 import { verificarToken } from './usuarioController.js';
 import * as postRepository from '../Repository/postRepository.js';
 import * as notificacaoRepository from '../Repository/notificacaoRepository.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const endpoints = Router();
 

@@ -1,0 +1,33 @@
+.expo-anuncio {
+  position: fixed;
+  top: 120px;
+  right: 40px;
+  width: 260px;
+  border-radius: 20px;
+  background: #0f172a;
+  padding: 10px;
+  box-shadow: 0 0 20px rgba(0, 150, 255, 0.3);
+  z-index: 999;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  a {
+    display: block;
+    text-decoration: none;
+  }
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(0, 150, 255, 0.5);
+  }
+
+  img {
+    width: 100%;
+    height: auto;
+    border-radius: 16px;
+    display: block;
+  }
+
+  @media (max-width: 1024px) {
+    display: none;
+  }
+}

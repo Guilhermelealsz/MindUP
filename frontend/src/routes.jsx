@@ -4,6 +4,7 @@ import Register from './pages/register/Register';
 import Feed from './pages/feed/Feed';
 import Perfil from './pages/perfil/Perfil';
 import ProfileEdit from './pages/ProfileEdit/ProfileEdit';
+import AccountSettings from './pages/AccountSettings/AccountSettings';
 import Notifications from './pages/notifications/Notifications';
 import Chat from './pages/chat/Chat';
 import ChatDetail from './pages/chat/ChatDetail';
@@ -84,8 +85,18 @@ export default function AppRoutes() {
           }
         />
 
+        <Route
+          path="/account-settings"
+          element={
+            <RotaPrivada>
+              <AccountSettings />
+            </RotaPrivada>
+          }
+        />
+
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
   );
 }
+

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fazerLogin } from '../../api';
+import { fazerLogin, buscarPerfil } from '../../api';
 import logo from '../../assets/image 27.png';
 import './login.scss';
 
@@ -31,7 +31,12 @@ export default function Login() {
       setCarregando(true);
       const resposta = await fazerLogin(email, senha);
       localStorage.setItem('token', resposta.token);
-      localStorage.setItem('usuario', JSON.stringify(resposta.usuario));
+
+      // Buscar perfil completo para garantir que o avatar esteja atualizado
+      const perfilCompleto = await buscarPerfil(resposta.usuario.id);
+      const usuarioAtualizado = { ...resposta.usuario, ...perfilCompleto };
+
+      localStorage.setItem('usuario', JSON.stringify(usuarioAtualizado));
       navigate('/feed');
     } catch (error) {
       setErro(error.response?.data?.erro || 'Erro ao fazer login');
@@ -98,8 +103,8 @@ export default function Login() {
         </form>
 
         <div className="cadastro-link">
-          NÃO POSSUI UMA CONTA?{' '}
-          <button onClick={() => navigate('/register')}>CADASTRE-SE</button>
+          Não possui uma conta?{' '}
+          <button onClick={() => navigate('/register')}>Cadastre-se</button>
         </div>
       </div>
     </div>

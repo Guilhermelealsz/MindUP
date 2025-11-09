@@ -5,7 +5,7 @@ import Sidebar from '../../components/Sidebar';
 import './Settings.scss';
 
 export default function Settings() {
-  const [tema, setTema] = useState(localStorage.getItem('tema') || 'light');
+  const [tema, setTema] = useState(localStorage.getItem('tema') || 'dark');
   const [usuario, setUsuario] = useState(null);
   const [mostrarConfirmacaoDelete, setMostrarConfirmacaoDelete] = useState(false);
   const navigate = useNavigate();
@@ -18,18 +18,24 @@ export default function Settings() {
     aplicarTema(tema);
   }, [tema]);
 
+  useEffect(() => {
+    // Aplicar tema inicial ao carregar a página
+    const temaSalvo = localStorage.getItem('tema') || 'dark';
+    setTema(temaSalvo);
+    aplicarTema(temaSalvo);
+  }, []);
+
   const aplicarTema = (novoTema) => {
     document.documentElement.setAttribute('data-theme', novoTema);
     localStorage.setItem('tema', novoTema);
   };
 
   const toggleTema = () => {
-    const novoTema = tema === 'light' ? 'dark' : 'light';
-    setTema(novoTema);
+    setTema('dark');
   };
 
-  const handleEditarPerfil = () => {
-    navigate(`/profile-edit/${usuario.id}`);
+  const handleAlterarDadosCadastro = () => {
+    navigate('/account-settings');
   };
 
   const handleTrocarConta = () => {
@@ -73,7 +79,7 @@ export default function Settings() {
             <div className="setting-item">
               <label htmlFor="theme-toggle">Tema</label>
               <div className="theme-toggle">
-                <span className={tema === 'light' ? 'active' : ''}>Escuro</span>
+                <span className={tema === 'dark' ? 'active' : ''}>Escuro</span>
                 <button
                   id="theme-toggle"
                   className={`toggle-switch ${tema}`}
@@ -81,7 +87,7 @@ export default function Settings() {
                 >
                   <div className="toggle-slider"></div>
                 </button>
-                <span className={tema === 'dark' ? 'active' : ''}>Claro</span>
+                <span className={tema === 'light' ? 'active' : ''}>Claro</span>
               </div>
             </div>
           </section>
@@ -89,8 +95,8 @@ export default function Settings() {
           <section className="settings-section">
             <h2>Conta</h2>
             <div className="setting-item">
-              <button className="btn-secondary" onClick={handleEditarPerfil}>
-                Alterar dados de cadastro
+              <button className="btn-secondary" onClick={handleAlterarDadosCadastro}>
+                Alterar Dados de Cadastro
               </button>
             </div>
             <div className="setting-item">
@@ -127,7 +133,6 @@ export default function Settings() {
             </div>
             <div className="setting-item">
               <label>Notificações por email</label>
-              <span className="coming-soon">Em breve</span>
             </div>
           </section>
         </div>

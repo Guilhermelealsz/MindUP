@@ -16,7 +16,7 @@ export default function Feed() {
   const [comentariosVisiveis, setComentariosVisiveis] = useState({});
   const [comentarios, setComentarios] = useState({});
   const [novoComentario, setNovoComentario] = useState({});
-  
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,6 +25,10 @@ export default function Feed() {
     if (usuarioData) {
       setUsuario(JSON.parse(usuarioData));
     }
+
+    // Aplicar tema salvo ao carregar a página
+    const temaSalvo = localStorage.getItem('tema') || 'dark';
+    document.documentElement.setAttribute('data-theme', temaSalvo);
   }, []);
 
   const carregarDados = async () => {

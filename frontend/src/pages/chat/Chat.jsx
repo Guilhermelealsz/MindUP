@@ -11,6 +11,13 @@ export default function Chat() {
 
   useEffect(() => {
     carregarChats();
+
+    // Atualizar lista de chats a cada 10 segundos
+    const interval = setInterval(() => {
+      carregarChats();
+    }, 10000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const carregarChats = async () => {

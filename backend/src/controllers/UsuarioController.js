@@ -135,22 +135,32 @@ endpoints.put('/usuarios/:id', verificarToken, async (req, res) => {
       return res.status(403).json({ erro: 'Você não pode editar este perfil' });
     }
 
-    const { nome, username, bio, avatar, celular, data_nascimento, email, senhaAtual } = req.body;
+    const { nome, username, bio, avatar, celular, data_nascimento, email, senha, senhaAtual } = req.body;
 
-    // Verificar senha atual para confirmar alterações
-    if (!senhaAtual) {
-      return res.status(400).json({ erro: 'Senha atual é obrigatória para confirmar alterações' });
-    }
+    // Verificar se campos sensíveis estão sendo alterados
+    const camposSensíveis = ['email', 'celular', 'data_nascimento', 'senha'];
+    const alterandoCamposSensíveis = camposSensíveis.some(campo => req.body.hasOwnProperty(campo) && req.body[campo] !== undefined);
 
-    // Buscar usuário para verificar senha atual
-    const usuario = await usuarioRepository.buscarPorId(id);
-    if (!usuario) {
-      return res.status(404).json({ erro: 'Usuário não encontrado' });
-    }
+    if (alterandoCamposSensíveis) {
+      // Verificar senha atual para confirmar alterações de campos sensíveis
+      if (!senhaAtual || senhaAtual.trim() === '') {
+        return res.status(400).json({ erro: 'Senha atual é obrigatória para confirmar alterações de dados sensíveis' });
+      }
 
-    const senhaValida = await bcrypt.compare(senhaAtual, usuario.senha);
-    if (!senhaValida) {
-      return res.status(400).json({ erro: 'Senha atual incorreta' });
+      // Buscar usuário para verificar senha atual
+      const usuario = await usuarioRepository.buscarPorId(id);
+      if (!usuario) {
+        return res.status(404).json({ erro: 'Usuário não encontrado' });
+      }
+
+      if (!usuario.senha) {
+        return res.status(400).json({ erro: 'Usuário não possui senha cadastrada' });
+      }
+
+      const senhaValida = await bcrypt.compare(senhaAtual, usuario.senha);
+      if (!senhaValida) {
+        return res.status(400).json({ erro: 'Senha atual incorreta' });
+      }
     }
 
     if (username) {
@@ -167,15 +177,20 @@ endpoints.put('/usuarios/:id', verificarToken, async (req, res) => {
       }
     }
 
-    const dadosAtualizados = {
-      nome,
-      username,
-      bio,
-      avatar,
-      celular,
-      data_nascimento,
-      email
-    };
+    const dadosAtualizados = {};
+    if (nome !== undefined) dadosAtualizados.nome = nome;
+    if (username !== undefined) dadosAtualizados.username = username;
+    if (bio !== undefined) dadosAtualizados.bio = bio;
+    if (avatar !== undefined) dadosAtualizados.avatar = avatar;
+    if (celular !== undefined) dadosAtualizados.celular = celular;
+    if (data_nascimento !== undefined) dadosAtualizados.data_nascimento = data_nascimento;
+    if (email !== undefined) dadosAtualizados.email = email;
+    if (senha !== undefined) {
+      if (senha.length < 6) {
+        return res.status(400).json({ erro: 'A nova senha deve ter pelo menos 6 caracteres' });
+      }
+      dadosAtualizados.senha = await bcrypt.hash(senha, 10);
+    }
 
     await usuarioRepository.atualizar(id, dadosAtualizados);
 

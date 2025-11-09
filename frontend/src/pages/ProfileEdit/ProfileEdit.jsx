@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './ProfileEdit.scss';
-import { atualizarPerfil, uploadAvatar, buscarPerfil, alterarSenha } from '../../api.js';
+import { atualizarPerfil, uploadAvatar, buscarPerfil } from '../../api.js';
 
 const ProfileEdit = () => {
   const { id } = useParams();
@@ -18,12 +18,6 @@ const ProfileEdit = () => {
     nome: '',
     bio: '',
     avatar: null,
-    email: '',
-    celular: '',
-    data_nascimento: '',
-    senhaAtual: '',
-    novaSenha: '',
-    confirmarSenha: '',
   });
 
   const [previewUrl, setPreviewUrl] = useState(null);
@@ -42,12 +36,6 @@ const ProfileEdit = () => {
         nome: perfil.nome || '',
         bio: perfil.bio || '',
         avatar: perfil.avatar || null,
-        email: perfil.email || '',
-        celular: perfil.celular || '',
-        data_nascimento: perfil.data_nascimento ? perfil.data_nascimento.split('T')[0] : '',
-        senhaAtual: '',
-        novaSenha: '',
-        confirmarSenha: '',
       });
       setPreviewUrl(perfil.avatar);
     } catch (error) {
@@ -122,37 +110,14 @@ const ProfileEdit = () => {
     setSuccess('');
 
     try {
-      // Validar senha se preenchida
-      if (formData.novaSenha && formData.novaSenha !== formData.confirmarSenha) {
-        setError('As senhas não coincidem');
-        setLoading(false);
-        return;
-      }
-
-      // Verificar se senha atual foi fornecida
-      if (!formData.senhaAtual) {
-        setError('Digite sua senha atual para confirmar as alterações');
-        setLoading(false);
-        return;
-      }
-
       const dadosParaAtualizar = {
         nome: formData.nome,
         username: formData.username,
         bio: formData.bio,
         avatar: previewUrl || formData.avatar,
-        email: formData.email,
-        celular: formData.celular,
-        data_nascimento: formData.data_nascimento,
-        senhaAtual: formData.senhaAtual, // Enviar senha atual para validação no backend
       };
 
       const updatedUser = await atualizarPerfil(id, dadosParaAtualizar);
-
-      // Se senha foi fornecida, alterar senha
-      if (formData.novaSenha) {
-        await alterarSenha(id, formData.senhaAtual, formData.novaSenha);
-      }
 
       // Atualizar localStorage com os dados atualizados
       const currentUser = JSON.parse(localStorage.getItem('usuario') || '{}');
@@ -262,74 +227,6 @@ const ProfileEdit = () => {
             onChange={handleInputChange}
             placeholder="Fale sobre você..."
             rows="3"
-          />
-        </div>
-
-        <div className="form-group">
-          <label>Email</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleInputChange}
-            placeholder="seu@email.com"
-          />
-        </div>
-
-        <div className="form-group">
-          <label>Celular</label>
-          <input
-            type="tel"
-            name="celular"
-            value={formData.celular}
-            onChange={handleInputChange}
-            placeholder="(11) 99999-9999"
-          />
-        </div>
-
-        <div className="form-group">
-          <label>Data de nascimento</label>
-          <input
-            type="date"
-            name="data_nascimento"
-            value={formData.data_nascimento}
-            onChange={handleInputChange}
-          />
-        </div>
-
-        <div className="form-group">
-          <label>Senha atual *</label>
-          <input
-            type="password"
-            name="senhaAtual"
-            value={formData.senhaAtual}
-            onChange={handleInputChange}
-            placeholder="Digite sua senha atual"
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label>Nova senha</label>
-          <input
-            type="password"
-            name="novaSenha"
-            value={formData.novaSenha}
-            onChange={handleInputChange}
-            placeholder="Digite a nova senha"
-            minLength="6"
-          />
-        </div>
-
-        <div className="form-group">
-          <label>Confirmar nova senha</label>
-          <input
-            type="password"
-            name="confirmarSenha"
-            value={formData.confirmarSenha}
-            onChange={handleInputChange}
-            placeholder="Confirme a nova senha"
-            minLength="6"
           />
         </div>
 

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { listarMensagensChat, enviarMensagem, buscarPost } from '../../api';
+import { listarMensagensChat, enviarMensagem, buscarPost, marcarMensagensComoLidas } from '../../api';
 import Sidebar from '../../components/Sidebar';
 import './Chat.scss';
 
@@ -18,11 +18,25 @@ export default function ChatDetail() {
 
   useEffect(() => {
     carregarMensagens();
+
+    // Atualizar mensagens a cada 5 segundos
+    const interval = setInterval(() => {
+      carregarMensagens();
+    }, 5000);
+
+    return () => clearInterval(interval);
   }, [chatId]);
 
   useEffect(() => {
     scrollToBottom();
-  }, [mensagens]);
+
+    // Marcar mensagens como lidas quando carregadas
+    if (mensagens.length > 0) {
+      marcarMensagensComoLidas(chatId).catch(error => {
+        console.error('Erro ao marcar mensagens como lidas:', error);
+      });
+    }
+  }, [mensagens, chatId]);
 
   const carregarMensagens = async () => {
     try {

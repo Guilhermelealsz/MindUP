@@ -156,6 +156,90 @@ $hover-blue: #2563eb;
   }
 }
 
+.chat-list-sidebar {
+  background: rgba(30, 41, 59, 0.95);
+  border-radius: 8px;
+  margin: 0.5rem 1rem;
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid #334155;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(51, 65, 85, 0.5);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #3b82f6;
+    border-radius: 2px;
+  }
+}
+
+.chat-item-sidebar {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  border-bottom: 1px solid rgba(51, 65, 85, 0.3);
+
+  &:hover {
+    background: rgba(59, 130, 246, 0.1);
+  }
+
+  &.active {
+    background: rgba(59, 130, 246, 0.2);
+    border-left: 3px solid #3b82f6;
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.chat-avatar-sidebar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 0.75rem;
+  border: 2px solid #3b82f6;
+}
+
+.chat-info-sidebar {
+  flex: 1;
+  min-width: 0;
+}
+
+.chat-name-sidebar {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: $text-primary;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 0.2rem;
+}
+
+.chat-last-message-sidebar {
+  font-size: 0.75rem;
+  color: $text-secondary;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.no-chats {
+  padding: 1rem;
+  text-align: center;
+  color: $text-secondary;
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
 .sidebar-footer {
   padding: 1rem 0;
   border-top: 1px solid #334155;
@@ -214,5 +298,9 @@ $hover-blue: #2563eb;
   .sidebar-header,
   .sidebar-footer {
     display: none;
+  }
+
+  .chat-list-sidebar {
+    display: none; // Ocultar lista de chats na versão mobile para manter simplicidade
   }
 }

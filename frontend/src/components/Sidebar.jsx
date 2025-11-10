@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { listarNotificacoes, contarMensagensNaoLidas, listarChats } from '../api';
-import logo from '../assets/image 27.png';
+import logo from '../assets/logo.png';
 import './Sidebar.scss';
 
 export default function Sidebar() {

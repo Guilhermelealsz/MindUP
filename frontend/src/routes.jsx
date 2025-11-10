@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import LandingPage from './pages/landing/LandingPage';
 import Login from './pages/login/Login';
 import Register from './pages/register/Register';
 import Feed from './pages/feed/Feed';
@@ -12,14 +13,15 @@ import Settings from './pages/settings/Settings';
 
 function RotaPrivada({ children }) {
   const token = localStorage.getItem('token');
-  return token ? children : <Navigate to="/" />;
+  return token ? children : <Navigate to="/login" />;
 }
 
 export default function AppRoutes() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         
         <Route 

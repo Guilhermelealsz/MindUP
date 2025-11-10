@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fazerLogin, buscarPerfil } from '../../api';
-import logo from '../../assets/image 27.png';
+import logo from '../../assets/logo.png';
 import './login.scss';
 
 export default function Login() {

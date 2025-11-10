@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { cadastrarUsuario } from '../../api';
-import logo from '../../assets/image 27.png';
+import logo from '../../assets/logo.png';
 import './register.scss';
 
 export default function Register() {
@@ -58,7 +58,7 @@ export default function Register() {
         data_nascimento: formData.data_nascimento
       });
       alert('Cadastro realizado com sucesso! Faça login para continuar.');
-      navigate('/');
+      navigate('/login');
     } catch (error) {
       setErro(error.response?.data?.erro || 'Erro ao cadastrar usuário');
     } finally {
@@ -72,7 +72,7 @@ export default function Register() {
         <div className="logo">
           <img src={logo} alt="MindUp" className="logo-image" />
         </div>
-        <button className="btn-cadastrar" onClick={() => navigate('/')} disabled={carregando}>
+        <button className="btn-cadastrar" onClick={() => navigate('/login')} disabled={carregando}>
           Cadastrar-se
         </button>
         <div className="checkbox-group">
@@ -102,7 +102,7 @@ export default function Register() {
           </button>
         </form>
         <div className="login-link">
-          Já possui uma conta? <button onClick={() => navigate('/')}>Faça login</button>
+          Já possui uma conta? <button onClick={() => navigate('/login')}>Faça login</button>
         </div>
       </div>
     </div>

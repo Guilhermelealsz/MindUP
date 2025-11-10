@@ -17,7 +17,9 @@ export default function Notifications() {
     try {
       setCarregando(true);
       const data = await listarNotificacoes();
-      setNotificacoes(data);
+      // Filtrar notificações de chat (tipo 'mensagem') — devem aparecer apenas na aba de chat
+      const filtered = Array.isArray(data) ? data.filter(n => n.tipo !== 'mensagem') : [];
+      setNotificacoes(filtered);
     } catch (error) {
       console.error('Erro ao carregar notificações:', error);
     } finally {
@@ -159,6 +161,7 @@ export default function Notifications() {
                     <img
                       src={`http://localhost:3000${notificacao.ator_avatar}`}
                       alt={notificacao.ator_nome}
+                      onError={(e) => { e.target.onerror = null; e.target.src = '/default-avatar.png'; }}
                     />
                   ) : (
                     notificacao.ator_nome?.charAt(0).toUpperCase()

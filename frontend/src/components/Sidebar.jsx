@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { listarNotificacoesNaoLidas, contarMensagensNaoLidas, listarChats } from '../api';
+import { listarNotificacoes, contarMensagensNaoLidas, listarChats } from '../api';
 import logo from '../assets/image 27.png';
 import './Sidebar.scss';
 
@@ -11,6 +11,15 @@ export default function Sidebar() {
   const navigate = useNavigate();
   const location = useLocation();
   const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
+
+  function getAvatarSrc(value) {
+    if (!value) return '/default-avatar.png';
+    if (typeof value !== 'string') return '/default-avatar.png';
+    if (value.startsWith('data:')) return value;
+    if (value.startsWith('http://') || value.startsWith('https://')) return value;
+    if (value.startsWith('/')) return `http://localhost:3000${value}`;
+    return `http://localhost:3000/uploads/avatars/${value}`;
+  }
 
   useEffect(() => {
     carregarNotificacoesNaoLidas();
@@ -29,8 +38,11 @@ export default function Sidebar() {
 
   const carregarNotificacoesNaoLidas = async () => {
     try {
-      const response = await listarNotificacoesNaoLidas();
-      setNotificacoesNaoLidas(response.notificacoes || 0);
+      // Buscar todas as notificações e filtrar as do tipo 'mensagem'
+      const all = await listarNotificacoes();
+      const filtered = Array.isArray(all) ? all.filter(n => n.tipo !== 'mensagem') : [];
+      const count = filtered.filter(n => !n.lida).length;
+      setNotificacoesNaoLidas(count || 0);
     } catch (error) {
       console.error('Erro ao carregar notificações não lidas:', error);
     }
@@ -100,13 +112,17 @@ export default function Sidebar() {
   return (
     <aside className="sidebar">
       <div className="sidebar-header">
-        <img src={logo} alt="MindUp" className="logo-image" />
+          <img src={logo} alt="MindUp" className="logo-image" onClick={() => navigate('/feed')} style={{ cursor: 'pointer' }} />
         <div className="user-avatar">
           {usuario.avatar ? (
             <img
-              src={`http://localhost:3000${usuario.avatar}`}
+              src={getAvatarSrc(usuario.avatar)}
               alt="Avatar"
               className="avatar-image"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = '/default-avatar.png';
+              }}
             />
           ) : (
             <div className="avatar-circle">
@@ -131,19 +147,20 @@ export default function Sidebar() {
             </button>
             {item.showChats && location.pathname.startsWith('/chat') && (
               <div className="chat-list-sidebar">
-                {chatsRecentes.length === 0 ? (
-                  <div className="no-chats">Nenhuma conversa recente</div>
-                ) : (
-                  chatsRecentes.map(chat => (
+                {chatsRecentes.map(chat => (
                     <div
                       key={chat.id}
                       className={`chat-item-sidebar ${location.pathname === `/chat/${chat.id}` ? 'active' : ''}`}
                       onClick={() => navigate(`/chat/${chat.id}`)}
                     >
                       <img
-                        src={chat.outro_usuario_avatar ? `http://localhost:3000${chat.outro_usuario_avatar}` : '/default-avatar.png'}
+                        src={getAvatarSrc(chat.outro_usuario_avatar)}
                         alt={chat.outro_usuario_nome}
                         className="chat-avatar-sidebar"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = '/default-avatar.png';
+                        }}
                       />
                       <div className="chat-info-sidebar">
                         <div className="chat-name-sidebar">{chat.outro_usuario_nome}</div>
@@ -152,8 +169,7 @@ export default function Sidebar() {
                         </div>
                       </div>
                     </div>
-                  ))
-                )}
+                ))}
               </div>
             )}
           </div>

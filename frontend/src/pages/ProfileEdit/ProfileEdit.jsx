@@ -27,6 +27,17 @@ const ProfileEdit = () => {
     carregarPerfil();
   }, [id]);
 
+  const getAvatarSrc = (value) => {
+    if (!value) return '/default-avatar.png';
+    // data URL (local preview) - use as is
+    if (typeof value === 'string' && value.startsWith('data:')) return value;
+    // already absolute URL
+    if (typeof value === 'string' && (value.startsWith('http://') || value.startsWith('https://'))) return value;
+    // relative path from backend (starts with /uploads/...)
+    if (typeof value === 'string' && value.startsWith('/')) return `http://localhost:3000${value}`;
+    return '/default-avatar.png';
+  };
+
   const carregarPerfil = async () => {
     try {
       setCarregandoPerfil(true);
@@ -151,9 +162,10 @@ const ProfileEdit = () => {
             style={{ cursor: 'pointer' }}
           >
             <img
-              src={previewUrl || formData.avatar || '/default-avatar.png'}
+              src={getAvatarSrc(previewUrl || formData.avatar)}
               alt="Avatar"
               className="avatar"
+              onError={(e) => { e.target.onerror = null; e.target.src = '/default-avatar.png'; }}
             />
             <div className="avatar-overlay">
               <span>✏️</span>

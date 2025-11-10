@@ -30,7 +30,8 @@ export async function listarChatsUsuario(usuarioId) {
            u2.avatar as outro_usuario_avatar,
            c.usuario2_id as outro_usuario_id,
            (SELECT texto FROM mensagens WHERE chat_id = c.id ORDER BY data_envio DESC LIMIT 1) as ultima_mensagem,
-           COALESCE((SELECT data_envio FROM mensagens WHERE chat_id = c.id ORDER BY data_envio DESC LIMIT 1), c.data_criacao) as data_ultima_mensagem
+           COALESCE((SELECT data_envio FROM mensagens WHERE chat_id = c.id ORDER BY data_envio DESC LIMIT 1), c.data_criacao) as data_ultima_mensagem,
+           (SELECT COUNT(*) FROM mensagens WHERE chat_id = c.id AND destinatario_id = ? AND lida = FALSE) as nao_lidas
     FROM chats c
     LEFT JOIN usuarios u2 ON c.usuario2_id = u2.id
     WHERE c.usuario1_id = ?
@@ -40,13 +41,14 @@ export async function listarChatsUsuario(usuarioId) {
            u1.avatar as outro_usuario_avatar,
            c.usuario1_id as outro_usuario_id,
            (SELECT texto FROM mensagens WHERE chat_id = c.id ORDER BY data_envio DESC LIMIT 1) as ultima_mensagem,
-           COALESCE((SELECT data_envio FROM mensagens WHERE chat_id = c.id ORDER BY data_envio DESC LIMIT 1), c.data_criacao) as data_ultima_mensagem
+           COALESCE((SELECT data_envio FROM mensagens WHERE chat_id = c.id ORDER BY data_envio DESC LIMIT 1), c.data_criacao) as data_ultima_mensagem,
+           (SELECT COUNT(*) FROM mensagens WHERE chat_id = c.id AND destinatario_id = ? AND lida = FALSE) as nao_lidas
     FROM chats c
     LEFT JOIN usuarios u1 ON c.usuario1_id = u1.id
     WHERE c.usuario2_id = ?
     ORDER BY data_ultima_mensagem DESC
   `;
-  const [linhas] = await pool.query(comando, [usuarioId, usuarioId]);
+  const [linhas] = await pool.query(comando, [usuarioId, usuarioId, usuarioId, usuarioId]);
   return linhas;
 }
 

@@ -214,6 +214,7 @@ export default function Feed() {
                             src={`http://localhost:3000${post.autor_avatar}`}
                             alt={post.autor_nome}
                             className="avatar-image"
+                            onError={(e) => { e.target.onerror = null; e.target.src = '/default-avatar.png'; }}
                           />
                         ) : (
                           post.autor_nome?.charAt(0).toUpperCase()
@@ -279,6 +280,7 @@ export default function Feed() {
                                         src={`http://localhost:3000${comentario.autor_avatar}`}
                                         alt={comentario.autor_nome}
                                         className="avatar-image-mini"
+                                        onError={(e) => { e.target.onerror = null; e.target.src = '/default-avatar.png'; }}
                                       />
                                     ) : (
                                       comentario.autor_nome?.charAt(0).toUpperCase()

@@ -28,36 +28,25 @@ endpoints.post('/chats', verificarToken, async (req, res) => {
   }
 });
 
-// Buscar chat existente entre dois usuários
+// Buscar chat existente entre dois usuários (se query presente) ou listar chats do usuário
 endpoints.get('/chats', verificarToken, async (req, res) => {
   try {
     const { outroUsuarioId } = req.query;
 
-    if (!outroUsuarioId) {
-      return res.status(400).json({ erro: 'ID do outro usuário é obrigatório' });
+    if (outroUsuarioId) {
+      const chat = await chatRepository.buscarChatEntreUsuarios(req.usuarioId, outroUsuarioId);
+      if (chat) {
+        return res.json({ chatId: chat.id });
+      }
+      return res.json({ chatId: null });
     }
 
-    const chat = await chatRepository.buscarChatEntreUsuarios(req.usuarioId, outroUsuarioId);
-
-    if (chat) {
-      res.json({ chatId: chat.id });
-    } else {
-      res.json({ chatId: null });
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ erro: 'Erro ao buscar chat' });
-  }
-});
-
-// Listar chats do usuário
-endpoints.get('/chats', verificarToken, async (req, res) => {
-  try {
+    // sem query: retorna lista de chats do usuário
     const chats = await chatRepository.listarChatsUsuario(req.usuarioId);
-    res.json(chats);
+    return res.json(chats);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ erro: 'Erro ao listar chats' });
+    res.status(500).json({ erro: 'Erro ao buscar/listar chats' });
   }
 });
 

@@ -1,201 +1,120 @@
-import { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { listarMensagensChat, enviarMensagem, buscarPost, marcarMensagensComoLidas } from '../../api';
+import { useEffect, useRef, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { listarMensagensChat, enviarMensagem, marcarMensagensComoLidas } from '../../api';
 import Sidebar from '../../components/Sidebar';
 import './Chat.scss';
 
 export default function ChatDetail() {
   const { chatId } = useParams();
-  const [mensagens, setMensagens] = useState([]);
-  const [novaMensagem, setNovaMensagem] = useState('');
-  const [postCompartilhado, setPostCompartilhado] = useState(null);
+  const [msgs, setMsgs] = useState([]);
+  const [conteudo, setConteudo] = useState('');
   const [loading, setLoading] = useState(true);
-  const [enviando, setEnviando] = useState(false);
-  const messagesEndRef = useRef(null);
-  const navigate = useNavigate();
+  const scrollRef = useRef(null);
 
-  const usuarioAtual = JSON.parse(localStorage.getItem('usuario') || '{}');
-
-  useEffect(() => {
-    carregarMensagens();
-
-    // Atualizar mensagens a cada 5 segundos
-    const interval = setInterval(() => {
-      carregarMensagens();
-    }, 5000);
-
-    return () => clearInterval(interval);
+  useEffect(() => { 
+    carregarMensagens(); 
+    marcarComoLidas(); 
+    // eslint-disable-next-line
   }, [chatId]);
 
   useEffect(() => {
-    scrollToBottom();
+    const interval = setInterval(carregarMensagens, 5000);
+    return () => clearInterval(interval);
+    // eslint-disable-next-line
+  }, [chatId]);
+  
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [msgs]);
 
-    // Marcar mensagens como lidas quando carregadas
-    if (mensagens.length > 0) {
-      marcarMensagensComoLidas(chatId).catch(error => {
-        console.error('Erro ao marcar mensagens como lidas:', error);
+  async function carregarMensagens() {
+    setLoading(true);
+    try {
+      const ms = await listarMensagensChat(chatId);
+      const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
+      ms.forEach(msg => {
+        msg.eh_sua = msg.remetente_id === usuario.id;
       });
+      setMsgs(ms);
+    } catch {
+      alert('Erro ao buscar mensagens');
     }
-  }, [mensagens, chatId]);
+    setLoading(false);
+  }
 
-  const carregarMensagens = async () => {
+  async function marcarComoLidas() {
     try {
-      const mensagensData = await listarMensagensChat(chatId);
-      setMensagens(mensagensData);
-    } catch (error) {
-      console.error('Erro ao carregar mensagens:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+      await marcarMensagensComoLidas(chatId);
+    } catch { /* ignora */ }
+  }
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const handleEnviarMensagem = async (e) => {
+  async function handleSend(e) {
     e.preventDefault();
-    if (!novaMensagem.trim() && !postCompartilhado) return;
-
-    setEnviando(true);
+    if (!conteudo.trim()) return;
     try {
-      const dados = {};
-      if (novaMensagem.trim()) {
-        dados.texto = novaMensagem.trim();
-      }
-      if (postCompartilhado) {
-        dados.postId = postCompartilhado.id;
-      }
-
-      await enviarMensagem(chatId, dados);
-      setNovaMensagem('');
-      setPostCompartilhado(null);
+      await enviarMensagem(chatId, { texto: conteudo });
+      setConteudo('');
       await carregarMensagens();
-    } catch (error) {
-      console.error('Erro ao enviar mensagem:', error);
-    } finally {
-      setEnviando(false);
+    } catch {
+      alert('Erro ao enviar');
     }
-  };
-
-  const handleCompartilharPost = async (postId) => {
-    try {
-      const post = await buscarPost(postId);
-      setPostCompartilhado(post);
-    } catch (error) {
-      console.error('Erro ao buscar post:', error);
-    }
-  };
-
-  const formatarData = (dataString) => {
-    const data = new Date(dataString);
-    return data.toLocaleString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
-
-  if (loading) {
-    return (
-      <div className="chat-page">
-        <Sidebar />
-        <main className="chat-main">
-          <div className="loading">Carregando mensagens...</div>
-        </main>
-      </div>
-    );
   }
 
   return (
-    <div className="chat-page">
+    <div className="chat-container">
       <Sidebar />
-      <main className="chat-main">
-        <div className="chat-header">
-          <button
-            className="back-button"
-            onClick={() => navigate('/chat')}
-          >
-            ← Voltar
-          </button>
-          <h1>Chat</h1>
-        </div>
-
-        <div className="chat-messages">
-          {mensagens.length === 0 ? (
-            <div className="empty-messages">
-              <p>Nenhuma mensagem ainda. Comece a conversa!</p>
-            </div>
+      <main className="chat-detail-main">
+        <div className="chat-messages-list">
+          {loading ? (
+            <div className="loading">Carregando mensagens...</div>
+          ) : msgs.length === 0 ? (
+            <div className="empty-messages">Nenhuma mensagem.</div>
           ) : (
-            mensagens.map(mensagem => (
+            msgs.map((msg, i) => (
               <div
-                key={mensagem.id}
-                className={`message ${mensagem.remetente_id === usuarioAtual.id ? 'own' : 'other'}`}
+                className={`chat-message ${msg.eh_sua ? 'own-message' : ''}`}
+                key={msg.id || i}
+                ref={i === msgs.length - 1 ? scrollRef : null}
               >
-                <div className="message-avatar">
+                {!msg.eh_sua && (
                   <img
-                    src={mensagem.remetente_avatar || '/default-avatar.png'}
-                    alt={mensagem.remetente_nome}
+                    className="chat-msg-avatar"
+                    src={
+                      msg.remetente_avatar && typeof msg.remetente_avatar === 'string'
+                        ? (msg.remetente_avatar.startsWith('http') ? msg.remetente_avatar : `http://localhost:3000${msg.remetente_avatar}`)
+                        : '/default-avatar.png'
+                    }
+                    alt={msg.remetente_nome}
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = '/default-avatar.png';
+                    }}
                   />
-                </div>
-                <div className="message-content">
-                  <div className="message-header">
-                    <span className="message-author">{mensagem.remetente_nome}</span>
-                    <span className="message-time">{formatarData(mensagem.data_envio)}</span>
-                  </div>
-                  {mensagem.texto && (
-                    <div className="message-text">{mensagem.texto}</div>
-                  )}
-                  {mensagem.post_id && (
-                    <div className="message-post">
-                      <div className="post-preview">
-                        <h4>{mensagem.post_titulo}</h4>
-                        <p>{mensagem.post_conteudo?.substring(0, 100)}...</p>
-                        {mensagem.post_imagem && (
-                          <img src={`http://localhost:3000${mensagem.post_imagem}`} alt="Post" />
-                        )}
-                      </div>
-                    </div>
-                  )}
-                </div>
+                )}
+                <span className="bubble">{msg.texto}</span>
+                <span className="time">{formatarHora(msg.data_envio)}</span>
               </div>
             ))
           )}
-          <div ref={messagesEndRef} />
         </div>
-
-        {postCompartilhado && (
-          <div className="post-share-preview">
-            <div className="post-preview">
-              <h4>Compartilhar: {postCompartilhado.titulo}</h4>
-              <p>{postCompartilhado.conteudo?.substring(0, 100)}...</p>
-              <button
-                className="remove-share"
-                onClick={() => setPostCompartilhado(null)}
-              >
-                Remover
-              </button>
-            </div>
-          </div>
-        )}
-
-        <form className="chat-input" onSubmit={handleEnviarMensagem}>
+        <form className="chat-input-area" onSubmit={handleSend}>
           <input
             type="text"
-            value={novaMensagem}
-            onChange={(e) => setNovaMensagem(e.target.value)}
-            placeholder="Digite sua mensagem..."
-            disabled={enviando}
+            placeholder="Digite sua mensagem"
+            value={conteudo}
+            onChange={e => setConteudo(e.target.value)}
+            disabled={loading}
           />
-          <button
-            type="submit"
-            disabled={enviando || (!novaMensagem.trim() && !postCompartilhado)}
-          >
-            {enviando ? 'Enviando...' : 'Enviar'}
+          <button type="submit" disabled={loading || !conteudo.trim()}>
+            Enviar
           </button>
         </form>
       </main>
     </div>
   );
+}
+
+function formatarHora(data) {
+  const date = new Date(data);
+  return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 }

@@ -102,6 +102,12 @@ export default function Sidebar() {
       badge: notificacoesNaoLidas > 0 ? notificacoesNaoLidas : null
     },
     {
+      id: 'books',
+      label: 'Livros',
+      icon: feedIcon, // You can replace with a book icon later
+      path: '/books'
+    },
+    {
       id: 'profile',
       label: 'Perfil',
       icon: perfilIcon,
@@ -113,13 +119,7 @@ export default function Sidebar() {
       icon: configIcon,
       path: '/settings'
     },
-    // Add admin menu item if user is admin
-    ...(usuario.role === 'admin' ? [{
-      id: 'admin',
-      label: 'Admin',
-      icon: configIcon, // You can use a different icon for admin
-      path: '/admin'
-    }] : [])
+
   ];
 
   return (

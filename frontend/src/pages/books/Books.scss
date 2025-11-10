@@ -1,0 +1,459 @@
+$bg-primary: #1a2634;
+$card-bg: #1e293b;
+$primary-blue: #3b82f6;
+$text-primary: #e2e8f0;
+$text-secondary: #94a3b8;
+$accent: #8b5cf6;
+$hover-blue: #2563eb;
+$border-radius: 12px;
+
+.books-page {
+  min-height: 100vh;
+  background: $bg-primary;
+  display: flex;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.books-content {
+  flex: 1;
+  padding: 2rem;
+  background: $bg-primary;
+  margin-left: 120px; // Account for fixed sidebar
+}
+
+.books-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+
+  h1 {
+    color: $text-primary;
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .btn-add-book {
+    background: linear-gradient(135deg, $primary-blue, $hover-blue);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: $border-radius;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    &:hover {
+      background: linear-gradient(135deg, $hover-blue, $primary-blue);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba($primary-blue, 0.3);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+}
+
+.books-filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  align-items: center;
+
+  .search-bar {
+    flex: 1;
+    max-width: 400px;
+
+    input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: $card-bg;
+      border: 1px solid #334155;
+      border-radius: $border-radius;
+      color: $text-primary;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+
+      &::placeholder {
+        color: $text-secondary;
+      }
+
+      &:focus {
+        outline: none;
+        border-color: $primary-blue;
+        box-shadow: 0 0 0 2px rgba($primary-blue, 0.2);
+      }
+    }
+  }
+
+  .category-filter {
+    select {
+      padding: 0.75rem 1rem;
+      background: $card-bg;
+      border: 1px solid #334155;
+      border-radius: $border-radius;
+      color: $text-primary;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      min-width: 200px;
+
+      &:focus {
+        outline: none;
+        border-color: $primary-blue;
+        box-shadow: 0 0 0 2px rgba($primary-blue, 0.2);
+      }
+
+      option {
+        background: $card-bg;
+        color: $text-primary;
+      }
+    }
+  }
+}
+
+.loading {
+  text-align: center;
+  color: $text-secondary;
+  font-size: 1.1rem;
+  padding: 3rem;
+}
+
+.books-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.book-card {
+  background: $card-bg;
+  border-radius: $border-radius;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border: 1px solid #334155;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    border-color: $primary-blue;
+  }
+}
+
+.book-cover {
+  position: relative;
+  height: 200px;
+  background: linear-gradient(135deg, #334155, #475569);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .book-card:hover & img {
+    transform: scale(1.05);
+  }
+
+  .default-cover {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, $primary-blue, $accent);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: bold;
+    color: white;
+  }
+}
+
+.book-info {
+  padding: 1.25rem;
+
+  .book-title {
+    color: $text-primary;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .book-author {
+    color: $text-secondary;
+    font-size: 0.9rem;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .book-category {
+    display: inline-block;
+    background: rgba($accent, 0.1);
+    color: $accent;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+  }
+
+  .book-description {
+    color: $text-secondary;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin: 0;
+  }
+}
+
+.book-actions {
+  padding: 0 1.25rem 1.25rem;
+  display: flex;
+  gap: 0.75rem;
+
+  button {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+
+    &.btn-view {
+      background: rgba($primary-blue, 0.1);
+      color: $primary-blue;
+      border: 1px solid rgba($primary-blue, 0.3);
+
+      &:hover {
+        background: $primary-blue;
+        color: white;
+        transform: translateY(-1px);
+      }
+    }
+
+    &.btn-download {
+      background: rgba($accent, 0.1);
+      color: $accent;
+      border: 1px solid rgba($accent, 0.3);
+
+      &:hover {
+        background: $accent;
+        color: white;
+        transform: translateY(-1px);
+      }
+    }
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: $text-secondary;
+
+  p {
+    font-size: 1.1rem;
+    margin: 0 0 0.5rem 0;
+
+    &:first-child {
+      color: $text-primary;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+  }
+}
+
+// Modal styles
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.modal-content {
+  background: $card-bg;
+  border-radius: $border-radius;
+  padding: 2rem;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border: 1px solid #334155;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+
+  h2 {
+    color: $text-primary;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 0 1.5rem 0;
+    text-align: center;
+  }
+
+  .error-message {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    text-align: center;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    input, select, textarea {
+      padding: 0.75rem 1rem;
+      background: $bg-primary;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      color: $text-primary;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+
+      &::placeholder {
+        color: $text-secondary;
+      }
+
+      &:focus {
+        outline: none;
+        border-color: $primary-blue;
+        box-shadow: 0 0 0 2px rgba($primary-blue, 0.2);
+      }
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+
+      button {
+        flex: 1;
+        padding: 0.75rem 1rem;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+
+        &:first-child {
+          background: rgba(108, 117, 125, 0.1);
+          color: $text-secondary;
+          border: 1px solid #334155;
+
+          &:hover {
+            background: #334155;
+            color: $text-primary;
+          }
+        }
+
+        &:last-child {
+          background: linear-gradient(135deg, $primary-blue, $hover-blue);
+          color: white;
+
+          &:hover {
+            background: linear-gradient(135deg, $hover-blue, $primary-blue);
+            transform: translateY(-1px);
+          }
+        }
+      }
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .books-content {
+    margin-left: 0;
+    padding: 1rem;
+  }
+
+  .books-header {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+
+    h1 {
+      font-size: 1.5rem;
+    }
+  }
+
+  .books-filters {
+    flex-direction: column;
+    gap: 0.75rem;
+
+    .search-bar {
+      max-width: none;
+    }
+
+    .category-filter select {
+      min-width: auto;
+    }
+  }
+
+  .books-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .book-card {
+    &:hover {
+      transform: none;
+    }
+  }
+
+  .modal-content {
+    width: 95%;
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .books-content {
+    padding: 0.75rem;
+  }
+
+  .books-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .book-actions {
+    flex-direction: column;
+  }
+}

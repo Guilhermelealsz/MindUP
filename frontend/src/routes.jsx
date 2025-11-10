@@ -10,28 +10,15 @@ import Notifications from './pages/notifications/Notifications';
 import Chat from './pages/chat/Chat';
 import ChatDetail from './pages/chat/ChatDetail';
 import Settings from './pages/settings/Settings';
-import AdminDashboard from './pages/admin/AdminDashboard';
+import Books from './pages/books/Books';
+
 
 function RotaPrivada({ children }) {
   const token = localStorage.getItem('token');
   return token ? children : <Navigate to="/login" />;
 }
 
-function RotaAdmin({ children }) {
-  const token = localStorage.getItem('token');
-  const usuario = localStorage.getItem('usuario');
 
-  if (!token) return <Navigate to="/login" />;
-
-  if (usuario) {
-    const usuarioData = JSON.parse(usuario);
-    if (usuarioData.role !== 'admin') {
-      return <Navigate to="/feed" />;
-    }
-  }
-
-  return children;
-}
 
 export default function AppRoutes() {
   return (
@@ -114,11 +101,11 @@ export default function AppRoutes() {
         />
 
         <Route
-          path="/admin"
+          path="/books"
           element={
-            <RotaAdmin>
-              <AdminDashboard />
-            </RotaAdmin>
+            <RotaPrivada>
+              <Books />
+            </RotaPrivada>
           }
         />
 

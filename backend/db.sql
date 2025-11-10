@@ -12,7 +12,11 @@ USE MindUP;
     avatar TEXT,
     celular VARCHAR(20),
     data_nascimento DATE,
-    data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    role ENUM('user', 'admin') DEFAULT 'user',
+    banned BOOLEAN DEFAULT FALSE,
+    ban_reason TEXT,
+    ban_date TIMESTAMP NULL
   );
 
   CREATE TABLE IF NOT EXISTS categorias (
@@ -115,6 +119,37 @@ USE MindUP;
     FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE
   );
 
+  CREATE TABLE IF NOT EXISTS admin_logs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    admin_id INT NOT NULL,
+    action VARCHAR(255) NOT NULL,
+    target_user_id INT NULL,
+    details TEXT,
+    ip_address VARCHAR(45),
+    user_agent TEXT,
+    data_log TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (admin_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+    FOREIGN KEY (target_user_id) REFERENCES usuarios(id) ON DELETE CASCADE
+  );
+
+  CREATE TABLE IF NOT EXISTS banned_emails (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    ban_reason TEXT,
+    banned_by INT NOT NULL,
+    ban_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (banned_by) REFERENCES usuarios(id) ON DELETE CASCADE
+  );
+
+  CREATE TABLE IF NOT EXISTS banned_phones (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    phone VARCHAR(20) UNIQUE NOT NULL,
+    ban_reason TEXT,
+    banned_by INT NOT NULL,
+    ban_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (banned_by) REFERENCES usuarios(id) ON DELETE CASCADE
+  );
+
 
 
 INSERT IGNORE INTO categorias (nome, descricao) VALUES
@@ -123,3 +158,8 @@ INSERT IGNORE INTO categorias (nome, descricao) VALUES
   ('Saúde', 'Dicas de saúde e bem-estar'),
   ('Entretenimento', 'Diversão e lazer'),
   ('Esportes', 'Notícias e discussões sobre esportes');
+
+-- Insert admin user
+INSERT IGNORE INTO usuarios (nome, username, email, senha, role) VALUES
+  ('Administrador', 'admin', 'Adm4.4.codes22.0', 'Paritehaida!.12.23', 'admin');
+  -- Password: Paritehaida!.12.23 (hashed with bcrypt)

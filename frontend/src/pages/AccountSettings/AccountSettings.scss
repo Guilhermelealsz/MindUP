@@ -1,161 +1,134 @@
 html, body {
-  background-color: #121212;
+  background: #121212;
 }
 
 .account-settings {
   max-width: 480px;
   margin: 0 auto;
   padding: 20px;
-  font-family: 'Segoe UI', sans-serif;
   color: #e0e0e0;
-  background-color: #121212;
+  font-family: "Inter", sans-serif;
   min-height: 100vh;
-}
 
-.account-settings-header {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 32px;
-  color: white;
+  .loading {
+    text-align: center;
+    margin-top: 50px;
+    color: #999;
+  }
 
-  .back-button {
-    background: transparent;
-    border: none;
-    font-size: 24px;
-    color: #1da1f2;
-    cursor: pointer;
-    padding: 4px 8px;
-    border-radius: 8px;
-    transition: background 0.2s;
+  .account-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 24px;
 
-    &:hover {
-      background: rgba(29, 161, 242, 0.1);
+    .back {
+      background: transparent;
+      border: none;
+      color: #1da1f2;
+      font-size: 22px;
+      cursor: pointer;
+      transition: 0.2s;
+
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+
+    h2 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #fff;
     }
   }
 
-  h2 {
-    margin: 0;
-    font-size: 20px;
-    font-weight: 600;
-  }
-}
-
-.account-form {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.form-section {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-
-  h3 {
-    margin: 0 0 1rem 0;
-    color: #e0e0e0;
-    font-size: 1.25rem;
-    font-weight: 600;
-    border-bottom: 2px solid #1da1f2;
-    padding-bottom: 8px;
-  }
-
-  .form-group {
+  form {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 24px;
 
-    label {
-      font-size: 14px;
-      color: #aaa;
-      font-weight: 500;
+    section {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+
+      h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-bottom: 2px solid #1da1f2;
+        padding-bottom: 6px;
+        margin-bottom: 10px;
+      }
+
+      label {
+        display: flex;
+        flex-direction: column;
+        font-size: 14px;
+        color: #bbb;
+
+        input {
+          background: #1e1e1e;
+          border: 1px solid #333;
+          border-radius: 8px;
+          padding: 12px;
+          color: #fff;
+          font-size: 15px;
+          margin-top: 4px;
+
+          &:focus {
+            border-color: #1da1f2;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(29, 161, 242, 0.2);
+          }
+
+          &::placeholder {
+            color: #666;
+          }
+        }
+      }
     }
 
-    input {
-      background: #1e1e1e;
-      border: 1px solid #333;
-      color: white !important;
+    .message {
       padding: 12px;
       border-radius: 8px;
-      font-size: 15px;
-      transition: border 0.2s, box-shadow 0.2s;
-
-      &:focus {
-        outline: none;
-        border-color: #1da1f2;
-        box-shadow: 0 0 0 2px rgba(29, 161, 242, 0.2);
-      }
-
-      &::placeholder {
-        color: #666;
-      }
-    }
-
-    .help-text {
-      display: block;
-      margin-top: 4px;
+      text-align: center;
       font-size: 14px;
-      color: #94a3b8;
+
+      &.error {
+        background: rgba(244, 67, 54, 0.15);
+        color: #ff6b6b;
+      }
+
+      &.success {
+        background: rgba(76, 175, 80, 0.15);
+        color: #81c784;
+      }
+    }
+
+    button {
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      background: #1da1f2;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+
+      &:hover:not(:disabled) {
+        background: #0d8bd9;
+        transform: translateY(-1px);
+      }
+
+      &:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
     }
   }
 }
 
-.message {
-  padding: 12px;
-  border-radius: 8px;
-  font-size: 14px;
-  text-align: center;
-  margin: 8px 0;
-
-  &.error {
-    background: rgba(244, 67, 54, 0.15);
-    color: #ff6b6b;
-    border: 1px solid rgba(244, 67, 54, 0.3);
-  }
-
-  &.success {
-    background: rgba(76, 175, 80, 0.15);
-    color: #81c784;
-    border: 1px solid rgba(76, 175, 80, 0.3);
-  }
-}
-
-.save-button {
-  margin-top: 16px;
-  padding: 14px;
-  background: #1da1f2;
-  color: white;
-  font-weight: 600;
-  font-size: 16px;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.3s;
-  position: relative;
-
-  &:hover:not(:disabled) {
-    background: #0d8bd9;
-    transform: translateY(-1px);
-  }
-
-  &:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-  }
-
-  .spinner {
-    display: inline-block;
-    animation: spin 1s linear infinite;
-  }
-}
-
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-// Responsivo
 @media (max-width: 480px) {
   .account-settings {
     padding: 16px;

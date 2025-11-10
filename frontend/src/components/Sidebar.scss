@@ -120,10 +120,10 @@ $hover-blue: #2563eb;
 }
 
 .sidebar-icon {
-  font-size: 1.2rem;
-  margin-right: 1rem;
   width: 24px;
-  text-align: center;
+  height: 24px;
+  margin-right: 1rem;
+  object-fit: contain;
 }
 
 .sidebar-label {
@@ -275,7 +275,8 @@ $hover-blue: #2563eb;
   .sidebar-icon {
     margin-right: 0;
     margin-bottom: 0.25rem;
-    font-size: 1.5rem;
+    width: 32px;
+    height: 32px;
   }
 
   .sidebar-label {

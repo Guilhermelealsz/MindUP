@@ -10,10 +10,27 @@ import Notifications from './pages/notifications/Notifications';
 import Chat from './pages/chat/Chat';
 import ChatDetail from './pages/chat/ChatDetail';
 import Settings from './pages/settings/Settings';
+import AdminDashboard from './pages/admin/AdminDashboard';
 
 function RotaPrivada({ children }) {
   const token = localStorage.getItem('token');
   return token ? children : <Navigate to="/login" />;
+}
+
+function RotaAdmin({ children }) {
+  const token = localStorage.getItem('token');
+  const usuario = localStorage.getItem('usuario');
+
+  if (!token) return <Navigate to="/login" />;
+
+  if (usuario) {
+    const usuarioData = JSON.parse(usuario);
+    if (usuarioData.role !== 'admin') {
+      return <Navigate to="/feed" />;
+    }
+  }
+
+  return children;
 }
 
 export default function AppRoutes() {
@@ -23,14 +40,14 @@ export default function AppRoutes() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        
-        <Route 
-          path="/feed" 
+
+        <Route
+          path="/feed"
           element={
             <RotaPrivada>
               <Feed />
             </RotaPrivada>
-          } 
+          }
         />
 
         <Route
@@ -96,9 +113,17 @@ export default function AppRoutes() {
           }
         />
 
+        <Route
+          path="/admin"
+          element={
+            <RotaAdmin>
+              <AdminDashboard />
+            </RotaAdmin>
+          }
+        />
+
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
   );
 }
-

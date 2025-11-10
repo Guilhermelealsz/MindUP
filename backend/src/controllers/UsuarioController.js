@@ -12,7 +12,7 @@ const endpoints = Router();
 
 export const verificarToken = (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
-  
+
   if (!token) {
     return res.status(401).json({ erro: 'Token não fornecido' });
   }
@@ -20,10 +20,18 @@ export const verificarToken = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.usuarioId = decoded.id;
+    req.userRole = decoded.role;
     next();
   } catch (error) {
     return res.status(401).json({ erro: 'Token inválido' });
   }
+};
+
+export const verificarAdmin = (req, res, next) => {
+  if (req.userRole !== 'admin') {
+    return res.status(403).json({ erro: 'Acesso negado. Apenas administradores podem acessar esta funcionalidade.' });
+  }
+  next();
 };
 
 endpoints.post('/usuarios', async (req, res) => {
@@ -32,6 +40,20 @@ endpoints.post('/usuarios', async (req, res) => {
 
     if (!nome || !email || !senha) {
       return res.status(400).json({ erro: 'Nome, email e senha são obrigatórios' });
+    }
+
+    // Check if email is banned
+    const emailBanned = await usuarioRepository.checkEmailBanned(email);
+    if (emailBanned) {
+      return res.status(400).json({ erro: 'Este email está banido do sistema' });
+    }
+
+    // Check if phone is banned
+    if (celular) {
+      const phoneBanned = await usuarioRepository.checkPhoneBanned(celular);
+      if (phoneBanned) {
+        return res.status(400).json({ erro: 'Este número de telefone está banido do sistema' });
+      }
     }
 
     const usuarioExiste = await usuarioRepository.buscarPorEmail(email);
@@ -78,19 +100,24 @@ endpoints.post('/login', async (req, res) => {
     }
 
     const usuario = await usuarioRepository.buscarPorEmail(email);
-    
+
     if (!usuario) {
       return res.status(401).json({ erro: 'Email ou senha inválidos' });
     }
 
+    // Check if user is banned
+    if (usuario.banned) {
+      return res.status(401).json({ erro: 'Sua conta foi banida. Motivo: ' + (usuario.ban_reason || 'Não especificado') });
+    }
+
     const senhaValida = await bcrypt.compare(senha, usuario.senha);
-    
+
     if (!senhaValida) {
       return res.status(401).json({ erro: 'Email ou senha inválidos' });
     }
 
     const token = jwt.sign(
-      { id: usuario.id, email: usuario.email },
+      { id: usuario.id, email: usuario.email, role: usuario.role },
       process.env.JWT_SECRET,
       { expiresIn: '7d' }
     );
@@ -101,7 +128,8 @@ endpoints.post('/login', async (req, res) => {
         id: usuario.id,
         nome: usuario.nome,
         email: usuario.email,
-        bio: usuario.bio
+        bio: usuario.bio,
+        role: usuario.role
       }
     });
   } catch (error) {
@@ -114,7 +142,7 @@ endpoints.get('/usuarios/:id', verificarToken, async (req, res) => {
   try {
     const { id } = req.params;
     const usuario = await usuarioRepository.buscarPorId(id);
-    
+
     if (!usuario) {
       return res.status(404).json({ erro: 'Usuário não encontrado' });
     }
@@ -131,7 +159,7 @@ endpoints.put('/usuarios/:id', verificarToken, async (req, res) => {
   try {
     const { id } = req.params;
 
-    if (parseInt(id) !== req.usuarioId) {
+    if (parseInt(id) !== req.usuarioId && req.userRole !== 'admin') {
       return res.status(403).json({ erro: 'Você não pode editar este perfil' });
     }
 
@@ -141,7 +169,7 @@ endpoints.put('/usuarios/:id', verificarToken, async (req, res) => {
     const camposSensíveis = ['email', 'celular', 'data_nascimento', 'senha'];
     const alterandoCamposSensíveis = camposSensíveis.some(campo => req.body.hasOwnProperty(campo) && req.body[campo] !== undefined);
 
-    if (alterandoCamposSensíveis) {
+    if (alterandoCamposSensíveis && req.userRole !== 'admin') {
       // Verificar senha atual para confirmar alterações de campos sensíveis
       if (!senhaAtual || senhaAtual.trim() === '') {
         return res.status(400).json({ erro: 'Senha atual é obrigatória para confirmar alterações de dados sensíveis' });
@@ -153,13 +181,12 @@ endpoints.put('/usuarios/:id', verificarToken, async (req, res) => {
         return res.status(404).json({ erro: 'Usuário não encontrado' });
       }
 
-      if (!usuario.senha) {
-        return res.status(400).json({ erro: 'Usuário não possui senha cadastrada' });
-      }
-
-      const senhaValida = await bcrypt.compare(senhaAtual, usuario.senha);
-      if (!senhaValida) {
-        return res.status(400).json({ erro: 'Senha atual incorreta' });
+      // Se o usuário não tem senha cadastrada, permitir alteração sem verificação
+      if (usuario.senha) {
+        const senhaValida = await bcrypt.compare(senhaAtual, usuario.senha);
+        if (!senhaValida) {
+          return res.status(400).json({ erro: 'Senha atual incorreta' });
+        }
       }
     }
 
@@ -242,7 +269,7 @@ endpoints.post('/usuarios/:id/avatar', verificarToken, upload.single('avatar'), 
   try {
     const { id } = req.params;
 
-    if (parseInt(id) !== req.usuarioId) {
+    if (parseInt(id) !== req.usuarioId && req.userRole !== 'admin') {
       return res.status(403).json({ erro: 'Você não pode fazer upload para este perfil' });
     }
 
@@ -268,7 +295,7 @@ endpoints.put('/usuarios/:id/senha', verificarToken, async (req, res) => {
   try {
     const { id } = req.params;
 
-    if (parseInt(id) !== req.usuarioId) {
+    if (parseInt(id) !== req.usuarioId && req.userRole !== 'admin') {
       return res.status(403).json({ erro: 'Você não pode alterar a senha deste perfil' });
     }
 

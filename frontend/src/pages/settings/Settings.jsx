@@ -31,7 +31,9 @@ export default function Settings() {
   };
 
   const toggleTema = () => {
-    setTema('dark');
+    const novoTema = tema === 'dark' ? 'light' : 'dark';
+    setTema(novoTema);
+    aplicarTema(novoTema);
   };
 
   const handleAlterarDadosCadastro = () => {

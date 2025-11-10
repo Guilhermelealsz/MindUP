@@ -2,6 +2,12 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { listarNotificacoes, contarMensagensNaoLidas, listarChats } from '../api';
 import logo from '../assets/logo.png';
+import feedIcon from '../assets/FeedICon.png';
+import chatIcon from '../assets/ChatIcon.png';
+import notificacaoIcon from '../assets/NotificacaoIcon.png';
+import perfilIcon from '../assets/PerfilIcon.png';
+import configIcon from '../assets/configIcon.png';
+import sairIcon from '../assets/sairICon.png';
 import './Sidebar.scss';
 
 export default function Sidebar() {
@@ -77,13 +83,13 @@ export default function Sidebar() {
     {
       id: 'feed',
       label: 'Feed',
-      icon: '',
+      icon: feedIcon,
       path: '/feed'
     },
     {
       id: 'chat',
       label: 'Chat',
-      icon: '',
+      icon: chatIcon,
       path: '/chat',
       badge: mensagensNaoLidas > 0 ? mensagensNaoLidas : null,
       showChats: true
@@ -91,22 +97,29 @@ export default function Sidebar() {
     {
       id: 'notifications',
       label: 'Notificações',
-      icon: '',
+      icon: notificacaoIcon,
       path: '/notifications',
       badge: notificacoesNaoLidas > 0 ? notificacoesNaoLidas : null
     },
     {
       id: 'profile',
       label: 'Perfil',
-      icon: '',
+      icon: perfilIcon,
       path: `/perfil/${JSON.parse(localStorage.getItem('usuario') || '{}').id}`
     },
     {
       id: 'settings',
       label: 'Configurações',
-      icon: '',
+      icon: configIcon,
       path: '/settings'
-    }
+    },
+    // Add admin menu item if user is admin
+    ...(usuario.role === 'admin' ? [{
+      id: 'admin',
+      label: 'Admin',
+      icon: configIcon, // You can use a different icon for admin
+      path: '/admin'
+    }] : [])
   ];
 
   return (
@@ -139,7 +152,7 @@ export default function Sidebar() {
               className={`sidebar-item ${location.pathname === item.path ? 'active' : ''}`}
               onClick={() => navigate(item.path)}
             >
-              <span className="sidebar-icon">{item.icon}</span>
+              <img src={item.icon} alt={item.label} className="sidebar-icon" />
               <span className="sidebar-label">{item.label}</span>
               {item.badge && (
                 <span className="sidebar-badge">{item.badge}</span>
@@ -181,7 +194,7 @@ export default function Sidebar() {
           className="sidebar-item logout-btn"
           onClick={handleLogout}
         >
-          <span className="sidebar-icon"></span>
+          <img src={sairIcon} alt="Sair" className="sidebar-icon" />
           <span className="sidebar-label">Sair</span>
         </button>
       </div>

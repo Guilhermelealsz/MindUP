@@ -2,36 +2,32 @@
 // VARIÁVEIS E CONFIGURAÇÕES
 // ============================================
 
-// Base para cálculo de REM (10px = 62.5% de 16px)
-// Deve ser aplicado no CSS base: html { font-size: 62.5%; }
-$rem-base: 1rem; // 16px
+// Cores
+$primary-blue: #0066ff;
+$primary-purple: #6366f1;
+$dark-bg: #1a1a1a;
+$light-bg: #ffffff;
+$light-gray: #f5f5f5;
+$border-color: #e0e0e0; 
+$text-dark: #1a1a1a;
+$text-light: #666666;
 
-// Cores Semânticas
-$color-primary: #0066ff; // Antigo $primary-blue
-$color-secondary: #6366f1; // Antigo $primary-purple
-$color-background-dark: #1a1a1a; // Antigo $dark-bg
-$color-background-light: #ffffff; // Antigo $light-bg
-$color-background-gray: #f5f5f5; // Antigo $light-gray
-$color-border-default: #e0e0e0; // Antigo $border-color
-$color-text-dark: #1a1a1a; // Antigo $text-dark
-$color-text-light: #555555; // Ajustado para melhor contraste (Antigo #666666)
-
-// Tipografia (em REM)
+// Tipografia
 $font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-$font-size-sm: 0.875rem; // 14px
-$font-size-base: 1rem; // 16px
-$font-size-lg: 1.125rem; // 18px
-$font-size-xl: 1.5rem; // 24px
-$font-size-2xl: 2rem; // 32px
-$font-size-3xl: 3rem; // 48px
+$font-size-sm: 14px;
+$font-size-base: 16px;
+$font-size-lg: 18px;
+$font-size-xl: 24px;
+$font-size-2xl: 32px;
+$font-size-3xl: 48px;
 
-// Espaçamento (em REM)
-$spacing-xs: 0.5rem; // 8px
-$spacing-sm: 0.75rem; // 12px
-$spacing-md: 1rem; // 16px
-$spacing-lg: 1.5rem; // 24px
-$spacing-xl: 2rem; // 32px
-$spacing-2xl: 3rem; // 48px
+// Espaçamento
+$spacing-xs: 8px;
+$spacing-sm: 12px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+$spacing-2xl: 48px;
 
 // Raio de borda
 $border-radius-sm: 8px;
@@ -43,9 +39,6 @@ $border-radius-xl: 20px;
 $shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
 $shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
 $shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
-
-// Gradientes
-$gradient-light: linear-gradient(135deg, $color-background-gray 0%, $color-background-light 100%);
 
 // ============================================
 // MIXINS
@@ -71,21 +64,19 @@ $gradient-light: linear-gradient(135deg, $color-background-gray 0%, $color-backg
   font-family: inherit;
 }
 
-// Breakpoints (Mobile First - min-width)
-$breakpoints: (
-  'sm': 640px,
-  'md': 768px,
-  'lg': 1024px,
-  'xl': 1280px
-);
-
 @mixin responsive($breakpoint) {
-  @if map-has-key($breakpoints, $breakpoint) {
-    @media (min-width: map-get($breakpoints, $breakpoint)) {
+  @if $breakpoint == 'sm' {
+    @media (max-width: 640px) {
       @content;
     }
-  } @else {
-    @warn "Breakpoint #{$breakpoint} não encontrado.";
+  } @else if $breakpoint == 'md' {
+    @media (max-width: 768px) {
+      @content;
+    }
+  } @else if $breakpoint == 'lg' {
+    @media (max-width: 1024px) {
+      @content;
+    }
   }
 }
 
@@ -108,17 +99,17 @@ body {
   font-family: $font-family;
   font-size: $font-size-base;
   line-height: 1.6;
-  color: $color-text-dark;
-  background-color: $color-background-light;
+  color: $text-dark;
+  background-color: $light-bg;
 }
 
 a {
-  color: $color-primary;
+  color: $primary-blue;
   text-decoration: none;
   transition: color 0.3s ease;
 
   &:hover {
-    color: darken($color-primary, 10%);
+    color: darken($primary-blue, 10%);
   }
 }
 
@@ -137,7 +128,7 @@ input, textarea {
 
 .hero {
   padding: $spacing-2xl;
-  background: $gradient-light;
+  background: linear-gradient(135deg, #f5f7fa 0%, #ffffff 100%);
   min-height: 600px;
   display: flex;
   align-items: center;
@@ -176,7 +167,7 @@ input, textarea {
   gap: $spacing-lg;
   margin-bottom: $spacing-lg;
   font-size: $font-size-sm;
-  color: $color-text-dark;
+  color: $text-dark;
   font-weight: 500;
 
   @include responsive('sm') {
@@ -190,7 +181,7 @@ input, textarea {
   transition: color 0.3s ease;
 
   &:hover {
-    color: $color-primary;
+    color: $primary-blue;
   }
 }
 
@@ -204,7 +195,7 @@ input, textarea {
   font-size: $font-size-3xl;
   font-weight: 700;
   line-height: 1.3;
-  color: $color-text-dark;
+  color: $text-dark;
 
   @include responsive('lg') {
     font-size: $font-size-2xl;
@@ -221,7 +212,7 @@ input, textarea {
 
 .hero-subtitle {
   font-size: $font-size-lg;
-  color: $color-text-light;
+  color: $primary-blue;
   line-height: 1.7;
 
   @include responsive('md') {
@@ -232,14 +223,14 @@ input, textarea {
 .hero-cta {
   align-self: flex-start;
   padding: 12px 24px;
-  background-color: $color-text-dark;
+  background-color: $text-dark;
   color: white;
   font-weight: 600;
   border-radius: $border-radius-sm;
-  transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.3s ease;
 
   &:hover {
-    background-color: $color-primary;
+    background-color: $primary-blue;
     transform: translateY(-2px);
     box-shadow: $shadow-lg;
   }
@@ -289,7 +280,6 @@ input, textarea {
   width: 100%;
   height: 100%;
   filter: drop-shadow(0 10px 20px rgba(0, 102, 255, 0.1));
-  will-change: transform;
 }
 
 .logo-icons {
@@ -316,12 +306,11 @@ input, textarea {
   height: 48px;
   border-radius: 50%;
   background-color: white;
-  border: 2px solid $color-primary;
+  border: 2px solid $primary-blue;
   @include flex-center;
-  color: $color-primary;
+  color: $primary-blue;
   box-shadow: $shadow-md;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  will-change: transform;
+  transition: all 0.3s ease;
 
   &:hover {
     transform: scale(1.1);
@@ -355,7 +344,7 @@ input, textarea {
 
 .faq {
   padding: $spacing-2xl;
-  background-color: $color-background-light;
+  background-color: $light-bg;
 
   @include responsive('md') {
     padding: $spacing-xl;
@@ -385,7 +374,6 @@ input, textarea {
   gap: $spacing-md;
   font-size: $font-size-2xl;
   font-weight: 700;
-  color: $color-text-dark;
 
   @include responsive('md') {
     font-size: $font-size-xl;
@@ -399,7 +387,7 @@ input, textarea {
 
 .faq-badge {
   display: inline-block;
-  background-color: $color-primary;
+  background-color: $primary-blue;
   color: white;
   padding: 8px 16px;
   border-radius: $border-radius-sm;
@@ -413,7 +401,7 @@ input, textarea {
 }
 
 .faq-subtitle {
-  color: $color-text-dark;
+  color: $text-dark;
   font-weight: 700;
 }
 
@@ -424,14 +412,14 @@ input, textarea {
 }
 
 .faq-item {
-  border: 2px solid $color-border-default;
+  border: 2px solid $border-color;
   border-radius: $border-radius-lg;
   overflow: hidden;
-  transition: border-color 0.3s ease, background-color 0.3s ease;
+  transition: all 0.3s ease;
 
   &.open {
-    border-color: $color-primary;
-    background-color: $color-primary;
+    border-color: $primary-blue;
+    background-color: $primary-blue;
 
     .faq-trigger {
       color: white;
@@ -460,7 +448,7 @@ input, textarea {
   align-items: center;
   gap: $spacing-md;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
   background-color: transparent;
 
   &:hover {
@@ -480,7 +468,7 @@ input, textarea {
 .faq-number {
   font-size: $font-size-xl;
   font-weight: 700;
-  color: $color-text-dark;
+  color: $text-dark;
   min-width: 50px;
   text-align: left;
 
@@ -495,7 +483,7 @@ input, textarea {
   text-align: left;
   font-size: $font-size-base;
   font-weight: 600;
-  color: $color-text-dark;
+  color: $text-dark;
 
   @include responsive('sm') {
     font-size: 14px;
@@ -505,11 +493,10 @@ input, textarea {
 .faq-icon {
   font-size: 24px;
   font-weight: 300;
-  color: $color-text-dark;
+  color: $text-dark;
   transition: transform 0.3s ease;
   min-width: 30px;
   text-align: right;
-  will-change: transform;
 
   @include responsive('sm') {
     font-size: 20px;
@@ -519,7 +506,6 @@ input, textarea {
 .faq-answer {
   padding: 0 $spacing-lg $spacing-lg $spacing-lg;
   animation: slideDown 0.3s ease;
-  will-change: transform, opacity;
 
   @include responsive('sm') {
     padding: 0 $spacing-md $spacing-md $spacing-md;
@@ -553,7 +539,7 @@ input, textarea {
 
 .team {
   padding: $spacing-2xl;
-  background-color: $color-background-gray;
+  background-color: $light-gray;
 
   @include responsive('md') {
     padding: $spacing-xl;
@@ -581,7 +567,7 @@ input, textarea {
 .team-title {
   font-size: $font-size-2xl;
   font-weight: 700;
-  color: $color-text-dark;
+  color: $text-dark;
   margin-bottom: $spacing-md;
 
   @include responsive('md') {
@@ -595,7 +581,7 @@ input, textarea {
 
 .team-description {
   font-size: $font-size-base;
-  color: $color-text-light;
+  color: $text-light;
   line-height: 1.7;
   max-width: 600px;
   margin: 0 auto;
@@ -622,15 +608,14 @@ input, textarea {
 
 .team-card {
   background-color: white;
-  border: 2px solid $color-border-default;
+  border: 2px solid $border-color;
   border-radius: $border-radius-xl;
   padding: $spacing-lg;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+  transition: all 0.3s ease;
   position: relative;
-  will-change: transform;
 
   &:hover {
-    border-color: $color-primary;
+    border-color: $primary-blue;
     box-shadow: $shadow-lg;
     transform: translateY(-4px);
   }
@@ -647,7 +632,7 @@ input, textarea {
   margin: 0 auto $spacing-lg;
   border-radius: 50%;
   overflow: hidden;
-  border: 3px solid $color-primary;
+  border: 3px solid $primary-blue;
 
   img {
     width: 100%;
@@ -669,7 +654,7 @@ input, textarea {
 .team-card-name {
   font-size: $font-size-lg;
   font-weight: 700;
-  color: $color-text-dark;
+  color: $text-dark;
   margin-bottom: $spacing-xs;
 
   @include responsive('sm') {
@@ -680,7 +665,7 @@ input, textarea {
 .team-card-role {
   font-size: $font-size-base;
   font-weight: 600;
-  color: $color-primary;
+  color: $primary-blue;
   margin-bottom: $spacing-md;
 
   @include responsive('sm') {
@@ -691,13 +676,13 @@ input, textarea {
 .team-card-divider {
   width: 40px;
   height: 2px;
-  background-color: $color-primary;
+  background-color: $primary-blue;
   margin: $spacing-md auto;
 }
 
 .team-card-bio {
   font-size: $font-size-sm;
-  color: $color-text-light;
+  color: $text-light;
   line-height: 1.6;
 
   @include responsive('sm') {
@@ -712,14 +697,13 @@ input, textarea {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: $color-text-dark;
+  background-color: $text-dark;
   color: white;
   @include flex-center;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-  will-change: transform;
+  transition: all 0.3s ease;
 
   &:hover {
-    background-color: $color-primary;
+    background-color: $primary-blue;
     transform: scale(1.1);
   }
 
@@ -742,7 +726,7 @@ input, textarea {
 
 .contact {
   padding: $spacing-2xl;
-  background: $gradient-light;
+  background: linear-gradient(135deg, #f5f7fa 0%, #ffffff 100%);
 
   @include responsive('md') {
     padding: $spacing-xl;
@@ -775,7 +759,7 @@ input, textarea {
 }
 
 .contact-form-wrapper {
-  background-color: $color-background-gray;
+  background-color: $light-gray;
   padding: $spacing-2xl;
   border-radius: $border-radius-lg;
 
@@ -791,7 +775,7 @@ input, textarea {
 .contact-title {
   font-size: $font-size-2xl;
   font-weight: 700;
-  color: $color-text-dark;
+  color: $text-dark;
   margin-bottom: $spacing-sm;
 
   @include responsive('md') {
@@ -805,7 +789,7 @@ input, textarea {
 
 .contact-subtitle {
   font-size: $font-size-base;
-  color: $color-text-light;
+  color: $text-light;
   margin-bottom: $spacing-lg;
 
   @include responsive('sm') {
@@ -828,7 +812,7 @@ input, textarea {
 .form-label {
   font-size: $font-size-sm;
   font-weight: 600;
-  color: $color-text-dark;
+  color: $text-dark;
 
   @include responsive('sm') {
     font-size: 12px;
@@ -838,15 +822,15 @@ input, textarea {
 .form-input,
 .form-textarea {
   padding: $spacing-md;
-  border: 2px solid $color-border-default;
+  border: 2px solid $border-color;
   border-radius: $border-radius-md;
   font-size: $font-size-base;
-  color: $color-text-dark;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  color: $text-dark;
+  transition: all 0.3s ease;
 
   &:focus {
     outline: none;
-    border-color: $color-primary;
+    border-color: $primary-blue;
     box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
   }
 
@@ -869,15 +853,14 @@ input, textarea {
 .contact-submit {
   align-self: flex-end;
   padding: 12px 32px;
-  background-color: $color-primary;
+  background-color: $primary-blue;
   color: white;
   font-weight: 600;
   border-radius: $border-radius-sm;
-  transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-  will-change: transform;
+  transition: all 0.3s ease;
 
   &:hover:not(:disabled) {
-    background-color: darken($color-primary, 10%);
+    background-color: darken($primary-blue, 10%);
     transform: translateY(-2px);
     box-shadow: $shadow-lg;
   }
@@ -933,7 +916,7 @@ input, textarea {
   right: 0;
   width: 150px;
   height: 150px;
-  background: linear-gradient(135deg, $color-primary, rgba(0, 102, 255, 0.3));
+  background: linear-gradient(135deg, $primary-blue, rgba(0, 102, 255, 0.3));
   border-radius: 50%;
   filter: blur(40px);
   opacity: 0.6;
@@ -963,7 +946,7 @@ input, textarea {
 // ============================================
 
 .footer {
-  background-color: $color-background-dark;
+  background-color: $dark-bg;
   color: white;
   padding: $spacing-2xl;
 
@@ -1010,11 +993,10 @@ input, textarea {
   background-color: rgba(255, 255, 255, 0.1);
   @include flex-center;
   color: white;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-  will-change: transform;
+  transition: all 0.3s ease;
 
   &:hover {
-    background-color: $color-primary;
+    background-color: $primary-blue;
     transform: scale(1.1);
   }
 
@@ -1046,8 +1028,7 @@ input, textarea {
   font-size: $font-size-base;
   font-weight: 600;
   margin-bottom: $spacing-md;
-  color: white; // Fallback for browsers that don't support background-clip: text
-  background: linear-gradient(90deg, $color-primary, $color-secondary);
+  background: linear-gradient(90deg, $primary-blue, #6366f1);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -1112,7 +1093,7 @@ input, textarea {
   transition: color 0.3s ease;
 
   &:hover {
-    color: $color-primary;
+    color: $primary-blue;
   }
 
   @include responsive('sm') {

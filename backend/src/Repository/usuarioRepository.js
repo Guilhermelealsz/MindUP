@@ -31,7 +31,7 @@ export async function buscarPorUsername(username) {
 }
 
 export async function buscarPorId(id) {
-  const sql = 'SELECT id, nome, username, email, bio, avatar, celular, data_nascimento, data_cadastro FROM usuarios WHERE id = ?';
+  const sql = 'SELECT id, nome, username, email, senha, bio, avatar, celular, data_nascimento, data_cadastro, role, banned, ban_reason, ban_date FROM usuarios WHERE id = ?';
   const [linhas] = await pool.query(sql, [id]);
   return linhas[0];
 }
@@ -72,6 +72,22 @@ export async function atualizar(id, dados) {
     campos.push('senha = ?');
     valores.push(dados.senha);
   }
+  if (dados.role !== undefined) {
+    campos.push('role = ?');
+    valores.push(dados.role);
+  }
+  if (dados.banned !== undefined) {
+    campos.push('banned = ?');
+    valores.push(dados.banned);
+  }
+  if (dados.ban_reason !== undefined) {
+    campos.push('ban_reason = ?');
+    valores.push(dados.ban_reason);
+  }
+  if (dados.ban_date !== undefined) {
+    campos.push('ban_date = ?');
+    valores.push(dados.ban_date);
+  }
 
   if (campos.length === 0) {
     throw new Error('Nenhum campo para atualizar');
@@ -88,4 +104,16 @@ export async function listarTodos() {
   const sql = 'SELECT id, nome, email, bio, data_cadastro FROM usuarios';
   const [linhas] = await pool.query(sql);
   return linhas;
+}
+
+export async function checkEmailBanned(email) {
+  const sql = 'SELECT * FROM banned_emails WHERE email = ?';
+  const [linhas] = await pool.query(sql, [email]);
+  return linhas[0];
+}
+
+export async function checkPhoneBanned(phone) {
+  const sql = 'SELECT * FROM banned_phones WHERE phone = ?';
+  const [linhas] = await pool.query(sql, [phone]);
+  return linhas[0];
 }

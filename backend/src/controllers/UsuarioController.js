@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import * as usuarioRepository from '../Repository/usuarioRepository.js';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import process from 'process';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -22,17 +23,12 @@ export const verificarToken = (req, res, next) => {
     req.usuarioId = decoded.id;
     req.userRole = decoded.role;
     next();
-  } catch (error) {
+  } catch {
     return res.status(401).json({ erro: 'Token inválido' });
   }
 };
 
-export const verificarAdmin = (req, res, next) => {
-  if (req.userRole !== 'admin') {
-    return res.status(403).json({ erro: 'Acesso negado. Apenas administradores podem acessar esta funcionalidade.' });
-  }
-  next();
-};
+
 
 endpoints.post('/usuarios', async (req, res) => {
   try {
@@ -42,19 +38,7 @@ endpoints.post('/usuarios', async (req, res) => {
       return res.status(400).json({ erro: 'Nome, email e senha são obrigatórios' });
     }
 
-    // Check if email is banned
-    const emailBanned = await usuarioRepository.checkEmailBanned(email);
-    if (emailBanned) {
-      return res.status(400).json({ erro: 'Este email está banido do sistema' });
-    }
 
-    // Check if phone is banned
-    if (celular) {
-      const phoneBanned = await usuarioRepository.checkPhoneBanned(celular);
-      if (phoneBanned) {
-        return res.status(400).json({ erro: 'Este número de telefone está banido do sistema' });
-      }
-    }
 
     const usuarioExiste = await usuarioRepository.buscarPorEmail(email);
     if (usuarioExiste) {
@@ -105,10 +89,7 @@ endpoints.post('/login', async (req, res) => {
       return res.status(401).json({ erro: 'Email ou senha inválidos' });
     }
 
-    // Check if user is banned
-    if (usuario.banned) {
-      return res.status(401).json({ erro: 'Sua conta foi banida. Motivo: ' + (usuario.ban_reason || 'Não especificado') });
-    }
+
 
     const senhaValida = await bcrypt.compare(senha, usuario.senha);
 
@@ -117,7 +98,7 @@ endpoints.post('/login', async (req, res) => {
     }
 
     const token = jwt.sign(
-      { id: usuario.id, email: usuario.email, role: usuario.role },
+      { id: usuario.id, email: usuario.email },
       process.env.JWT_SECRET,
       { expiresIn: '7d' }
     );
@@ -128,8 +109,7 @@ endpoints.post('/login', async (req, res) => {
         id: usuario.id,
         nome: usuario.nome,
         email: usuario.email,
-        bio: usuario.bio,
-        role: usuario.role
+        bio: usuario.bio
       }
     });
   } catch (error) {
@@ -159,7 +139,7 @@ endpoints.put('/usuarios/:id', verificarToken, async (req, res) => {
   try {
     const { id } = req.params;
 
-    if (parseInt(id) !== req.usuarioId && req.userRole !== 'admin') {
+    if (parseInt(id) !== req.usuarioId) {
       return res.status(403).json({ erro: 'Você não pode editar este perfil' });
     }
 
@@ -167,9 +147,9 @@ endpoints.put('/usuarios/:id', verificarToken, async (req, res) => {
 
     // Verificar se campos sensíveis estão sendo alterados
     const camposSensíveis = ['email', 'celular', 'data_nascimento', 'senha'];
-    const alterandoCamposSensíveis = camposSensíveis.some(campo => req.body.hasOwnProperty(campo) && req.body[campo] !== undefined);
+    const alterandoCamposSensíveis = camposSensíveis.some(campo => Object.prototype.hasOwnProperty.call(req.body, campo) && req.body[campo] !== undefined);
 
-    if (alterandoCamposSensíveis && req.userRole !== 'admin') {
+    if (alterandoCamposSensíveis) {
       // Verificar senha atual para confirmar alterações de campos sensíveis
       if (!senhaAtual || senhaAtual.trim() === '') {
         return res.status(400).json({ erro: 'Senha atual é obrigatória para confirmar alterações de dados sensíveis' });
@@ -269,7 +249,7 @@ endpoints.post('/usuarios/:id/avatar', verificarToken, upload.single('avatar'), 
   try {
     const { id } = req.params;
 
-    if (parseInt(id) !== req.usuarioId && req.userRole !== 'admin') {
+    if (parseInt(id) !== req.usuarioId) {
       return res.status(403).json({ erro: 'Você não pode fazer upload para este perfil' });
     }
 
@@ -295,7 +275,7 @@ endpoints.put('/usuarios/:id/senha', verificarToken, async (req, res) => {
   try {
     const { id } = req.params;
 
-    if (parseInt(id) !== req.usuarioId && req.userRole !== 'admin') {
+    if (parseInt(id) !== req.usuarioId) {
       return res.status(403).json({ erro: 'Você não pode alterar a senha deste perfil' });
     }
 

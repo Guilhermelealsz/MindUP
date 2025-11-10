@@ -1,0 +1,5 @@
+- [x] Fix book upload error by adding multer middleware to POST /books endpoint
+- [x] Remove cover image upload from frontend and backend, keep only PDF
+- [x] Update frontend Books.jsx to remove cover image input
+- [x] Update api.js criarLivro to only send PDF
+- [ ] Test book addition with PDF only

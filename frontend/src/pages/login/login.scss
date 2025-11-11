@@ -145,6 +145,21 @@ html, body {
     label {
       cursor: pointer;
     }
+
+    .link-termos {
+      background: none;
+      border: none;
+      color: var(--color-primary);
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 0.875rem; /* 14px */
+      text-decoration: underline;
+      padding: 0;
+
+      &:hover {
+        color: #6bb3ff;
+      }
+    }
   }
 
   .btn-entrar {

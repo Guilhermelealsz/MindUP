@@ -94,7 +94,16 @@ export default function Login() {
               onChange={(e) => setAceitouTermos(e.target.checked)}
               disabled={carregando}
             />
-            <label htmlFor="termos">Aceito os Termos e Condições</label>
+            <label htmlFor="termos">
+              Aceito os{' '}
+              <button
+                type="button"
+                onClick={() => window.open('/terms', '_blank')}
+                className="link-termos"
+              >
+                Termos e Condições
+              </button>
+            </label>
           </div>
 
           <button type="submit" className="btn-entrar" disabled={carregando}>

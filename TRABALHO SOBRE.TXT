@@ -1,0 +1,360 @@
+TRABALHO SOBRE: MINDUP - REDE SOCIAL EDUCACIONAL
+
+================================================================================
+DESCRIÇÃO GERAL DO PROJETO
+================================================================================
+
+MindUP é uma plataforma digital inovadora desenvolvida como Trabalho de Conclusão de Curso (TCC), concebida como uma rede social gratuita e acessível voltada exclusivamente para o compartilhamento de conhecimento educacional. A proposta é democratizar o acesso à informação, permitindo que estudantes, professores e profissionais compartilhem conteúdos educativos, experiências acadêmicas e materiais de estudo em um ambiente focado e colaborativo.
+
+A plataforma se diferencia das redes sociais tradicionais (como Twitter e LinkedIn) por seu foco exclusivo no conhecimento educacional, oferecendo uma experiência sem distrações, com biblioteca colaborativa integrada e propósito claro de reduzir desigualdades através da educação.
+
+================================================================================
+TECNOLOGIAS UTILIZADAS
+================================================================================
+
+BACKEND:
+--------
+- Node.js: Ambiente de execução JavaScript no servidor
+- Express.js: Framework web para Node.js, minimalista e flexível
+- MySQL: Sistema de gerenciamento de banco de dados relacional
+- mysql2: Driver MySQL para Node.js com suporte a promises
+- bcrypt: Biblioteca para hash de senhas
+- jsonwebtoken (JWT): Implementação de autenticação baseada em tokens
+- multer: Middleware para upload de arquivos (imagens, vídeos, PDFs)
+- cors: Middleware para habilitar CORS (Cross-Origin Resource Sharing)
+- dotenv: Carregamento de variáveis de ambiente
+- nodemon: Ferramenta para reinicialização automática do servidor durante desenvolvimento
+
+FRONTEND:
+---------
+- React: Biblioteca JavaScript para construção de interfaces de usuário
+- React Router DOM: Roteamento para aplicações React
+- Axios: Cliente HTTP para fazer requisições à API
+- Vite: Ferramenta de build e servidor de desenvolvimento rápido
+- Tailwind CSS: Framework CSS utilitário
+- PostCSS: Ferramenta para transformar CSS
+- Autoprefixer: Plugin PostCSS para adicionar prefixos CSS automaticamente
+- ESLint: Ferramenta de linting para JavaScript/React
+- FontAwesome: Biblioteca de ícones
+- React Icons: Conjunto de ícones populares para React
+- PropTypes: Verificação de tipos para props do React
+- UUID: Geração de identificadores únicos
+- Crypto-JS: Biblioteca de criptografia para JavaScript
+- Sass/SCSS: Pré-processador CSS
+
+================================================================================
+ARQUITETURA DO SISTEMA
+================================================================================
+
+BACKEND (Node.js/Express):
+-------------------------
+- Estrutura MVC (Model-View-Controller) adaptada
+- Controllers: Lógica de negócio e endpoints da API
+- Repository: Camada de acesso a dados (banco de dados)
+- Utils: Funções utilitárias
+- Middleware de autenticação JWT
+- Upload de arquivos com Multer
+- Validação de dados de entrada
+- Tratamento de erros consistente
+
+FRONTEND (React):
+-----------------
+- Componentes funcionais com Hooks
+- Roteamento com React Router
+- Gerenciamento de estado local
+- API client centralizado com Axios
+- Interceptors para autenticação automática
+- Componentes reutilizáveis (Sidebar, modais, etc.)
+- Estilização responsiva com Tailwind CSS e SCSS
+
+BANCO DE DADOS (MySQL):
+-----------------------
+- 11 tabelas principais
+- Relacionamentos complexos (usuários, posts, comentários, etc.)
+- Índices para otimização de consultas
+- Constraints de integridade referencial
+- Dados iniciais (categorias padrão)
+
+================================================================================
+FUNCIONALIDADES IMPLEMENTADAS
+================================================================================
+
+1. AUTENTICAÇÃO E AUTORIZAÇÃO:
+   - Cadastro de usuários com validação
+   - Login com JWT
+   - Middleware de proteção de rotas
+   - Upload e gerenciamento de avatares
+   - Recuperação e atualização de perfil
+
+2. SISTEMA DE POSTS:
+   - Criação de posts com título, conteúdo e categoria
+   - Upload de imagens e vídeos
+   - Sistema de curtidas
+   - Comentários aninhados
+   - Filtros por categoria
+   - Edição e exclusão de posts próprios
+
+3. SISTEMA DE SEGUIDORES:
+   - Seguir/deixar de seguir usuários
+   - Contagem de seguidores e seguindo
+   - Listagem de seguidores e seguindo
+   - Verificação de relacionamento
+
+4. CHAT E MENSAGENS:
+   - Sistema de chat entre usuários
+   - Compartilhamento de posts via chat
+   - Mensagens em tempo real (atualização automática)
+   - Contador de mensagens não lidas
+   - Histórico de conversas
+
+5. NOTIFICAÇÕES:
+   - Notificações em tempo real para:
+     * Curtidas em posts
+     * Comentários
+     * Curtidas em comentários
+     * Novos seguidores
+     * Mensagens de chat
+   - Marcar como lidas individualmente ou em lote
+   - Limpeza de notificações
+
+6. BIBLIOTECA DE LIVROS:
+   - Upload de livros em PDF
+   - Metadados (título, autor, categoria, descrição)
+   - Capas de livros
+   - Busca e filtros por categoria
+   - Download de PDFs
+
+7. INTERFACE E EXPERIÊNCIA DO USUÁRIO:
+   - Design responsivo
+   - Tema escuro/claro
+   - Sidebar de navegação
+   - Landing page atrativa
+   - Páginas de perfil detalhadas
+   - Modais para interações
+   - Feedback visual para ações
+
+================================================================================
+ESTRUTURA DO BANCO DE DADOS
+================================================================================
+
+TABELAS PRINCIPAIS:
+
+1. usuarios:
+   - id (PK), nome, username, email, senha, bio, avatar, celular, data_nascimento, data_cadastro
+
+2. categorias:
+   - id (PK), nome, descricao, data_criacao
+
+3. posts:
+   - id (PK), titulo, conteudo, imagem, video, categoria_id (FK), autor_id (FK), data_postagem
+
+4. comentarios:
+   - id (PK), texto, post_id (FK), autor_id (FK), data
+
+5. curtidas:
+   - id (PK), post_id (FK), usuario_id (FK), data_curtida
+
+6. seguidores:
+   - id (PK), seguidor_id (FK), seguindo_id (FK), data_seguimento
+
+7. curtidas_comentarios:
+   - id (PK), comentario_id (FK), usuario_id (FK), data_criacao
+
+8. notificacoes:
+   - id (PK), usuario_id (FK), tipo, ator_id (FK), post_id (FK), comentario_id (FK), lida, data_notificacao
+
+9. chats:
+   - id (PK), usuario1_id (FK), usuario2_id (FK), data_criacao
+
+10. mensagens:
+    - id (PK), chat_id (FK), remetente_id (FK), destinatario_id (FK), texto, post_id (FK), lida, data_envio
+
+11. livros:
+    - id (PK), titulo, autor, categoria, descricao, pdf_url, capa_imagem, data_upload
+
+================================================================================
+ENDPOINTS DA API (BACKEND)
+================================================================================
+
+USUÁRIOS:
+- POST /usuarios - Cadastro
+- POST /login - Autenticação
+- GET /usuarios/:id - Buscar perfil
+- PUT /usuarios/:id - Atualizar perfil
+- POST /usuarios/:id/avatar - Upload de avatar
+- PUT /usuarios/:id/senha - Alterar senha
+- GET /usuarios - Buscar usuários
+- GET /usuarios/:id/posts - Posts do usuário
+- GET /usuarios/:id/stats - Estatísticas
+- GET /usuarios/:id/seguidores - Listar seguidores
+- GET /usuarios/:id/seguindo-lista - Listar seguindo
+- POST /usuarios/:id/seguir - Seguir usuário
+- DELETE /usuarios/:id/seguir - Deixar de seguir
+- GET /usuarios/:id/seguindo - Verificar seguindo
+
+POSTS:
+- GET /posts - Listar posts (com filtro de categoria)
+- GET /posts/:id - Buscar post específico
+- POST /posts - Criar post
+- PUT /posts/:id - Editar post
+- DELETE /posts/:id - Deletar post
+- POST /posts/:id/curtir - Curtir post
+- DELETE /posts/:id/curtir - Descurtir post
+- GET /posts/:id/curtidas - Contar curtidas
+
+COMENTÁRIOS:
+- GET /comentarios/:postId - Listar comentários
+- POST /comentarios - Adicionar comentário
+- DELETE /comentarios/:id - Deletar comentário
+- POST /comentarios/:id/curtir - Curtir comentário
+- DELETE /comentarios/:id/curtir - Descurtir comentário
+
+CATEGORIAS:
+- GET /categorias - Listar categorias
+- POST /categorias - Criar categoria
+
+NOTIFICAÇÕES:
+- GET /notificacoes - Listar notificações
+- GET /notificacoes/nao-lidas - Contar não lidas
+- PUT /notificacoes/:id/lida - Marcar como lida
+- PUT /notificacoes/marcar-todas-lidas - Marcar todas como lidas
+- DELETE /notificacoes/:id - Deletar notificação
+- DELETE /notificacoes - Limpar todas
+
+CHAT:
+- POST /chats - Criar/buscar chat
+- GET /chats - Listar chats
+- POST /chats/:chatId/mensagens - Enviar mensagem
+- GET /chats/:chatId/mensagens - Listar mensagens
+- GET /chats/mensagens-nao-lidas - Contar mensagens não lidas
+- PUT /chats/:chatId/mensagens/lidas - Marcar como lidas
+
+LIVROS:
+- GET /books - Listar livros
+- GET /books/:id - Buscar livro
+- POST /books - Adicionar livro
+- PUT /books/:id - Atualizar livro
+- DELETE /books/:id - Deletar livro
+
+================================================================================
+COMPONENTES DO FRONTEND
+================================================================================
+
+PÁGINAS PRINCIPAIS:
+- LandingPage: Página inicial com apresentação do projeto
+- Login: Autenticação de usuários
+- Register: Cadastro de novos usuários
+- Feed: Timeline principal com posts
+- Perfil: Perfil do usuário com posts, seguidores, seguindo
+- ProfileEdit: Edição de perfil
+- AccountSettings: Configurações da conta
+- Notifications: Central de notificações
+- Chat: Lista de conversas
+- ChatDetail: Conversa específica
+- Books: Biblioteca de livros
+- Settings: Configurações gerais
+- Terms: Termos e condições
+
+COMPONENTES REUTILIZÁVEIS:
+- Sidebar: Menu lateral de navegação
+- Modal: Componente genérico para modais
+
+================================================================================
+SEGURANÇA IMPLEMENTADA
+================================================================================
+
+- Hash de senhas com bcrypt
+- Autenticação JWT com expiração
+- Middleware de verificação de token
+- Validação de entrada de dados
+- Proteção contra SQL injection (prepared statements)
+- Sanitização de uploads de arquivos
+- Controle de acesso baseado em usuário
+- CORS configurado
+- Headers de segurança
+
+================================================================================
+DESIGN E UX/UI
+================================================================================
+
+- Design responsivo (mobile-first)
+- Paleta de cores consistente
+- Tipografia hierárquica
+- Ícones intuitivos
+- Feedback visual para interações
+- Estados de loading
+- Tratamento de erros amigável
+- Navegação intuitiva
+- Tema escuro/claro
+- Animações sutis
+
+================================================================================
+PROCESSO DE DESENVOLVIMENTO
+================================================================================
+
+METODOLOGIA:
+- Desenvolvimento ágil com iterações
+- Versionamento com Git
+- Documentação técnica
+- Testes manuais de funcionalidades
+- Deploy local para desenvolvimento
+
+FERRAMENTAS DE DESENVOLVIMENTO:
+- VS Code como editor
+- Git para controle de versão
+- Node.js/npm para gerenciamento de pacotes
+- MySQL Workbench para modelagem do banco
+- Postman para testes de API
+- Browser DevTools para debug
+
+================================================================================
+IMPACTO SOCIAL E OBJETIVOS
+================================================================================
+
+OBJETIVOS ALCANÇADOS:
+- Democratização do acesso à educação
+- Plataforma gratuita e inclusiva
+- Ambiente colaborativo de aprendizado
+- Redução de desigualdades educacionais
+- Incentivo ao compartilhamento de conhecimento
+- Tecnologia como ferramenta de transformação social
+
+PÚBLICO-ALVO:
+- Estudantes de todos os níveis
+- Professores e educadores
+- Profissionais em busca de atualização
+- Qualquer pessoa interessada em aprender
+
+DIFERENCIAIS COMPETITIVOS:
+- Foco exclusivo em conteúdo educacional
+- Sem anúncios ou distrações
+- Biblioteca colaborativa integrada
+- Sistema de reputação e conexões
+- Interface simples e intuitiva
+- Totalmente gratuito
+
+================================================================================
+CONCLUSÃO
+================================================================================
+
+O MindUP representa uma solução completa e funcional para o compartilhamento de conhecimento educacional, demonstrando a viabilidade técnica e o potencial impacto social de uma rede social especializada. O projeto combina tecnologias modernas, arquitetura sólida e design centrado no usuário para criar uma plataforma que verdadeiramente contribui para a democratização da educação.
+
+A implementação abrange desde a concepção do banco de dados até a interface final do usuário, passando por todas as camadas necessárias para um sistema web completo e escalável. O resultado é uma aplicação robusta, segura e user-friendly que atende aos objetivos propostos no TCC.
+
+================================================================================
+EQUIPE DE DESENVOLVIMENTO
+================================================================================
+
+- Guilherme Leal: Líder de Projeto e Desenvolvedor Full-Stack
+- Enzo Gaeta: Infraestrutura e Operações
+- Davi Amorim: Marketing e Conteúdo
+- Emily Uliach: Design UX/UI
+
+================================================================================
+CONTATO E SUPORTE
+================================================================================
+
+Email: minduppublic@gmail.com
+Instagram: @minduppublic
+
+O projeto está disponível em repositório público para estudo e contribuição da comunidade de desenvolvedores interessados em educação e tecnologia social.

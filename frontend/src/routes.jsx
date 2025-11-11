@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import LandingPage from './pages/landing/LandingPage';
 import Login from './pages/login/Login';
 import Register from './pages/register/Register';
+import Terms from './pages/terms/Terms';
 import Feed from './pages/feed/Feed';
 import Perfil from './pages/perfil/Perfil';
 import ProfileEdit from './pages/ProfileEdit/ProfileEdit';
@@ -27,6 +28,7 @@ export default function AppRoutes() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/terms" element={<Terms />} />
 
         <Route
           path="/feed"

@@ -1,7 +1,10 @@
-  import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { listarPosts, listarCategorias, criarPost, curtirPost, removerCurtida, listarComentarios, adicionarComentario, deletarComentario, curtirComentario, descurtirComentario, buscarUsuarios, criarChat, enviarMensagem } from '../../api';
 import Sidebar from '../../components/Sidebar';
+import curtidaIcon from '../../assets/curtidaIcon.png';
+import compartilharIcon from '../../assets/compartilharIcon.png';
+import comentarioIcon from '../../assets/comentarioIcon.png';
 import './feed.scss';
 
 export default function Feed() {
@@ -94,11 +97,7 @@ export default function Feed() {
     navigate(`/perfil/${autorId}`);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('usuario');
-    navigate('/');
-  };
+
 
   const toggleComentarios = async (postId) => {
     const visivel = !comentariosVisiveis[postId];
@@ -125,7 +124,7 @@ export default function Feed() {
       const comentariosData = await listarComentarios(postId);
       setComentarios({ ...comentarios, [postId]: comentariosData });
       carregarDados();
-    } catch (error) {
+    } catch {
       alert('Erro ao adicionar comentário');
     }
   };
@@ -138,7 +137,7 @@ export default function Feed() {
       const comentariosData = await listarComentarios(postId);
       setComentarios({ ...comentarios, [postId]: comentariosData });
       carregarDados();
-    } catch (error) {
+    } catch {
       alert('Erro ao deletar comentário');
     }
   };
@@ -150,9 +149,13 @@ export default function Feed() {
       setComentarios({ ...comentarios, [postId]: comentariosData });
     } catch (error) {
       if (error.response?.status === 400) {
-        await descurtirComentario(comentarioId);
-        const comentariosData = await listarComentarios(postId);
-        setComentarios({ ...comentarios, [postId]: comentariosData });
+        try {
+          await descurtirComentario(comentarioId);
+          const comentariosData = await listarComentarios(postId);
+          setComentarios({ ...comentarios, [postId]: comentariosData });
+        } catch {
+          // Ignore errors in descurtirComentario
+        }
       }
     }
   };
@@ -188,7 +191,7 @@ export default function Feed() {
       setBuscaUsuarios('');
       setUsuariosEncontrados([]);
       alert('Post compartilhado com sucesso!');
-    } catch (error) {
+    } catch {
       alert('Erro ao compartilhar post');
     }
   };
@@ -295,19 +298,19 @@ export default function Feed() {
                       className="btn-interacao"
                       onClick={() => handleCurtir(post.id)}
                     >
-                      ❤️ {post.total_curtidas || 0}
+                      <img src={curtidaIcon} alt="Curtir" className="icon-btn" /> {post.total_curtidas || 0}
                     </button>
                     <button
                       className="btn-interacao"
                       onClick={() => toggleComentarios(post.id)}
                     >
-                      💬 {post.total_comentarios || 0}
+                      <img src={comentarioIcon} alt="Comentários" className="icon-btn" /> {post.total_comentarios || 0}
                     </button>
                     <button
                       className="btn-interacao"
                       onClick={() => handleCompartilhar(post)}
                     >
-                      Compartilhar
+                      <img src={compartilharIcon} alt="Compartilhar" className="icon-btn" /> Compartilhar
                     </button>
                   </div>
 
@@ -353,7 +356,7 @@ export default function Feed() {
                                   className="btn-curtir-comentario"
                                   onClick={() => handleCurtirComentario(comentario.id, post.id)}
                                 >
-                                  👍 {comentario.curtidas || 0}
+                                  <img src={curtidaIcon} alt="Curtir comentário" className="icon-btn" /> {comentario.curtidas || 0}
                                 </button>
                               </div>
                             </div>

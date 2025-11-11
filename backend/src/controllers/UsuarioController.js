@@ -5,7 +5,7 @@ import * as usuarioRepository from '../Repository/usuarioRepository.js';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import process from 'process';
-import conexao from '../database/conexao.js';
+import conexao from '../Repository/db.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

@@ -62,36 +62,36 @@ function FAQ() {
   const [openId, setOpenId] = useState(1);
 
   const faqItems = [
-    {
-      id: 1,
-      question: "Como funciona o MindUP?",
-      answer: "MindUP é uma plataforma de desenvolvimento pessoal que combina técnicas de produtividade, foco e bem-estar mental para ajudar você a alcançar seus objetivos.",
-    },
-    {
-      id: 2,
-      question: "Qual é o custo?",
-      answer: "Oferecemos planos gratuitos e premium. O plano gratuito inclui acesso básico a todas as funcionalidades, enquanto o premium oferece recursos avançados.",
-    },
-    {
-      id: 3,
-      question: "Como posso começar?",
-      answer: "Basta se registrar em nossa plataforma e começar a usar. Você terá acesso imediato a todas as ferramentas básicas.",
-    },
-    {
-      id: 4,
-      question: "Posso cancelar minha inscrição?",
-      answer: "Sim, você pode cancelar sua inscrição a qualquer momento sem penalidades. Seus dados serão preservados por 30 dias.",
-    },
-    {
-      id: 5,
-      question: "Como funciona o suporte?",
-      answer: "Oferecemos suporte via email e chat ao vivo. Nosso time está disponível para ajudar você 24/7.",
-    },
-    {
-      id: 6,
-      question: "Meus dados estão seguros?",
-      answer: "Sim, utilizamos criptografia de ponta a ponta e conformidade com LGPD para proteger seus dados.",
-    },
+  {
+    id: 1,
+    question: "O que é o MindUP?",
+    answer: "MindUP é uma rede social gratuita voltada para o compartilhamento de conhecimento e estudos, combinando a dinamicidade do Twitter com o profissionalismo do LinkedIn. O objetivo é democratizar o acesso à informação, permitindo que usuários publiquem conteúdos educativos, compartilhem experiências acadêmicas e recomendem materiais de estudo em um ambiente simples, interativo e acessível.",
+  },
+  {
+    id: 2,
+    question: "Como funciona o MindUP?",
+    answer: "Os usuários criam uma conta gratuita, definem seu perfil acadêmico/profissional e escolhem áreas de interesse. É possível publicar posts curtos com ideias, dicas de estudo e reflexões, que podem receber curtidas, comentários e compartilhamentos. Há também indicações de livros e materiais, um sistema de reputação para contribuidores e incentivos a conexões entre estudantes, professores e profissionais.",
+  },
+  {
+    id: 3,
+    question: "O MindUP é gratuito?",
+    answer: "Sim, o MindUP é totalmente gratuito e acessível. Não há planos pagos, assinaturas ou anúncios invasivos. O foco é democratizar o acesso à educação, permitindo que qualquer pessoa, independente da condição financeira, possa aprender e contribuir.",
+  },
+  {
+    id: 4,
+    question: "Quais são as principais funcionalidades do MindUP?",
+    answer: "As principais funcionalidades incluem publicações (posts) similares ao Twitter, indicações de livros, artigos e PDFs com download direto, uma biblioteca colaborativa categorizada por área, sistema de reputação com selos de destaque, e interações para formar conexões de apoio e troca de aprendizado.",
+  },
+  {
+    id: 5,
+    question: "Como o MindUP se diferencia do Twitter e LinkedIn?",
+    answer: "Diferente do Twitter (voltado para entretenimento e opinião) e LinkedIn (focado em carreiras e mercado de trabalho), o MindUP tem foco exclusivo no compartilhamento de conhecimento educacional. É uma plataforma de transformação educacional e social, com ambiente sem distrações, biblioteca colaborativa integrada e propósito de reduzir desigualdades através do conhecimento.",
+  },
+  {
+    id: 6,
+    question: "Qual é o impacto social do MindUP?",
+    answer: "O MindUP atua diretamente sobre desigualdades no acesso à educação e informação. Como plataforma digital gratuita e inclusiva, permite que qualquer pessoa com acesso à internet aprenda, ensine e cresça profissionalmente sem custos altos. Isso reforça o papel da tecnologia como ferramenta de transformação social.",
+  },
   ];
 
   return (

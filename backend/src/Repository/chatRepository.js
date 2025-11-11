@@ -29,7 +29,7 @@ export async function listarChatsUsuario(usuarioId) {
            u2.nome as outro_usuario_nome,
            u2.avatar as outro_usuario_avatar,
            c.usuario2_id as outro_usuario_id,
-           (SELECT texto FROM mensagens WHERE chat_id = c.id ORDER BY data_envio DESC LIMIT 1) as ultima_mensagem,
+           (SELECT COALESCE(texto, CASE WHEN post_id IS NOT NULL THEN 'Post compartilhado' ELSE NULL END) FROM mensagens WHERE chat_id = c.id ORDER BY data_envio DESC LIMIT 1) as ultima_mensagem,
            COALESCE((SELECT data_envio FROM mensagens WHERE chat_id = c.id ORDER BY data_envio DESC LIMIT 1), c.data_criacao) as data_ultima_mensagem,
            (SELECT COUNT(*) FROM mensagens WHERE chat_id = c.id AND destinatario_id = ? AND lida = FALSE) as nao_lidas
     FROM chats c
@@ -40,7 +40,7 @@ export async function listarChatsUsuario(usuarioId) {
            u1.nome as outro_usuario_nome,
            u1.avatar as outro_usuario_avatar,
            c.usuario1_id as outro_usuario_id,
-           (SELECT texto FROM mensagens WHERE chat_id = c.id ORDER BY data_envio DESC LIMIT 1) as ultima_mensagem,
+           (SELECT COALESCE(texto, CASE WHEN post_id IS NOT NULL THEN 'Post compartilhado' ELSE NULL END) FROM mensagens WHERE chat_id = c.id ORDER BY data_envio DESC LIMIT 1) as ultima_mensagem,
            COALESCE((SELECT data_envio FROM mensagens WHERE chat_id = c.id ORDER BY data_envio DESC LIMIT 1), c.data_criacao) as data_ultima_mensagem,
            (SELECT COUNT(*) FROM mensagens WHERE chat_id = c.id AND destinatario_id = ? AND lida = FALSE) as nao_lidas
     FROM chats c
@@ -71,7 +71,7 @@ export async function listarMensagensChat(chatId, usuarioId) {
 
   const comando = `
     SELECT m.*, u.nome as remetente_nome, u.avatar as remetente_avatar,
-           p.titulo as post_titulo, p.conteudo as post_conteudo, p.imagem as post_imagem
+           p.titulo as post_titulo, p.conteudo as post_conteudo, p.imagem as post_imagem, p.video as post_video
     FROM mensagens m
     LEFT JOIN usuarios u ON m.remetente_id = u.id
     LEFT JOIN posts p ON m.post_id = p.id

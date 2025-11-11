@@ -18,12 +18,12 @@ $border-radius: 12px;
   flex: 1;
   padding: 2rem;
   background: $bg-primary;
-  margin-left: 160px; // Account for fixed sidebar with more space
+  margin-left: 120px; // Account for fixed sidebar with more space
   transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .sidebar:hover ~ .books-content {
-  margin-left: 240px;
+  margin-left: 200px;
 }
 
 .books-filters {
@@ -286,7 +286,6 @@ $border-radius: 12px;
   }
 }
 
-// Modal styles
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -295,11 +294,10 @@ $border-radius: 12px;
   bottom: 0;
   background: rgba(0, 0, 0, 0.7);
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: center;  justify-content: center;
   z-index: 1000;
-  backdrop-filter: blur(4px);
 }
+
 
 .modal-content {
   background: $card-bg;

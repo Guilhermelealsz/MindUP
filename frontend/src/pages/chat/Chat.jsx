@@ -135,4 +135,64 @@ function formatarData(dataString) {
     : { day: '2-digit', month: 'short', year: 'numeric' };
   
   return data.toLocaleDateString('pt-BR', opcoes);
+
+function BuscarUsuariosParaCompartilhar({ onSelecionarUsuario }) {
+  const [busca, setBusca] = useState('');
+  const [usuarios, setUsuarios] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = async (e) => {
+    const termo = e.target.value;
+    setBusca(termo);
+
+    if (termo.length >= 2) {
+      setLoading(true);
+      try {
+        const resultados = await buscarUsuarios(termo);
+        setUsuarios(resultados);
+      } catch (error) {
+        console.error('Erro ao buscar usuários:', error);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      setUsuarios([]);
+    }
+  };
+
+  return (
+    <div className="compartilhar-container">
+      <input
+        type="text"
+        placeholder="Buscar usuário..."
+        value={busca}
+        onChange={handleChange}
+        className="input-busca"
+      />
+
+      {loading && <p>Carregando...</p>}
+
+      <ul className="lista-usuarios">
+        {usuarios.map((u) => (
+          <li
+            key={u.id}
+            className="usuario-item"
+            onClick={() => onSelecionarUsuario?.(u)}
+          >
+            <img
+              src={u.avatar || '/default-avatar.png'}
+              alt={u.nome}
+              className="avatar"
+            />
+            <div>
+              <strong>{u.nome}</strong>
+              {u.username && <p>@{u.username}</p>}
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 }

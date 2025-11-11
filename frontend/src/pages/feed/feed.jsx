@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+  import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { listarPosts, listarCategorias, criarPost, curtirPost, removerCurtida, listarComentarios, adicionarComentario, deletarComentario, curtirComentario, descurtirComentario } from '../../api';
+import { listarPosts, listarCategorias, criarPost, curtirPost, removerCurtida, listarComentarios, adicionarComentario, deletarComentario, curtirComentario, descurtirComentario, buscarUsuarios, criarChat, enviarMensagem } from '../../api';
 import Sidebar from '../../components/Sidebar';
 import './feed.scss';
 
@@ -15,6 +15,10 @@ export default function Feed() {
   const [comentariosVisiveis, setComentariosVisiveis] = useState({});
   const [comentarios, setComentarios] = useState({});
   const [novoComentario, setNovoComentario] = useState({});
+  const [mostrarModalCompartilhar, setMostrarModalCompartilhar] = useState(false);
+  const [postCompartilhar, setPostCompartilhar] = useState(null);
+  const [buscaUsuarios, setBuscaUsuarios] = useState('');
+  const [usuariosEncontrados, setUsuariosEncontrados] = useState([]);
 
   const navigate = useNavigate();
 
@@ -153,6 +157,42 @@ export default function Feed() {
     }
   };
 
+  const handleCompartilhar = (post) => {
+    setPostCompartilhar(post);
+    setMostrarModalCompartilhar(true);
+    setBuscaUsuarios('');
+    setUsuariosEncontrados([]);
+  };
+
+  const handleBuscarUsuarios = async (query) => {
+    if (query.length < 2) {
+      setUsuariosEncontrados([]);
+      return;
+    }
+    try {
+      const usuarios = await buscarUsuarios(query);
+      setUsuariosEncontrados(usuarios);
+    } catch (error) {
+      console.error('Erro ao buscar usuários:', error);
+    }
+  };
+
+  const handleEnviarCompartilhar = async (usuarioId) => {
+    if (!postCompartilhar) return;
+
+    try {
+      const chat = await criarChat(usuarioId);
+      await enviarMensagem(chat.chatId, { postId: postCompartilhar.id });
+      setMostrarModalCompartilhar(false);
+      setPostCompartilhar(null);
+      setBuscaUsuarios('');
+      setUsuariosEncontrados([]);
+      alert('Post compartilhado com sucesso!');
+    } catch (error) {
+      alert('Erro ao compartilhar post');
+    }
+  };
+
   return (
     <div className="feed-container">
       <Sidebar />
@@ -263,6 +303,12 @@ export default function Feed() {
                     >
                       💬 {post.total_comentarios || 0}
                     </button>
+                    <button
+                      className="btn-interacao"
+                      onClick={() => handleCompartilhar(post)}
+                    >
+                      Compartilhar
+                    </button>
                   </div>
 
                   {comentariosVisiveis[post.id] && (
@@ -354,14 +400,14 @@ export default function Feed() {
                 value={novoPost.titulo}
                 onChange={(e) => setNovoPost({ ...novoPost, titulo: e.target.value })}
               />
-              
+
               <textarea
                 placeholder="Compartilhe seu conhecimento..."
                 rows="6"
                 value={novoPost.conteudo}
                 onChange={(e) => setNovoPost({ ...novoPost, conteudo: e.target.value })}
               />
-              
+
               <select
                 value={novoPost.categoria_id}
                 onChange={(e) => setNovoPost({ ...novoPost, categoria_id: e.target.value })}
@@ -391,7 +437,54 @@ export default function Feed() {
         </div>
       )}
 
-     
+      {mostrarModalCompartilhar && (
+        <div className="modal-overlay" onClick={() => setMostrarModalCompartilhar(false)}>
+          <div className="modal-content modal-compartilhar" onClick={(e) => e.stopPropagation()}>
+            <h2> Compartilhar Post</h2>
+            <p>Compartilhar "{postCompartilhar?.titulo}" com:</p>
+            <div className="search-container">
+              <input
+                type="text"
+                placeholder="Buscar usuário..."
+                value={buscaUsuarios}
+                onChange={(e) => {
+                  setBuscaUsuarios(e.target.value);
+                  handleBuscarUsuarios(e.target.value);
+                }}
+              />
+              <span className="search-icon">🔍</span>
+            </div>
+            <div className="usuarios-lista">
+              {usuariosEncontrados.map(user => (
+                <div key={user.id} className="usuario-item" onClick={() => handleEnviarCompartilhar(user.id)}>
+                  <div className="usuario-avatar">
+                    {user.avatar ? (
+                      <img
+                        src={`http://localhost:3000${user.avatar}`}
+                        alt={user.nome}
+                        className="avatar-image-mini"
+                        onError={(e) => { e.target.onerror = null; e.target.src = '/default-avatar.png'; }}
+                      />
+                    ) : (
+                      user.nome?.charAt(0).toUpperCase()
+                    )}
+                  </div>
+                  <span>{user.nome}</span>
+                  <span className="share-icon">➤</span>
+                </div>
+              ))}
+              {buscaUsuarios && usuariosEncontrados.length === 0 && (
+                <p className="no-users">Nenhum usuário encontrado.</p>
+              )}
+            </div>
+            <div className="modal-buttons">
+              <button type="button" onClick={() => setMostrarModalCompartilhar(false)}>
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );

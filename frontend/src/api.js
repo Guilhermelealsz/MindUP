@@ -280,6 +280,11 @@ export const deletarLivro = async (id) => {
   return response.data;
 };
 
+export const buscarUsuarios = async (query) => {
+  const response = await api.get(`/usuarios?busca=${encodeURIComponent(query)}`);
+  return response.data;
+};
+
 export default api;
 
 

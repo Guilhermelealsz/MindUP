@@ -21,7 +21,9 @@ $text-secondary-light: #64748b;
   min-height: 100vh;
   background-color: $bg-primary;
   position: relative;
-  
+  margin-left: 120px; // Posiciona o chat ao lado da sidebar fechada
+  transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1); // Transição suave como a sidebar
+
   .chat-main, .chat-detail-main {
     flex: 1;
     display: flex;
@@ -30,7 +32,7 @@ $text-secondary-light: #64748b;
     min-width: 0;
     border-radius: $border-radius;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin: 1rem 1rem 1rem 120px; // Ajustado para a largura da sidebar
+    margin: 1rem; // Remove margem esquerda, pois o container já está posicionado
     transition: all 0.3s ease;
   }
 }
@@ -170,10 +172,10 @@ $text-secondary-light: #64748b;
   .chat-time {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: center;
     color: $text-secondary;
     font-size: 0.85rem;
-    margin-left: 1rem;
+    margin-left: 0.5rem;
 
     .unread-count {
       background: $primary-blue;
@@ -250,6 +252,16 @@ $text-secondary-light: #64748b;
     object-fit: cover;
   }
 
+  .chat-msg-avatar.avatar-circle {
+    background: linear-gradient(135deg, $primary-blue, $hover-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+  }
+
   .bubble {
     background: rgba(255, 255, 255, 0.05);
     padding: 0.8rem 1.2rem;
@@ -260,7 +272,66 @@ $text-secondary-light: #64748b;
     color: $text-primary;
     position: relative;
     transition: all 0.2s;
-    
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+  }
+
+  .shared-post {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: $border-radius;
+    max-width: 60%;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    .shared-post-header {
+      background: rgba($primary-blue, 0.2);
+      padding: 0.5rem 1rem;
+      font-size: 0.9em;
+      font-weight: 600;
+      color: $primary-blue;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .shared-post-content {
+      padding: 1rem;
+
+      h4 {
+        margin: 0 0 0.5rem 0;
+        font-size: 1em;
+        color: $text-primary;
+        font-weight: 600;
+      }
+
+      p {
+        margin: 0 0 1rem 0;
+        color: $text-secondary;
+        font-size: 0.9em;
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .shared-post-image {
+        width: 100%;
+        max-height: 150px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-top: 0.5rem;
+      }
+
+      .shared-post-video {
+        width: 100%;
+        max-height: 200px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-top: 0.5rem;
+      }
+    }
+
     &:hover {
       background: rgba(255, 255, 255, 0.08);
     }
@@ -275,16 +346,29 @@ $text-secondary-light: #64748b;
 
   &.own-message {
     flex-direction: row-reverse;
-    
+
     .bubble {
       background: rgba($primary-blue, 0.2);
       color: $text-primary;
-      
+
       &:hover {
         background: rgba($primary-blue, 0.25);
       }
     }
-    
+
+    .shared-post {
+      background: rgba($primary-blue, 0.2);
+      border: 1px solid rgba($primary-blue, 0.3);
+
+      .shared-post-header {
+        background: rgba($primary-blue, 0.3);
+      }
+
+      &:hover {
+        background: rgba($primary-blue, 0.25);
+      }
+    }
+
     .chat-msg-avatar {
       margin-left: 12px;
       margin-right: 0;
@@ -406,37 +490,39 @@ $text-secondary-light: #64748b;
 /* Media Queries */
 @media (max-width: 768px) {
   .chat-container {
+    margin-left: 0; // Remove margem em mobile
+
     .chat-main, .chat-detail-main {
       margin: 0.5rem;
       border-radius: $border-radius;
     }
   }
-  
+
   .chat-messages-list {
     padding: 1rem;
   }
-  
+
   .chat-input-area {
     padding: 0.8rem;
-    
+
     input {
       font-size: 0.95rem;
     }
-    
+
     button {
       padding: 0.6rem 1rem;
     }
   }
-  
+
   .chat-header {
     padding: 1rem;
     flex-wrap: wrap;
     gap: 0.5rem;
-    
+
     h2 {
       font-size: 1.25rem;
     }
-    
+
     .chat-search {
       width: 100%;
     }
@@ -446,14 +532,15 @@ $text-secondary-light: #64748b;
 /* Layout responsivo para tablets */
 @media (min-width: 769px) and (max-width: 1024px) {
   .chat-container {
+    margin-left: 120px; // Ajuste para sidebar fechada em tablets
+
     .chat-main, .chat-detail-main {
-      margin: 1rem 1rem 1rem 80px;
+      margin: 1rem;
     }
   }
 }
 
 /* Ajuste quando a sidebar está expandida */
-.sidebar:hover ~ .chat-main,
-.sidebar:hover ~ .chat-detail-main {
-  margin-left: 200px;
+.sidebar:hover ~ .chat-container {
+  margin-left: 200px; // Ajuste para sidebar expandida
 }

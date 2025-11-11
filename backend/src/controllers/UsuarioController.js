@@ -5,6 +5,7 @@ import * as usuarioRepository from '../Repository/usuarioRepository.js';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import process from 'process';
+import conexao from '../database/conexao.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -313,5 +314,36 @@ endpoints.put('/usuarios/:id/senha', verificarToken, async (req, res) => {
     res.status(500).json({ erro: 'Erro ao alterar senha' });
   }
 });
+
+endpoints.get('/usuarios', verificarToken, async (req, res) => {
+  try {
+    const { busca } = req.query;
+
+    if (!busca || busca.trim().length < 2) {
+      return res.status(400).json({ erro: 'Termo de busca deve ter pelo menos 2 caracteres' });
+    }
+
+    const usuarios = await usuarioRepository.buscarUsuariosPorNome(busca.trim(), req.usuarioId);
+    res.json(usuarios);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ erro: 'Erro ao buscar usuários' });
+  }
+});
+
+export async function buscarUsuariosPorNome(nome, usuarioId) {
+  const [rows] = await conexao.query(
+    `
+      SELECT id, nome, username, avatar
+      FROM usuarios
+      WHERE nome LIKE ? AND id != ?
+      ORDER BY nome ASC
+      LIMIT 20
+    `,
+    [`%${nome}%`, usuarioId]
+  );
+
+  return rows;
+}
 
 export default endpoints;

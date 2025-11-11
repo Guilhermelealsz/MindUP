@@ -133,31 +133,31 @@ function Team() {
     {
       id: 1,
       name: "Guilherme Leal",
-      role: "CEO & CTO",
-      bio: "Especialista em desenvolvimento de produtos digitais com mais de 10 anos de experiência.",
+      role: "Desenvolvedor e Líder de Projeto", // Simplificado de 'Estrategista de Produto e Desenvolvedor'
+      bio: "Focado em arquitetura de software e novas tecnologias. Apaixonado por transformar ideias em soluções digitais e liderar a visão do produto.",
       image: guilherme,
-    },
-    {
-      id: 2,
+      },
+      {
+       id: 2,
       name: "Enzo Gaeta",
-      role: "COO & CIO",
-      bio: "Líder em operações e inovação tecnológica com foco em escalabilidade.",
+      role: "Operações e Infraestrutura", // Simplificado de 'Gestão de Projetos e Infraestrutura'
+      bio: "Responsável por otimizar processos internos do projeto e garantir a performance da infraestrutura com foco em escalabilidade desde o início.",
       image: enzo,
-    },
-    {
+      },
+      {
       id: 3,
       name: "Davi Amorim",
-      role: "Chefe de Marketing",
-      bio: "Mais de 5 anos de experiência em SEO e criação de conteúdo. Proficiência em pesquisa de palavras-chave e otimização on-page.",
+      role: "Especialista em Marketing e Conteúdo", // Simplificado de 'Estrategista de Conteúdo e SEO'
+      bio: "Entusiasta de Marketing Digital e SEO. Proficiência em pesquisa de palavras-chave e otimização on-page, buscando sempre o crescimento orgânico.",
       image: davi,
-    },
-    {
+      },
+      {
       id: 4,
       name: "Emily Uliach",
-      role: "Líder de Design",
-      bio: "Designer de experiência com paixão por criar interfaces intuitivas e acessíveis.",
+      role: "Designer UX/UI", // Este já estava bem direto
+      bio: "Designer com paixão por usabilidade e acessibilidade. Dedicada a criar interfaces intuitivas que proporcionam a melhor experiência ao usuário.",
       image: emilly,
-    },
+      },
   ];
 
   return (

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { listarNotificacoes, contarMensagensNaoLidas } from '../api';
 import logo from '../assets/logo.png';
+import livroIcon from '../assets/livroIcon.png';
 import feedIcon from '../assets/FeedICon.png';
 import chatIcon from '../assets/ChatIcon.png';
 import notificacaoIcon from '../assets/NotificacaoIcon.png';
@@ -41,7 +42,7 @@ export default function Sidebar() {
 
   const carregarNotificacoesNaoLidas = async () => {
     try {
-      // Buscar todas as notificações e filtrar as do tipo 'mensagem'
+      // Busca todas as notificações e filtrar as do tipo 'mensagem'
       const all = await listarNotificacoes();
       const filtered = Array.isArray(all) ? all.filter(n => n.tipo !== 'mensagem') : [];
       const count = filtered.filter(n => !n.lida).length;
@@ -92,7 +93,7 @@ export default function Sidebar() {
     {
       id: 'books',
       label: 'Livros',
-      icon: feedIcon, // You can replace with a book icon later
+      icon: livroIcon,
       path: '/books'
     },
     {

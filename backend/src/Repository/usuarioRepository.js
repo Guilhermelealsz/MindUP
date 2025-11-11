@@ -91,4 +91,16 @@ export async function listarTodos() {
   return linhas;
 }
 
+export async function buscarUsuariosPorNome(query, usuarioIdAtual) {
+  const sql = `
+    SELECT id, nome, username, avatar
+    FROM usuarios
+    WHERE (nome LIKE ? OR username LIKE ?) AND id != ?
+    ORDER BY nome ASC
+    LIMIT 20
+  `;
+  const [linhas] = await pool.query(sql, [`%${query}%`, `%${query}%`, usuarioIdAtual]);
+  return linhas;
+}
+
 

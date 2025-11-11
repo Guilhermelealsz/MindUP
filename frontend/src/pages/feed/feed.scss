@@ -10,7 +10,6 @@ $hover-blue: #2563eb;
 
 $font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
-// Light theme variables
 $bg-primary-light: #ffffff;
 $card-bg-light: #f8fafc;
 $input-bg-light: #ffffff;
@@ -43,7 +42,6 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-// Dark theme (default)
 [data-theme="dark"] {
   html {
     background-color: $bg-primary;
@@ -238,9 +236,172 @@ body {
       }
     }
   }
+
+  .modal-compartilhar {
+    h2 {
+      color: $text-primary;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    p {
+      color: $text-secondary;
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      font-weight: 500;
+    }
+
+    .search-container {
+      position: relative;
+      margin-bottom: 1.5rem;
+
+      input {
+        width: 100%;
+        padding: 0.75rem 2.5rem 0.75rem 1rem;
+        border-radius: 12px;
+        border: 1px solid #475569;
+        background: $input-bg;
+        color: #1a2634;
+        font-size: 1rem;
+        transition: all 0.2s ease;
+
+        &::placeholder {
+          color: #64748b;
+        }
+
+        &:focus {
+          outline: none;
+          border-color: $primary-blue;
+          box-shadow: 0 0 0 3px rgba($primary-blue, 0.1);
+        }
+      }
+
+      .search-icon {
+        position: absolute;
+        right: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+        font-size: 1.1rem;
+        pointer-events: none;
+      }
+    }
+
+    .usuarios-lista {
+      max-height: 300px;
+      overflow-y: auto;
+      margin-top: 1rem;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      background: rgba(30, 41, 59, 0.3);
+
+      .usuario-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        border-bottom: 1px solid rgba(71, 85, 105, 0.3);
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        &:hover {
+          background: rgba(59, 130, 246, 0.15);
+          transform: translateX(4px);
+          box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+        }
+
+        .usuario-avatar {
+          width: 36px;
+          height: 36px;
+          background: linear-gradient(135deg, $primary-blue, $accent);
+          color: white;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: bold;
+          font-size: 1rem;
+          flex-shrink: 0;
+          box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+
+          .avatar-image-mini {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+          }
+        }
+
+        span {
+          color: $text-primary;
+          font-weight: 500;
+          flex: 1;
+          font-size: 1rem;
+        }
+
+        .share-icon {
+          color: $primary-blue;
+          font-size: 1.4rem;
+          opacity: 0;
+          transition: all 0.3s ease;
+          margin-left: auto;
+          transform: scale(0.8);
+        }
+
+        &:hover .share-icon {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      .no-users {
+        text-align: center;
+        color: $text-secondary;
+        font-style: italic;
+        padding: 2rem;
+        margin: 0;
+        font-size: 0.9rem;
+      }
+    }
+
+    .modal-buttons {
+      margin-top: 1.5rem;
+      display: flex;
+      justify-content: center;
+
+      button {
+        padding: 0.75rem 2rem;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        background: transparent;
+        border: 1px solid #475569;
+        color: $text-secondary;
+
+        &:hover {
+          background: #334155;
+          color: white;
+          transform: translateY(-1px);
+        }
+      }
+    }
+  }
 }
 
-// Light theme
 [data-theme="light"] {
   html {
     background: #f8fafc;
@@ -530,6 +691,95 @@ body {
             }
           }
         }
+      }
+    }
+
+    .search-container {
+      position: relative;
+      margin-bottom: 1rem;
+
+      input {
+        width: 100%;
+        padding-right: 2.5rem;
+      }
+
+      .search-icon {
+        position: absolute;
+        right: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #64748b;
+        font-size: 1.1rem;
+        pointer-events: none;
+      }
+    }
+
+    .usuarios-lista {
+      max-height: 300px;
+      overflow-y: auto;
+      margin-top: 1rem;
+
+      .usuario-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+        position: relative;
+
+        &:hover {
+          background: rgba(59, 130, 246, 0.1);
+          transform: translateX(2px);
+        }
+
+        .usuario-avatar {
+          width: 32px;
+          height: 32px;
+          background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+          color: white;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: bold;
+          font-size: 0.9rem;
+          flex-shrink: 0;
+
+          .avatar-image-mini {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+          }
+        }
+
+        span {
+          color: #1e293b;
+          font-weight: 500;
+          flex: 1;
+        }
+
+        .share-icon {
+          color: #3b82f6;
+          font-size: 1.2rem;
+          opacity: 0;
+          transition: opacity 0.2s;
+          margin-left: auto;
+        }
+
+        &:hover .share-icon {
+          opacity: 1;
+        }
+      }
+
+      .no-users {
+        text-align: center;
+        color: #64748b;
+        font-style: italic;
+        padding: 2rem;
+        margin: 0;
       }
     }
   }

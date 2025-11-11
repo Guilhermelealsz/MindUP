@@ -14,13 +14,13 @@ export default function ChatDetail() {
   useEffect(() => { 
     carregarMensagens(); 
     marcarComoLidas(); 
-    // eslint-disable-next-line
+    
   }, [chatId]);
 
   useEffect(() => {
     const interval = setInterval(carregarMensagens, 5000);
     return () => clearInterval(interval);
-    // eslint-disable-next-line
+    
   }, [chatId]);
   
   useEffect(() => {
@@ -77,21 +77,51 @@ export default function ChatDetail() {
                 ref={i === msgs.length - 1 ? scrollRef : null}
               >
                 {!msg.eh_sua && (
-                  <img
-                    className="chat-msg-avatar"
-                    src={
-                      msg.remetente_avatar && typeof msg.remetente_avatar === 'string'
-                        ? (msg.remetente_avatar.startsWith('http') ? msg.remetente_avatar : `http://localhost:3000${msg.remetente_avatar}`)
-                        : '/default-avatar.png'
-                    }
-                    alt={msg.remetente_nome}
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src = '/default-avatar.png';
-                    }}
-                  />
+                  msg.remetente_avatar && typeof msg.remetente_avatar === 'string' ? (
+                    <img
+                      className="chat-msg-avatar"
+                      src={
+                        msg.remetente_avatar.startsWith('http') ? msg.remetente_avatar : `http://localhost:3000${msg.remetente_avatar}`
+                      }
+                      alt={msg.remetente_nome}
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = '/default-avatar.png';
+                      }}
+                    />
+                  ) : (
+                    <div className="chat-msg-avatar avatar-circle">
+                      {msg.remetente_nome?.charAt(0).toUpperCase()}
+                    </div>
+                  )
                 )}
-                <span className="bubble">{msg.texto}</span>
+                {msg.post_id ? (
+                  <div className="shared-post">
+                    <div className="shared-post-header">
+                      📤 Post compartilhado
+                    </div>
+                    <div className="shared-post-content">
+                      <h4>{msg.post_titulo}</h4>
+                      <p>{msg.post_conteudo}</p>
+                      {msg.post_imagem && (
+                        <img
+                          src={`http://localhost:3000/uploads/${msg.post_imagem}`}
+                          alt={msg.post_titulo}
+                          className="shared-post-image"
+                        />
+                      )}
+                      {msg.post_video && (
+                        <video
+                          src={`http://localhost:3000/uploads/${msg.post_video}`}
+                          controls
+                          className="shared-post-video"
+                        />
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <span className="bubble">{msg.texto}</span>
+                )}
                 <span className="time">{formatarHora(msg.data_envio)}</span>
               </div>
             ))

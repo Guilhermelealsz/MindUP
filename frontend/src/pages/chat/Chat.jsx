@@ -80,14 +80,20 @@ export default function Chat() {
                 onClick={() => navigate(`/chat/${chat.id}`)}
               >
                 <div className="chat-avatar">
-                  <img
-                    src={getAvatarSrc(chat.outro_usuario_avatar)}
-                    alt={chat.outro_usuario_nome}
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src = '/default-avatar.png';
-                    }}
-                  />
+                  {chat.outro_usuario_avatar ? (
+                    <img
+                      src={getAvatarSrc(chat.outro_usuario_avatar)}
+                      alt={chat.outro_usuario_nome}
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = '/default-avatar.png';
+                      }}
+                    />
+                  ) : (
+                    <div className="avatar-circle">
+                      {chat.outro_usuario_nome?.charAt(0).toUpperCase()}
+                    </div>
+                  )}
                 </div>
                 <div className="chat-info">
                   <strong className="chat-name">{chat.outro_usuario_nome}</strong>

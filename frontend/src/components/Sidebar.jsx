@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { listarNotificacoes, contarMensagensNaoLidas, listarChats } from '../api';
+import { listarNotificacoes, contarMensagensNaoLidas } from '../api';
 import logo from '../assets/logo.png';
 import feedIcon from '../assets/FeedICon.png';
 import chatIcon from '../assets/ChatIcon.png';
@@ -13,7 +13,6 @@ import './Sidebar.scss';
 export default function Sidebar() {
   const [notificacoesNaoLidas, setNotificacoesNaoLidas] = useState(0);
   const [mensagensNaoLidas, setMensagensNaoLidas] = useState(0);
-  const [chatsRecentes, setChatsRecentes] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
   const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
@@ -30,13 +29,11 @@ export default function Sidebar() {
   useEffect(() => {
     carregarNotificacoesNaoLidas();
     carregarMensagensNaoLidas();
-    carregarChatsRecentes();
 
     // Atualizar a cada 10 segundos para mais responsividade
     const interval = setInterval(() => {
       carregarNotificacoesNaoLidas();
       carregarMensagensNaoLidas();
-      carregarChatsRecentes();
     }, 10000);
 
     return () => clearInterval(interval);
@@ -63,15 +60,7 @@ export default function Sidebar() {
     }
   };
 
-  const carregarChatsRecentes = async () => {
-    try {
-      const chats = await listarChats();
-      // Limitar a 5 conversas mais recentes
-      setChatsRecentes(chats.slice(0, 5));
-    } catch (error) {
-      console.error('Erro ao carregar chats recentes:', error);
-    }
-  };
+
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -91,8 +80,7 @@ export default function Sidebar() {
       label: 'Chat',
       icon: chatIcon,
       path: '/chat',
-      badge: mensagensNaoLidas > 0 ? mensagensNaoLidas : null,
-      showChats: true
+      badge: mensagensNaoLidas > 0 ? mensagensNaoLidas : null
     },
     {
       id: 'notifications',
@@ -158,33 +146,7 @@ export default function Sidebar() {
                 <span className="sidebar-badge">{item.badge}</span>
               )}
             </button>
-            {item.showChats && location.pathname.startsWith('/chat') && (
-              <div className="chat-list-sidebar">
-                {chatsRecentes.map(chat => (
-                    <div
-                      key={chat.id}
-                      className={`chat-item-sidebar ${location.pathname === `/chat/${chat.id}` ? 'active' : ''}`}
-                      onClick={() => navigate(`/chat/${chat.id}`)}
-                    >
-                      <img
-                        src={getAvatarSrc(chat.outro_usuario_avatar)}
-                        alt={chat.outro_usuario_nome}
-                        className="chat-avatar-sidebar"
-                        onError={(e) => {
-                          e.target.onerror = null;
-                          e.target.src = '/default-avatar.png';
-                        }}
-                      />
-                      <div className="chat-info-sidebar">
-                        <div className="chat-name-sidebar">{chat.outro_usuario_nome}</div>
-                        <div className="chat-last-message-sidebar">
-                          {chat.ultima_mensagem || 'Nenhuma mensagem'}
-                        </div>
-                      </div>
-                    </div>
-                ))}
-              </div>
-            )}
+
           </div>
         ))}
       </nav>

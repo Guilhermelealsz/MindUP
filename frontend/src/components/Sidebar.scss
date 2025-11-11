@@ -244,6 +244,21 @@ $hover-blue: #2563eb;
   border: 2px solid $primary-blue;
 }
 
+.avatar-circle-sidebar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, $primary-blue, $accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: white;
+  margin-right: 0.75rem;
+  border: 2px solid $primary-blue;
+}
+
 .chat-info-sidebar {
   flex: 1;
   min-width: 0;

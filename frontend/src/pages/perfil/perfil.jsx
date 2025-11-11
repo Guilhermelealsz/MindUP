@@ -195,7 +195,7 @@ export default function Perfil() {
                     className="btn-chat"
                     onClick={handleIniciarChat}
                   >
-                    💬 Chat
+                    Chat
                   </button>
                 )}
               </div>

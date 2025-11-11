@@ -6,9 +6,6 @@ import davi from "../../assets/davi.jpeg";
 import emilly from "../../assets/emilly.png";
 import "./LandingPage.scss";
 
-// ============================================
-// HERO SECTION
-// ============================================
 function Hero() {
   const navigate = useNavigate();
 
@@ -22,7 +19,10 @@ function Hero() {
           <p className="hero-subtitle">
             Não espere por inspiração. Seja a inspiração que te move. Coloque e fone, pegue o café e o foco aqui está no máximo! Qual a sua meta de estudos para hoje? 🎯
           </p>
-          <button className="hero-cta" onClick={() => navigate('/register')}>REGISTRE - SE</button>
+          <div className="hero-buttons">
+            <button className="hero-cta" onClick={() => navigate('/register')}>REGISTRE-SE</button>
+            <button className="hero-login" onClick={() => navigate('/login')}>ENTRAR</button>
+          </div>
         </div>
         <div className="hero-logo">
           <div className="logo-wrapper">
@@ -58,9 +58,6 @@ function Hero() {
   );
 }
 
-// ============================================
-// FAQ SECTION
-// ============================================
 function FAQ() {
   const [openId, setOpenId] = useState(1);
 
@@ -131,9 +128,6 @@ function FAQ() {
   );
 }
 
-// ============================================
-// TEAM SECTION
-// ============================================
 function Team() {
   const teamMembers = [
     {
@@ -153,14 +147,14 @@ function Team() {
     {
       id: 3,
       name: "Davi Amorim",
-      role: "Head of Marketing",
-      bio: "5+ years of experience in SEO and content creation. Proficient in keyword research and on-page optimization",
+      role: "Chefe de Marketing",
+      bio: "Mais de 5 anos de experiência em SEO e criação de conteúdo. Proficiência em pesquisa de palavras-chave e otimização on-page.",
       image: davi,
     },
     {
       id: 4,
       name: "Emily Uliach",
-      role: "Lead Designer",
+      role: "Líder de Design",
       bio: "Designer de experiência com paixão por criar interfaces intuitivas e acessíveis.",
       image: emilly,
     },
@@ -201,9 +195,6 @@ function Team() {
   );
 }
 
-// ============================================
-// CONTACT SECTION
-// ============================================
 function Contact() {
   const [formData, setFormData] = useState({
     name: "",
@@ -239,16 +230,16 @@ function Contact() {
         <div className="contact-content">
           <div className="contact-form-wrapper">
             <h2 className="contact-title">Contate - nos</h2>
-            <p className="contact-subtitle">Tem sugestões e Dúvidas??</p>
+            <p className="contact-subtitle">Tem sugestões e dúvidas?</p>
 
             <form className="contact-form" onSubmit={handleSubmit}>
               <div className="form-group">
-                <label htmlFor="name" className="form-label">Name</label>
+                <label htmlFor="name" className="form-label">Nome</label>
                 <input
                   type="text"
                   id="name"
                   name="name"
-                  placeholder="Name"
+                  placeholder="Nome"
                   value={formData.name}
                   onChange={handleChange}
                   required
@@ -271,11 +262,11 @@ function Contact() {
               </div>
 
               <div className="form-group">
-                <label htmlFor="message" className="form-label">Message*</label>
+                <label htmlFor="message" className="form-label">Mensagem*</label>
                 <textarea
                   id="message"
                   name="message"
-                  placeholder="Message"
+                  placeholder="Mensagem"
                   value={formData.message}
                   onChange={handleChange}
                   required
@@ -306,9 +297,6 @@ function Contact() {
   );
 }
 
-// ============================================
-// FOOTER SECTION
-// ============================================
 function Footer() {
   return (
     <footer className="footer">
@@ -339,7 +327,7 @@ function Footer() {
         <div className="footer-divider"></div>
 
         <div className="footer-bottom">
-          <p className="footer-copyright">© 2025 MindUP. All Rights Reserved.</p>
+          <p className="footer-copyright">© 2025 MindUP. All Rights Reserved  .</p>
           <a href="#" className="footer-link">Privacy Policy</a>
         </div>
       </div>
@@ -347,9 +335,6 @@ function Footer() {
   );
 }
 
-// ============================================
-// MAIN LANDING PAGE COMPONENT
-// ============================================
 export default function LandingPage() {
   return (
     <div className="landing-page">

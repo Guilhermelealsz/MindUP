@@ -18,45 +18,12 @@ $border-radius: 12px;
   flex: 1;
   padding: 2rem;
   background: $bg-primary;
-  margin-left: 120px; // Account for fixed sidebar
+  margin-left: 160px; // Account for fixed sidebar with more space
+  transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.books-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2rem;
-
-  h1 {
-    color: $text-primary;
-    font-size: 2rem;
-    font-weight: 700;
-    margin: 0;
-  }
-
-  .btn-add-book {
-    background: linear-gradient(135deg, $primary-blue, $hover-blue);
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: $border-radius;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-
-    &:hover {
-      background: linear-gradient(135deg, $hover-blue, $primary-blue);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba($primary-blue, 0.3);
-    }
-
-    &:active {
-      transform: translateY(0);
-    }
-  }
+.sidebar:hover ~ .books-content {
+  margin-left: 240px;
 }
 
 .books-filters {
@@ -113,6 +80,44 @@ $border-radius: 12px;
         background: $card-bg;
         color: $text-primary;
       }
+    }
+  }
+}
+
+.books-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+
+  h1 {
+    color: $text-primary;
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .btn-add-book {
+    background: linear-gradient(135deg, $primary-blue, $hover-blue);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: $border-radius;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    &:hover {
+      background: linear-gradient(135deg, $hover-blue, $primary-blue);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba($primary-blue, 0.3);
+    }
+
+    &:active {
+      transform: translateY(0);
     }
   }
 }

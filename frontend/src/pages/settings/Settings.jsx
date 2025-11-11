@@ -135,6 +135,7 @@ export default function Settings() {
             </div>
             <div className="setting-item">
               <label>Notificações por email</label>
+              <span className="coming-soon">Em breve</span>
             </div>
           </section>
         </div>

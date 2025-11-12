@@ -1,6 +1,16 @@
-Guilherme Leal
-Emilly Uliach
-Enzo Gaeta
-Davi Amorim
+Guilherme Leal------
+
+
+Emilly Uliach------
+
+
+
+Enzo Gaeta------
+
+
+
+Davi Amorim------
+
+
 
 INFORMATICA A

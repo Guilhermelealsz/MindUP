@@ -133,29 +133,29 @@ function Team() {
     {
       id: 1,
       name: "Guilherme Leal",
-      role: "Desenvolvedor e Líder de Projeto", // Simplificado de 'Estrategista de Produto e Desenvolvedor'
-      bio: "Focado em arquitetura de software e novas tecnologias. Apaixonado por transformar ideias em soluções digitais e liderar a visão do produto.",
+      role: "Full Dev",
+      bio: "Atuou tanto no front quanto no back-end, integrando todas as partes do projeto, auxiliando o grupo para garantir um funcionamento completo e eficiente.",
       image: guilherme,
       },
       {
        id: 2,
       name: "Enzo Gaeta",
-      role: "Operações e Infraestrutura", // Simplificado de 'Gestão de Projetos e Infraestrutura'
-      bio: "Responsável por otimizar processos internos do projeto e garantir a performance da infraestrutura com foco em escalabilidade desde o início.",
+      role: "Back Dev", 
+      bio: "Responsável pela lógica, APIs e banco de dados. Garantiu que o sistema funcione com segurança e alto desempenho.",
       image: enzo,
       },
       {
       id: 3,
       name: "Davi Amorim",
-      role: "Especialista em Marketing e Conteúdo", // Simplificado de 'Estrategista de Conteúdo e SEO'
-      bio: "Entusiasta de Marketing Digital e SEO. Proficiência em pesquisa de palavras-chave e otimização on-page, buscando sempre o crescimento orgânico.",
+      role: "Front Dev", 
+      bio: "Desenvolveu a interface do site, criando layouts modernos e promissor. Cuida da parte visual e da interação direta com o usuário.",
       image: davi,
       },
       {
       id: 4,
       name: "Emily Uliach",
-      role: "Designer UX/UI", // Este já estava bem direto
-      bio: "Designer com paixão por usabilidade e acessibilidade. Dedicada a criar interfaces intuitivas que proporcionam a melhor experiência ao usuário.",
+      role: "Designer UX/UI", 
+      bio: "Cria designs intuitivos e melhora a experiência do usuário. Une estética e funcionalidade para deixar o site agradavél de usar.",
       image: emilly,
       },
   ];

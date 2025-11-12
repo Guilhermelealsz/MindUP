@@ -180,7 +180,7 @@ export default function Perfil() {
                 className="btn-editar"
                 onClick={() => navigate(`/profile-edit/${id}`)}
               >
-                 Editar Perfil
+                Editar Perfil
               </button>
             ) : (
               <div className="perfil-acoes">

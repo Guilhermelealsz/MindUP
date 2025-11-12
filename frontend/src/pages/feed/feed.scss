@@ -114,15 +114,52 @@ body {
       }
 
       .post-footer {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+
         .btn-interacao {
           background: transparent;
-          border-color: #475569;
+          border: 1px solid #475569;
           color: $text-secondary;
+          padding: 0.5rem 1rem;
+          border-radius: 12px;
+          font-size: 0.9rem;
+          cursor: pointer;
+          transition: all 0.2s;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+
+          .icon-btn {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+            filter: brightness(0) invert(1); // ícone branco por padrão no tema escuro
+            transition: filter 0.2s;
+          }
 
           &:hover {
             background: #334155;
             border-color: $primary-blue;
             color: $primary-blue;
+            .icon-btn {
+              filter: brightness(0) invert(1); // mantém branco/visível, sem virar vermelho
+            }
+          }
+        }
+
+        /* Hover/vermelho aplicado apenas ao botão de curtir (classe específica) */
+        .btn-curtir {
+          &:hover {
+            background: #334155;
+            border-color: #ef4444;
+            color: #ef4444;
+
+            .icon-btn {
+              /* filtro que aplica vermelho ao ícone (ef4444) */
+              filter: invert(22%) sepia(91%) saturate(1410%) hue-rotate(0deg) brightness(100%) contrast(101%);
+            }
           }
         }
       }
@@ -159,8 +196,8 @@ body {
 
               &:hover {
                 background: #334155;
-                border-color: $accent;
-                color: $accent;
+                border-color: $primary-blue;
+                color: $primary-blue;
               }
             }
           }
@@ -509,100 +546,86 @@ body {
 
       .post-footer {
         .btn-interacao {
-          background: transparent;
+          background: #ffffff;
           border: 1px solid #e2e8f0;
           color: #64748b;
-          border-radius: 8px;
+          border-radius: 12px;
           padding: 0.5rem 1rem;
-          font-weight: 500;
+          font-size: 0.9rem;
+          cursor: pointer;
           transition: all 0.2s ease;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+
+          .icon-btn {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+            filter: none; // ícone normal no tema claro
+            transition: filter 0.2s;
+          }
 
           &:hover {
             background: #f1f5f9;
-            border-color: #3b82f6;
-            color: #3b82f6;
-            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.1);
+            border-color: $primary-blue;
+            color: $primary-blue;
+            .icon-btn {
+              filter: none;
+            }
+          }
+        }
+
+        /* Aplicar vermelho apenas no botão de curtir (tema claro) */
+        .btn-curtir {
+          &:hover {
+            background: #f1f5f9;
+            border-color: #ef4444;
+            color: #ef4444;
+
+            .icon-btn {
+              filter: invert(22%) sepia(91%) saturate(1410%) hue-rotate(0deg) brightness(100%) contrast(101%);
+            }
           }
         }
       }
 
       .comentarios-section {
-        border-top: 1px solid #f1f5f9;
+        .comentarios-lista {
+          .comentario-item {
+            .comentario-footer {
+              .btn-curtir-comentario {
+                background: #ffffff;
+                border: 1px solid #e2e8f0;
+                color: #64748b;
+                border-radius: 8px;
+                padding: 0.4rem 0.8rem;
+                font-size: 0.85rem;
+                cursor: pointer;
+                transition: all 0.2s;
+                display: flex;
+                align-items: center;
+                gap: 0.25rem;
 
-        .comentario-item {
-          background: #f8fafc;
-          border: 1px solid #e2e8f0;
-          border-radius: 8px;
-          padding: 1rem;
-          margin-bottom: 0.5rem;
-
-          .comentario-header {
-            .comentario-autor {
-              div {
-                strong {
-                  color: #1e293b;
-                  font-weight: 600;
+                .icon-btn {
+                  width: 16px;
+                  height: 16px;
+                  object-fit: contain;
+                  filter: none;
+                  transition: filter 0.2s;
+                  flex-shrink: 0;
                 }
 
-                .comentario-data {
-                  color: #64748b;
-                  font-size: 0.8rem;
+                &:hover {
+                  background: #f1f5f9;
+                  border-color: #3b82f6;
+                  color: #3b82f6;
+
+                  .icon-btn {
+                    filter: none;
+                  }
                 }
               }
-            }
-          }
-
-          .comentario-texto {
-            color: #374151;
-            line-height: 1.6;
-          }
-
-          .comentario-footer {
-            .btn-curtir-comentario {
-              background: transparent;
-              border: 1px solid #e2e8f0;
-              color: #64748b;
-              border-radius: 6px;
-              padding: 0.4rem 0.8rem;
-              font-size: 0.85rem;
-              transition: all 0.2s ease;
-
-              &:hover {
-                background: #f1f5f9;
-                border-color: #8b5cf6;
-                color: #8b5cf6;
-                box-shadow: 0 2px 4px rgba(139, 92, 246, 0.1);
-              }
-            }
-          }
-        }
-
-        .sem-comentarios {
-          color: #64748b;
-          font-style: italic;
-          text-align: center;
-          padding: 1rem;
-        }
-
-        .form-comentario {
-          input {
-            background: #ffffff;
-            color: #1e293b;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 0.75rem 1rem;
-            font-size: 0.95rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            transition: all 0.2s ease;
-
-            &::placeholder {
-              color: #94a3b8;
-            }
-
-            &:focus {
-              outline: none;
-              border-color: #3b82f6;
-              box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
             }
           }
         }
@@ -1000,12 +1023,18 @@ body {
           width: 20px;
           height: 20px;
           object-fit: contain;
+          filter: brightness(0) invert(1);
+          transition: filter 0.2s;
         }
 
         &:hover {
           background: #334155;
-          border-color: $primary-blue;
-          color: $primary-blue;
+          border-color: #ef4444;
+          color: #ef4444;
+
+          .icon-btn {
+            filter: invert(22%) sepia(91%) saturate(1410%) hue-rotate(0deg) brightness(100%) contrast(101%);
+          }
         }
       }
     }
@@ -1105,10 +1134,23 @@ body {
               align-items: center;
               gap: 0.25rem;
 
+              .icon-btn {
+                width: 16px;
+                height: 16px;
+                object-fit: contain;
+                filter: brightness(0) invert(1);
+                transition: filter 0.2s;
+                flex-shrink: 0;
+              }
+
               &:hover {
                 background: #334155;
-                border-color: $accent;
-                color: $accent;
+                border-color: $primary-blue;
+                color: $primary-blue;
+
+                .icon-btn {
+                  filter: brightness(0) invert(1);
+                }
               }
             }
           }
@@ -1145,7 +1187,7 @@ body {
           }
         }
 
-        .btn-comentar {
+        .btn-comentario {
           background: $primary-blue;
           color: white;
           border: none;

@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { listarMensagensChat, enviarMensagem, marcarMensagensComoLidas } from '../../api';
 import Sidebar from '../../components/Sidebar';
 import './Chat.scss';
 
 export default function ChatDetail() {
   const { chatId } = useParams();
+  const navigate = useNavigate();
   const [msgs, setMsgs] = useState([]);
   const [conteudo, setConteudo] = useState('');
   const [loading, setLoading] = useState(true);
@@ -77,23 +78,28 @@ export default function ChatDetail() {
                 ref={i === msgs.length - 1 ? scrollRef : null}
               >
                 {!msg.eh_sua && (
-                  msg.remetente_avatar && typeof msg.remetente_avatar === 'string' ? (
-                    <img
-                      className="chat-msg-avatar"
-                      src={
-                        msg.remetente_avatar.startsWith('http') ? msg.remetente_avatar : `http://localhost:3000${msg.remetente_avatar}`
-                      }
-                      alt={msg.remetente_nome}
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = '/default-avatar.png';
-                      }}
-                    />
-                  ) : (
-                    <div className="chat-msg-avatar avatar-circle">
-                      {msg.remetente_nome?.charAt(0).toUpperCase()}
-                    </div>
-                  )
+                  <div 
+                    className="chat-avatar-container"
+                    onClick={() => navigate(`/perfil/${msg.remetente_id}`)}
+                  >
+                    {msg.remetente_avatar && typeof msg.remetente_avatar === 'string' ? (
+                      <img
+                        className="chat-msg-avatar"
+                        src={
+                          msg.remetente_avatar.startsWith('http') ? msg.remetente_avatar : `http://localhost:3000${msg.remetente_avatar}`
+                        }
+                        alt={msg.remetente_nome}
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = '/default-avatar.png';
+                        }}
+                      />
+                    ) : (
+                      <div className="chat-msg-avatar avatar-circle">
+                        {msg.remetente_nome?.charAt(0).toUpperCase()}
+                      </div>
+                    )}
+                  </div>
                 )}
                 {msg.post_id ? (
                   <div className="shared-post">

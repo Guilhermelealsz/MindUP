@@ -295,7 +295,7 @@ export default function Feed() {
                   
                   <div className="post-footer">
                     <button
-                      className="btn-interacao"
+                      className="btn-interacao btn-curtir"
                       onClick={() => handleCurtir(post.id)}
                     >
                       <img src={curtidaIcon} alt="Curtir" className="icon-btn" /> {post.total_curtidas || 0}

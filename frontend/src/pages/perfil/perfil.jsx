@@ -234,13 +234,9 @@ export default function Perfil() {
                   <article key={post.id} className="post-card-mini">
                     <h4>{post.titulo}</h4>
                     <p>{post.conteudo.substring(0, 100)}...</p>
-                    <div className="post-footer-mini">
-                      <span> {post.total_curtidas}</span>
-                      <span> {post.total_comentarios}</span>
-                    </div>
                   </article>
                 ))
-              )}
+              )}  
             </div>
           )}
 

@@ -228,10 +228,6 @@ export const marcarMensagensComoLidas = async (chatId) => {
 };
 
 // Funções de Configurações
-export const deletarUsuario = async (id) => {
-  const response = await api.delete(`/usuarios/${id}`);
-  return response.data;
-};
 
 export const alterarSenha = async (id, senhaAtual, novaSenha) => {
   const response = await api.put(`/usuarios/${id}/senha`, { senhaAtual, novaSenha });

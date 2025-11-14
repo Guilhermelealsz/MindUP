@@ -67,7 +67,7 @@
           pdf: newBook.pdf
         };
         await criarLivro(bookData);
-        setErrorMessage(''); // Clear any previous error
+        setErrorMessage(''); 
         setShowAddModal(false);
         setNewBook({
           title: '',
@@ -76,7 +76,7 @@
           description: '',
           pdf: null
         });
-        loadBooks(); // Reload the books list
+        loadBooks(); 
       } catch (error) {
         console.error('Erro ao adicionar livro:', error);
         setErrorMessage('Erro ao adicionar livro. Tente novamente.');
@@ -84,15 +84,11 @@
     };
 
     const handleDownloadBook = (book) => {
-      // Implementar download do PDF
       console.log('Baixando livro:', book.title);
-      // window.open(book.pdfUrl, '_blank');
     };
 
     const handleViewBook = (book) => {
-      // Implementar visualização do PDF
       console.log('Visualizando livro:', book.title);
-      // window.open(book.pdfUrl, '_blank');
     };
 
     return (

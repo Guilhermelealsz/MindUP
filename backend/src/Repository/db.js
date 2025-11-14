@@ -4,7 +4,7 @@ import process from 'process';
 const pool = mysql.createPool({
   host: process.env.DB_HOST || 'localhost',
   user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || 'GuiiLherme0091',
+  password: process.env.DB_PASSWORD || 'enzogaeta17',
   database: process.env.DB_NAME || 'MindUP',
   waitForConnections: true,
   connectionLimit: 10,

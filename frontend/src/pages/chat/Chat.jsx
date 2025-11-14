@@ -31,7 +31,6 @@ export default function Chat() {
     try {
       const chatsData = await listarChats();
 
-      // usar o campo nao_lidas retornado pelo backend (quando presente)
       const chatsComNaoLidas = (chatsData || []).map(chat => ({
         ...chat,
         mensagens_nao_lidas: chat.nao_lidas || 0

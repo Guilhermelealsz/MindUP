@@ -15,7 +15,6 @@ endpoints.post('/usuarios/:id/seguir', verificarToken, async (req, res) => {
 
     await seguidorRepository.seguir(req.usuarioId, id);
 
-    // Criar notificação para o usuário seguido
     await notificacaoRepository.criarNotificacao({
       usuario_id: id,
       tipo: 'seguidor',

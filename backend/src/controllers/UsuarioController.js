@@ -146,23 +146,19 @@ endpoints.put('/usuarios/:id', verificarToken, async (req, res) => {
 
     const { nome, username, bio, avatar, celular, data_nascimento, email, senha, senhaAtual } = req.body;
 
-    // Verificar se campos sensíveis estão sendo alterados
     const camposSensíveis = ['email', 'celular', 'data_nascimento', 'senha'];
     const alterandoCamposSensíveis = camposSensíveis.some(campo => Object.prototype.hasOwnProperty.call(req.body, campo) && req.body[campo] !== undefined);
 
     if (alterandoCamposSensíveis) {
-      // Verificar senha atual para confirmar alterações de campos sensíveis
       if (!senhaAtual || senhaAtual.trim() === '') {
         return res.status(400).json({ erro: 'Senha atual é obrigatória para confirmar alterações de dados sensíveis' });
       }
 
-      // Buscar usuário para verificar senha atual
       const usuario = await usuarioRepository.buscarPorId(id);
       if (!usuario) {
         return res.status(404).json({ erro: 'Usuário não encontrado' });
       }
 
-      // Se o usuário não tem senha cadastrada, permitir alteração sem verificação
       if (usuario.senha) {
         const senhaValida = await bcrypt.compare(senhaAtual, usuario.senha);
         if (!senhaValida) {
@@ -202,7 +198,6 @@ endpoints.put('/usuarios/:id', verificarToken, async (req, res) => {
 
     await usuarioRepository.atualizar(id, dadosAtualizados);
 
-    // Buscar o usuário atualizado para retornar os dados completos
     const usuarioAtualizado = await usuarioRepository.buscarPorId(id);
     delete usuarioAtualizado.senha;
 
@@ -236,7 +231,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+  limits: { fileSize: 5 * 1024 * 1024 }, 
   fileFilter: (req, file, cb) => {
     if (file.mimetype.startsWith('image/')) {
       cb(null, true);
@@ -290,7 +285,6 @@ endpoints.put('/usuarios/:id/senha', verificarToken, async (req, res) => {
       return res.status(400).json({ erro: 'A nova senha deve ter pelo menos 6 caracteres' });
     }
 
-    // Buscar usuário para verificar senha atual
     const usuario = await usuarioRepository.buscarPorId(id);
     if (!usuario) {
       return res.status(404).json({ erro: 'Usuário não encontrado' });
@@ -301,7 +295,6 @@ endpoints.put('/usuarios/:id/senha', verificarToken, async (req, res) => {
       return res.status(400).json({ erro: 'Senha atual incorreta' });
     }
 
-    // Hash da nova senha
     const novaSenhaHash = await bcrypt.hash(novaSenha, 10);
 
     await usuarioRepository.atualizar(id, { senha: novaSenhaHash });

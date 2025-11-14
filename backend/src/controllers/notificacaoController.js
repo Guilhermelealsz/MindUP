@@ -18,7 +18,6 @@ endpoints.get('/notificacoes/nao-lidas', verificarToken, async (req, res) => {
   try {
     const notificacoesNaoLidas = await notificacaoRepository.contarNotificacoesNaoLidas(req.usuarioId);
 
-    // Importar chatRepository aqui para evitar dependência circular
     const { contarMensagensNaoLidasUsuario } = await import('../Repository/chatRepository.js');
     const mensagensNaoLidas = await contarMensagensNaoLidasUsuario(req.usuarioId);
 

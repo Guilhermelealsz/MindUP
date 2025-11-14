@@ -5,7 +5,6 @@ import Sidebar from '../../components/Sidebar';
 import './Settings.scss';
 
 export default function Settings() {
-  const [tema, setTema] = useState(localStorage.getItem('tema') || 'dark');
   const [usuario, setUsuario] = useState(null);
   const [mostrarConfirmacaoDelete, setMostrarConfirmacaoDelete] = useState(false);
   const navigate = useNavigate();
@@ -15,26 +14,7 @@ export default function Settings() {
     if (usuarioData) {
       setUsuario(JSON.parse(usuarioData));
     }
-    aplicarTema(tema);
-  }, [tema]);
-
-  useEffect(() => {
-    // Aplicar tema inicial ao carregar a página
-    const temaSalvo = localStorage.getItem('tema') || 'dark';
-    setTema(temaSalvo);
-    aplicarTema(temaSalvo);
   }, []);
-
-  const aplicarTema = (novoTema) => {
-    document.documentElement.setAttribute('data-theme', novoTema);
-    localStorage.setItem('tema', novoTema);
-  };
-
-  const toggleTema = () => {
-    const novoTema = tema === 'dark' ? 'light' : 'dark';
-    setTema(novoTema);
-    aplicarTema(novoTema);
-  };
 
   const handleAlterarDadosCadastro = () => {
     navigate('/account-settings');
@@ -76,24 +56,6 @@ export default function Settings() {
         </div>
 
         <div className="settings-sections">
-          <section className="settings-section">
-            <h2>Aparência</h2>
-            <div className="setting-item">
-              <label htmlFor="theme-toggle">Tema</label>
-              <div className="theme-toggle">
-                <span className={tema === 'dark' ? 'active' : ''}>Escuro</span>
-                <button
-                  id="theme-toggle"
-                  className={`toggle-switch ${tema}`}
-                  onClick={toggleTema}
-                >
-                  <div className="toggle-slider"></div>
-                </button>
-                <span className={tema === 'light' ? 'active' : ''}>Claro</span>
-              </div>
-            </div>
-          </section>
-
           <section className="settings-section">
             <h2>Conta</h2>
             <div className="setting-item">

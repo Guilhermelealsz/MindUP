@@ -162,6 +162,19 @@ body {
             }
           }
         }
+
+        /* Hover/azul aplicado ao botão de comentários (segundo botão) */
+        .btn-interacao:nth-child(2) {
+          &:hover {
+            background: #334155;
+            border-color: $primary-blue;
+            color: $primary-blue;
+
+            .icon-btn {
+              filter: brightness(0) invert(1);
+            }
+          }
+        }
       }
 
       .comentarios-section {
@@ -1108,6 +1121,13 @@ body {
               border-radius: 4px;
               transition: background 0.2s;
 
+              .icon-delete {
+                width: 16px;
+                height: 16px;
+                filter: brightness(0) invert(1);
+                object-fit: contain;
+              }
+
               &:hover {
                 background: rgba(248, 113, 113, 0.1);
               }
@@ -1187,19 +1207,31 @@ body {
           }
         }
 
-        .btn-comentario {
-          background: $primary-blue;
+        .btn-comentar {
+          background: linear-gradient(135deg, $primary-blue, $hover-blue);
           color: white;
           border: none;
-          padding: 0.75rem 1.25rem;
+          padding: 0.75rem 1.5rem;
           border-radius: 12px;
           font-weight: 600;
+          font-size: 0.95rem;
           cursor: pointer;
-          transition: all 0.2s;
+          transition: all 0.3s ease;
+          box-shadow: 0 2px 8px rgba($primary-blue, 0.2);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
 
           &:hover {
-            background: $hover-blue;
-            transform: translateY(-1px);
+            background: linear-gradient(135deg, $hover-blue, $primary-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba($primary-blue, 0.3);
+          }
+
+          &:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba($primary-blue, 0.2);
           }
         }
       }

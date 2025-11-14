@@ -5,7 +5,6 @@ import * as notificacaoRepository from '../Repository/notificacaoRepository.js';
 
 const endpoints = Router();
 
-// Criar ou buscar chat entre dois usuários
 endpoints.post('/chats', verificarToken, async (req, res) => {
   try {
     const { outroUsuarioId } = req.body;
@@ -28,7 +27,6 @@ endpoints.post('/chats', verificarToken, async (req, res) => {
   }
 });
 
-// Buscar chat existente entre dois usuários (se query presente) ou listar chats do usuário
 endpoints.get('/chats', verificarToken, async (req, res) => {
   try {
     const { outroUsuarioId } = req.query;
@@ -41,7 +39,6 @@ endpoints.get('/chats', verificarToken, async (req, res) => {
       return res.json({ chatId: null });
     }
 
-    // sem query: retorna lista de chats do usuário
     const chats = await chatRepository.listarChatsUsuario(req.usuarioId);
     return res.json(chats);
   } catch (error) {
@@ -50,7 +47,6 @@ endpoints.get('/chats', verificarToken, async (req, res) => {
   }
 });
 
-// Enviar mensagem
 endpoints.post('/chats/:chatId/mensagens', verificarToken, async (req, res) => {
   try {
     const { chatId } = req.params;
@@ -60,7 +56,6 @@ endpoints.post('/chats/:chatId/mensagens', verificarToken, async (req, res) => {
       return res.status(400).json({ erro: 'Mensagem ou post é obrigatório' });
     }
 
-    // Verificar se o usuário faz parte do chat
     const chats = await chatRepository.listarChatsUsuario(req.usuarioId);
     const chat = chats.find(c => c.id == chatId);
 
@@ -72,7 +67,6 @@ endpoints.post('/chats/:chatId/mensagens', verificarToken, async (req, res) => {
 
     const mensagemId = await chatRepository.enviarMensagem(chatId, req.usuarioId, destinatarioId, texto, postId);
 
-    // Criar notificação para o destinatário
     await notificacaoRepository.criarNotificacao({
       usuario_id: destinatarioId,
       tipo: 'mensagem',
@@ -86,12 +80,10 @@ endpoints.post('/chats/:chatId/mensagens', verificarToken, async (req, res) => {
   }
 });
 
-// Listar mensagens de um chat
 endpoints.get('/chats/:chatId/mensagens', verificarToken, async (req, res) => {
   try {
     const { chatId } = req.params;
 
-    // Verificar se o usuário faz parte do chat
     const chats = await chatRepository.listarChatsUsuario(req.usuarioId);
     const chat = chats.find(c => c.id == chatId);
 
@@ -107,7 +99,6 @@ endpoints.get('/chats/:chatId/mensagens', verificarToken, async (req, res) => {
   }
 });
 
-// Contar mensagens não lidas
 endpoints.get('/chats/mensagens-nao-lidas', verificarToken, async (req, res) => {
   try {
     const total = await chatRepository.contarMensagensNaoLidasUsuario(req.usuarioId);
@@ -118,12 +109,10 @@ endpoints.get('/chats/mensagens-nao-lidas', verificarToken, async (req, res) => 
   }
 });
 
-// Marcar mensagens como lidas
 endpoints.put('/chats/:chatId/mensagens/lidas', verificarToken, async (req, res) => {
   try {
     const { chatId } = req.params;
 
-    // Verificar se o usuário faz parte do chat
     const chats = await chatRepository.listarChatsUsuario(req.usuarioId);
     const chat = chats.find(c => c.id == chatId);
 

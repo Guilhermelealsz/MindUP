@@ -10,10 +10,8 @@ const __dirname = path.dirname(__filename);
 
 const endpoints = Router();
 
-// --- Configuração do Multer para Upload de Arquivos ---
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        // Define o diretório de uploads
         const uploadDir = path.join(__dirname, '../../uploads');
         if (!fs.existsSync(uploadDir)) {
             fs.mkdirSync(uploadDir, { recursive: true });
@@ -21,7 +19,6 @@ const storage = multer.diskStorage({
         cb(null, uploadDir);
     },
     filename: (req, file, cb) => {
-        // Gera um nome de arquivo único
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
         cb(null, uniqueSuffix + path.extname(file.originalname));
     }
@@ -29,9 +26,8 @@ const storage = multer.diskStorage({
 
 const upload = multer({
     storage,
-    limits: { fileSize: 50 * 1024 * 1024 }, // 50MB
+    limits: { fileSize: 50 * 1024 * 1024 },
     fileFilter: (req, file, cb) => {
-        // Permite PDF e tipos de imagem comuns
         const allowedTypes = /pdf|jpeg|jpg|png|gif/;
         const extname = path.extname(file.originalname).toLowerCase();
         const mimetype = file.mimetype;
@@ -42,7 +38,6 @@ const upload = multer({
         cb(new Error('Apenas PDFs e imagens (jpeg, png, gif) são permitidos.'));
     }
 });
-// -----------------------------------------------------
 
 endpoints.get('/books', async (req, res) => {
     try {
@@ -53,7 +48,6 @@ endpoints.get('/books', async (req, res) => {
         } else {
             books = await bookRepository.listarTodos();
         }
-        // Retorna um array vazio se o repositório retornar null ou undefined
         res.json(books || []);
     } catch (error) {
         console.error('Erro ao listar livros:', error);
@@ -75,15 +69,11 @@ endpoints.get('/books/:id', async (req, res) => {
     }
 });
 
-/**
- * Endpoint POST para adicionar um novo livro.
- * Suporta o upload de PDF e/ou Capa (imagem).
- */
 endpoints.post(
     '/books',
     upload.fields([
         { name: 'pdf', maxCount: 1 },
-        { name: 'capa_imagem', maxCount: 1 } // ⬅️ Adicionado suporte para capa
+        { name: 'capa_imagem', maxCount: 1 } 
     ]),
     async (req, res) => {
         try {
@@ -98,7 +88,6 @@ endpoints.post(
                 pdf_url = `/uploads/${req.files.pdf[0].filename}`;
             }
 
-            // ⬅️ Obtém o caminho da imagem de capa, se houver
             let capa_imagem = null;
             if (req.files && req.files.capa_imagem && req.files.capa_imagem[0]) {
                 capa_imagem = `/uploads/${req.files.capa_imagem[0].filename}`;
@@ -110,7 +99,7 @@ endpoints.post(
                 categoria: categoria || null,
                 descricao,
                 pdf_url,
-                capa_imagem // ⬅️ Incluído no objeto a ser inserido
+                capa_imagem 
             };
 
             const resultado = await bookRepository.inserir(novoLivro);
@@ -125,20 +114,18 @@ endpoints.post(
 endpoints.put('/books/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        const dadosAtualizados = req.body; // Usa o corpo inteiro da requisição
+        const dadosAtualizados = req.body; 
 
         const livroExistente = await bookRepository.buscarPorId(id);
         if (!livroExistente) {
             return res.status(404).json({ erro: 'Livro não encontrado' });
         }
 
-        // 💡 Otimização: Atualiza apenas os campos fornecidos no corpo da requisição
         const livroParaAtualizar = {
-            ...livroExistente, // Mantém os dados antigos
-            ...dadosAtualizados // Sobrescreve com os dados novos
+            ...livroExistente, 
+            ...dadosAtualizados 
         };
 
-        // Remove a propriedade 'id' para evitar problemas na atualização do DB
         delete livroParaAtualizar.id;
         
         await bookRepository.atualizar(id, livroParaAtualizar);

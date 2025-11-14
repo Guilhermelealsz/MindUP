@@ -32,7 +32,6 @@ export default function Login() {
       const resposta = await fazerLogin(email, senha);
       localStorage.setItem('token', resposta.token);
 
-      // Buscar perfil completo para garantir que o avatar esteja atualizado
       const perfilCompleto = await buscarPerfil(resposta.usuario.id);
       const usuarioAtualizado = { ...resposta.usuario, ...perfilCompleto };
 

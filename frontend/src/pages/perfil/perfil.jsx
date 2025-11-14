@@ -23,7 +23,7 @@ export default function Perfil() {
   const [seguidores, setSeguidores] = useState([]);
   const [seguindo, setSeguindo] = useState([]);
   const [estaSeguin, setEstaSeguindo] = useState(false);
-  const [abaAtiva, setAbaAtiva] = useState('posts'); // posts, seguidores, seguindo
+  const [abaAtiva, setAbaAtiva] = useState('posts'); 
   const [carregando, setCarregando] = useState(true);
   const [meuPerfil, setMeuPerfil] = useState(false);
   const [avatarError, setAvatarError] = useState(false);
@@ -95,12 +95,10 @@ export default function Perfil() {
 
   const handleIniciarChat = async () => {
     try {
-      // Primeiro tenta buscar chat existente
       const chatExistente = await buscarChat(id);
       if (chatExistente.chatId) {
         navigate(`/chat/${chatExistente.chatId}`);
       } else {
-        // Se não existe, cria um novo
         const novoChat = await criarChat(id);
         navigate(`/chat/${novoChat.chatId}`);
       }
@@ -237,8 +235,8 @@ export default function Perfil() {
                     <h4>{post.titulo}</h4>
                     <p>{post.conteudo.substring(0, 100)}...</p>
                     <div className="post-footer-mini">
-                      <span>❤️ {post.total_curtidas}</span>
-                      <span>💬 {post.total_comentarios}</span>
+                      <span> {post.total_curtidas}</span>
+                      <span> {post.total_comentarios}</span>
                     </div>
                   </article>
                 ))

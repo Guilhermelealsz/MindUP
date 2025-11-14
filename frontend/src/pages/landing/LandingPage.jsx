@@ -14,7 +14,7 @@ function Hero() {
       <div className="hero-container">
         <div className="hero-content">
           <h1 className="hero-title">
-            Café na xícara, foco na mente e caneta na mão. Hoje é dia de construir o futuro! ☕
+            Café na xícara, foco na mente e caneta na mão. Hoje é dia de construir o futuro! 
           </h1>
           <p className="hero-subtitle">
             Não espere por inspiração. Seja a inspiração que te move. Coloque e fone, pegue o café e o foco aqui está no máximo! Qual a sua meta de estudos para hoje? 🎯

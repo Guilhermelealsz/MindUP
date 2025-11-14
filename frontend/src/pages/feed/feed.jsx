@@ -5,6 +5,7 @@ import Sidebar from '../../components/Sidebar';
 import curtidaIcon from '../../assets/curtidaIcon.png';
 import compartilharIcon from '../../assets/compartilharIcon.png';
 import comentarioIcon from '../../assets/comentarioIcon.png';
+import lixo from '../../assets/lixo.png';
 import './feed.scss';
 
 export default function Feed() {
@@ -31,8 +32,7 @@ export default function Feed() {
     if (usuarioData) {
       setUsuario(JSON.parse(usuarioData));
     }
-
-    // Aplicar tema salvo ao carregar a página
+    
     const temaSalvo = localStorage.getItem('tema') || 'dark';
     document.documentElement.setAttribute('data-theme', temaSalvo);
   }, []);
@@ -154,7 +154,6 @@ export default function Feed() {
           const comentariosData = await listarComentarios(postId);
           setComentarios({ ...comentarios, [postId]: comentariosData });
         } catch {
-          // Ignore errors in descurtirComentario
         }
       }
     }
@@ -346,7 +345,7 @@ export default function Feed() {
                                     className="btn-deletar-comentario"
                                     onClick={() => handleDeletarComentario(comentario.id, post.id)}
                                   >
-                                    🗑️
+                                    <img src={lixo} alt="Excluir comentário" className="icon-delete" />
                                   </button>
                                 )}
                               </div>

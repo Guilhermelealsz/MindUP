@@ -1,7 +1,6 @@
 import pool from './db.js';
 
 export async function criarChat(usuario1Id, usuario2Id) {
-  // Garantir que usuario1_id seja sempre menor que usuario2_id para evitar duplicatas
   const [menorId, maiorId] = usuario1Id < usuario2Id ? [usuario1Id, usuario2Id] : [usuario2Id, usuario1Id];
 
   const comando = `
@@ -62,7 +61,6 @@ export async function enviarMensagem(chatId, remetenteId, destinatarioId, texto,
 }
 
 export async function listarMensagensChat(chatId, usuarioId) {
-  // Marcar mensagens como lidas quando o usuário as visualiza
   await pool.query(`
     UPDATE mensagens
     SET lida = TRUE

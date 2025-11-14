@@ -28,7 +28,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage,
-  limits: { fileSize: 50 * 1024 * 1024 }, // Aumentado para 50MB para vídeos
+  limits: { fileSize: 50 * 1024 * 1024 }, 
   fileFilter: (req, file, cb) => {
     const allowedImageTypes = /jpeg|jpg|png|gif/;
     const allowedVideoTypes = /mp4|avi|mov|wmv|flv|webm|mkv/;
@@ -162,7 +162,6 @@ endpoints.post('/posts/:id/curtir', verificarToken, async (req, res) => {
     const { id } = req.params;
     await postRepository.curtir(id, req.usuarioId);
 
-    // Criar notificação para o autor do post
     const post = await postRepository.buscarPorId(id);
     if (post && post.autor_id !== req.usuarioId) {
       await notificacaoRepository.criarNotificacao({
@@ -205,7 +204,6 @@ endpoints.get('/posts/:id/curtidas', async (req, res) => {
   }
 });
 
-// Buscar posts de um usuário
 endpoints.get('/usuarios/:id/posts', async (req, res) => {
   try {
     const { id } = req.params;

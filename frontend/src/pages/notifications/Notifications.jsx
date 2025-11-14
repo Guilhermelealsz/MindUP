@@ -17,7 +17,6 @@ export default function Notifications() {
     try {
       setCarregando(true);
       const data = await listarNotificacoes();
-      // Filtrar notificações de chat (tipo 'mensagem') — devem aparecer apenas na aba de chat
       const filtered = Array.isArray(data) ? data.filter(n => n.tipo !== 'mensagem') : [];
       setNotificacoes(filtered);
     } catch (error) {
@@ -61,18 +60,16 @@ export default function Notifications() {
   };
 
   const handleNotificacaoClick = async (notificacao) => {
-    // Marcar como lida se não estiver
     if (!notificacao.lida) {
       await handleMarcarComoLida(notificacao.id);
     }
 
-    // Navegar baseado no tipo de notificação
     if (notificacao.tipo === 'curtida_post' && notificacao.post_id) {
-      navigate('/feed'); // Por enquanto, vai para o feed
+      navigate('/feed'); 
     } else if (notificacao.tipo === 'comentario' && notificacao.post_id) {
-      navigate('/feed'); // Por enquanto, vai para o feed
+      navigate('/feed'); 
     } else if (notificacao.tipo === 'curtida_comentario') {
-      navigate('/feed'); // Por enquanto, vai para o feed
+      navigate('/feed'); 
     } else if (notificacao.tipo === 'seguidor' && notificacao.ator_id) {
       navigate(`/perfil/${notificacao.ator_id}`);
     }

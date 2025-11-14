@@ -33,7 +33,6 @@ endpoints.post('/comentarios', verificarToken, async (req, res) => {
 
     const resultado = await comentarioRepository.inserir(novoComentario);
 
-    // Criar notificação para o autor do post
     const post = await postRepository.buscarPorId(post_id);
     if (post && post.autor_id !== req.usuarioId) {
       await notificacaoRepository.criarNotificacao({
@@ -90,7 +89,6 @@ endpoints.post('/comentarios/:id/curtir', verificarToken, async (req, res) => {
     await comentarioRepository.curtirComentario(id, req.usuarioId);
     const totalCurtidas = await comentarioRepository.contarCurtidasComentario(id);
 
-    // Criar notificação para o autor do comentário
     if (comentario.autor_id !== req.usuarioId) {
       await notificacaoRepository.criarNotificacao({
         usuario_id: comentario.autor_id,
